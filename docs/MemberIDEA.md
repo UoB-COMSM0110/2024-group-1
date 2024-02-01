@@ -1,4 +1,6 @@
-# IDEA about Implementing a 3D Card Game with Java and Processing
+# Document for team members to suggest game ideas
+
+## IDEA about Implementing a 3D Card Game with Java and Processing
 
 ---
 
@@ -95,3 +97,35 @@ ArrayList<Card> playerDeck = new ArrayList<>();
       // Draw UI elements
     }
     ```
+
+## Dungeon Crawler Game Idea
+
+---
+
+author: Samuel Arnold-Parra
+
+date: 2024-02-01
+
+last_modified_at: 
+
+modified_by:
+
+---
+
+I'd like to suggest a first person dungeon crawler game, which could be implemented in either 2D or 3D.
+This game would involve the player traversing a dungeon environment, fighting enemies in random
+encounters. The player would aim to collect treasure and get deeper in the dungeon, as well as
+obtain items which could make them stronger or which provide healing effects.
+
+Three challenges I can think of for this project include:
+
+1. Whether the game is implemented using 2D or 3D, getting the game to render appropriately will
+be a challenge. In the case of 2D, it will be necessary to work out perspective maths so that
+the illusion of 3D depth is created. In the case of 3D, creating a functioning camera system will
+be a challenge.
+
+2. Creating smooth and appropriate transitions between game states (start screen, dungeon
+traversal, combat, etc).
+
+3. Creating a combat system with sufficient balance and depth will pose a challenge
+in the development of this game idea.
