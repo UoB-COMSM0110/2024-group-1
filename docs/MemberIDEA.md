@@ -1,6 +1,6 @@
 # Document for team members to suggest game ideas
 
-## IDEA about Implementing a 3D Card Game with Java and Processing
+## Idea about Implementing a 3D Card Game with Java and Processing
 
 ---
 
