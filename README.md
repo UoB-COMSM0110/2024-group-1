@@ -39,13 +39,9 @@ For this project, I can think of three challenges:
 
 
 ### Prototype
-<object width="425" height="350">
-  <param name="movie" value="https://youtu.be/VUtbDt9KXXw" />
-  <param name="wmode" value="transparent" />
-  <embed src="https://youtu.be/VUtbDt9KXXw"
-         type="application/x-shockwave-flash"
-         wmode="transparent" width="425" height="350" />
-</object>
+
+[![Alt text](https://img.youtube.com/vi/VUtbDt9KXXw/0.jpg)](https://www.youtube.com/watch?v=VUtbDt9KXXw)
+*Right-click and select "Open link in new tab" to watch the video without leaving GitHub.*
 
 
 
