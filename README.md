@@ -5,7 +5,7 @@
 
 Samuel Arnold-Parra,username@emailprovider.com, A-PS1999
 
-Jasmine Thakral,username@emailprovider.com, 
+Jasmine Thakral,dk23586@bristol.ac.uk, JThakral20
 
 Zhuoli Feng,username@emailprovider.com,
 
