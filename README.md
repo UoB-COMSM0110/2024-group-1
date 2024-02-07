@@ -39,6 +39,7 @@ For this project, I can think of three challenges:
 
 
 ### Prototype
+![image](https://github.com/UoB-COMSM0110/2024-group-1/blob/main/images/PaperPrototype1.gif)
 
 [![Alt text](https://img.youtube.com/vi/VUtbDt9KXXw/0.jpg)](https://www.youtube.com/watch?v=VUtbDt9KXXw)
 
