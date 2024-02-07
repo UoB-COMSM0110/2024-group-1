@@ -16,8 +16,7 @@ Ricardo Pu, kc23989@bristol.ac.uk, RicardoMiles
 ## Team photo
 ---
 ![image](https://github.com/UoB-COMSM0110/2024-group-1/blob/main/images/TeamPhoto.jpg)
-![IMG_8772 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/1431ac4d-13f1-4315-8d47-d8e789c5737e)
-![IMG_8776 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/ae396519-d9d0-4ae7-aae0-ebaf6f93ed5c)
+
 
 ## Idea about Implementing a 3D Card Game with Java and Processing
 
@@ -48,7 +47,8 @@ For this project, I can think of three challenges:
 *Right-click and select "Open link in new tab" to watch the video without leaving GitHub.*
 
 
-
+![IMG_8772 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/1431ac4d-13f1-4315-8d47-d8e789c5737e)
+![IMG_8776 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/ae396519-d9d0-4ae7-aae0-ebaf6f93ed5c)
 
 
 ## Dungeon Crawler Game Idea
