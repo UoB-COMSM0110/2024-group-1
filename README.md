@@ -82,3 +82,7 @@ traversal, combat, etc).
 
 3. Creating a combat system with sufficient balance and depth will pose a challenge
 in the development of this game idea.
+
+### Prototype
+
+![prototype2](./images/PaperPrototype2.png)
