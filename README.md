@@ -1,6 +1,6 @@
 # COMSM0110 2024 Group 1
 
-##Group member
+## Group member
 ---
 
 Samuel Arnold-Parra,username@emailprovider.com, A-PS1999
@@ -13,7 +13,7 @@ Lanai Huang,username@emailprovider.com,
 
 Ricardo Pu, kc23989@bristol.ac.uk, RicardoMiles
 
-##Team photo
+## Team photo
 ---
 
 
