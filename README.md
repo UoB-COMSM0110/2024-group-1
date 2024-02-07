@@ -1,5 +1,22 @@
 # COMSM0110 2024 Group 1
 
+##Group member
+---
+
+Samuel Arnold-Parra,username@emailprovider.com, A-PS1999
+
+Jasmine Thakral,username@emailprovider.com, 
+
+Zhuoli Feng,username@emailprovider.com,
+
+Lanai Huang,username@emailprovider.com,
+
+Ricardo Pu, kc23989@bristol.ac.uk, RicardoMiles
+
+##Team photo
+---
+
+
 ## Idea about Implementing a 3D Card Game with Java and Processing
 
 ---
