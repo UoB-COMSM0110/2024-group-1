@@ -35,5 +35,6 @@
 7. Installing the git lfs (large file storage) in case there is a large file in team programming
 
 8. Who is our "Stakeholder" ?
+
     Result: Maybe the card game fans.
 
