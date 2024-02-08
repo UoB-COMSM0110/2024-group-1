@@ -1,5 +1,23 @@
 # COMSM0110 2024 Group 1
 
+## Group member
+---
+
+Samuel Arnold-Parra,username@emailprovider.com, A-PS1999
+
+Jasmine Thakral,dk23586@bristol.ac.uk, JThakral20
+
+Zhuoli Feng,username@emailprovider.com, erer1022
+
+Lanai Huang,username@emailprovider.com, Doctor-TOTORO
+
+Ricardo Pu, kc23989@bristol.ac.uk, RicardoMiles
+
+## Team photo
+---
+![image](https://github.com/UoB-COMSM0110/2024-group-1/blob/main/images/TeamPhoto.jpg)
+
+
 ## Idea about Implementing a 3D Card Game with Java and Processing
 
 ---
@@ -20,6 +38,17 @@ For this project, I can think of three challenges:
 2. Setting up the random generation of enemies and action point values, as well as randomizing various resources for monsters, will involve designing data structures, and designing methods to access attribute values in these data structures is an important aspect of object-oriented programming.
 3. Creating an interactive user interface that allows players to manage their card decks, view card information, and perform actions. Using Processing's drawing capabilities to render UI elements (such as buttons, text, and card images) will involve implementing interface design and interaction logic.
 
+
+### Prototype
+![image](https://github.com/UoB-COMSM0110/2024-group-1/blob/main/images/PaperPrototype1.gif)
+
+[![Alt text](https://img.youtube.com/vi/VUtbDt9KXXw/0.jpg)](https://www.youtube.com/watch?v=VUtbDt9KXXw)
+
+*Right-click and select "Open link in new tab" to watch the video without leaving GitHub.*
+
+
+![IMG_8772 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/1431ac4d-13f1-4315-8d47-d8e789c5737e)
+![IMG_8776 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/ae396519-d9d0-4ae7-aae0-ebaf6f93ed5c)
 
 
 ## Dungeon Crawler Game Idea
@@ -53,3 +82,7 @@ traversal, combat, etc).
 
 3. Creating a combat system with sufficient balance and depth will pose a challenge
 in the development of this game idea.
+
+### Prototype
+
+![prototype2](./images/PaperPrototype2.png)
