@@ -3,13 +3,13 @@
 ## Group member
 ---
 
-Samuel Arnold-Parra,username@emailprovider.com, A-PS1999
+Samuel Arnold-Parra, uq23711@bristol.ac.uk, A-PS1999
 
-Jasmine Thakral,dk23586@bristol.ac.uk, JThakral20
+Jasmine Thakral, dk23586@bristol.ac.uk, JThakral20
 
-Zhuoli Feng,username@emailprovider.com, erer1022
+Zhuoli Feng, bx23489@bristol.ac.uk, erer1022
 
-Lanai Huang,username@emailprovider.com, Doctor-TOTORO
+Lanai Huang, kq23993@bristol.ac.uk, Doctor-TOTORO
 
 Ricardo Pu, kc23989@bristol.ac.uk, RicardoMiles
 
