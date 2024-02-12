@@ -59,7 +59,7 @@ author: Samuel Arnold-Parra
 
 date: 2024-02-01
 
-last_modified_at: 
+last_modified_at:
 
 modified_by:
 
