@@ -26,19 +26,14 @@ spending extra points to move further.
 top of the tower and wins the game.
 
 # Alternative Flow
-The game provides map interface and tutorial/helo interface. Once the players filed in any of the battles, game ends and shows the results to the player.
+Once the players filed in any of the battles, game ends and shows the results to the player.
 
-1. If it's the first time to get into the game, there will be a tutorial/help interface to show how to play the game.
+1. At the beginning of the game, the player chooses one of several
+starting points on the map.
 
-2. When get lost in the maze, the players are allowed to look at the map to find where they are.
+2. The player has no more action points to move, game ends and back to the menu directly.
 
-3. After winning a battle, the players will get few action points, they can decide how many steps they want to move based on the points they have.
-
-4. After battle, the lost lives would  be implemented and all the cards would be reset.
-
-5. There are 2 types of cards: general cards and wasty cards. The general cards can be reused in a battle, but the wasty cards can only be used once.
-
-6. Whenever the battle is failed, game will end and show an ending interface to the players, including cards and action points they have, scores they get and the routine they have experienced. Then back to the main interface.
+3. The player lost all the lifes during combating with the enemies, also game ends and back to the menu directly.
 
 # Extension Points
 There can be easy model and hard model, which differs in the players' and monsters' HP and XP. When the players meet treasures, their XP and HP may get updated.
