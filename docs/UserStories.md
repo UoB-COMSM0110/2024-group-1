@@ -3,7 +3,7 @@
 > As a player, I want the game to have enough card variety and
 strategic depth so that I feel challenged and entertained.
 
-> As a player, I want the rules of the game to be adequately
+> As a novice player, I want the rules of the game to be adequately
 explained with a tutorial or instruction screen so that I
 can understand the game and play it properly.
 
@@ -15,7 +15,7 @@ software engineering.
 many lives I have left so that I can make strategic decisions
 and feel a sense of urgency during the game.
 
-> ‘As the creators of the game - we want to create a game that is enjoyable and challenging for our user - so we feel a sense of achievement’
+> As the creators of the game - we want to create a game that is engaging and challenging for our user through the use of having different levels to the game. 
 
 > ‘As a user I want a game that requires making strategic decisions with cards I have to choose in order to face an opponent ’
 
