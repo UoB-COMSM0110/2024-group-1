@@ -25,11 +25,9 @@ spending extra points to move further.
 4. This flow repeats from 2 above, until the player reaches the
 top of the tower and wins the game.
 
-5. Beating enemies could recover the health points to maximum.
-
-
 # Alternative Flow
-Once the players failed in any of the battles, game ends and shows the results to the player.
+Illustrates the case where the player loses the game as a result of
+losing all their health points.
 
 1. At the beginning of the game, the player chooses one of several
 starting points on the map.
@@ -45,7 +43,3 @@ their health drops to 0.
 
 4. Having lost all their health points, the player is shown
 a game over screen and can return to the main menu.
-
-
-# Extension Points
-There can be easy mode and hard mode, which differs in the players' and monsters' HP and XP. When the player obtains treasures, their XP and HP may get updated.
