@@ -20,7 +20,7 @@ abstract class Enemy extends Entity {
 
     public void executeMoves() {
         for (Move move : moves) {
-            move.execute();
+            move.executeMove();
         }
         moves.clear();
     }

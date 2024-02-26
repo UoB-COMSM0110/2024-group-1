@@ -2,6 +2,7 @@ import java.util.Stack;
 
 class GameEngine {
     private static Stack<GameState> stateStack;
+    private Player thePlayer;
     private boolean isRunning;
 
     GameEngine() {

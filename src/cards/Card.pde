@@ -13,7 +13,7 @@ abstract class Card {
         takesTarget = needsTarget;
     }
 
-    public int getCost() {
+    public int getEnergyCost() {
         return energyCost;
     }
 
