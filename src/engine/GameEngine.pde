@@ -8,6 +8,7 @@ class GameEngine {
     GameEngine() {
         stateStack = new Stack();
         isRunning = true;
+        thePlayer = null;
         // Todo: push main menu state onto state stack here
     }
 

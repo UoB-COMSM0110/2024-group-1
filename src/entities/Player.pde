@@ -5,9 +5,9 @@ class Player extends Entity {
     private int currEnergy;
     private int currGold;
 
-    Player(String name, int maxHp, int str, int dex, int actionPts, int energyLim) {
+    Player(String name, int maxHp, int str, int dex, int actionPts, int energyLim, int cardLim) {
         super(name, maxHp, str, dex);
-        cardDeck = new Deck();
+        cardDeck = new Deck(cardLim);
         currActionPts = actionPts;
         this.energyLim = energyLim;
         currEnergy = energyLim;
