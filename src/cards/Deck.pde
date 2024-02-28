@@ -57,6 +57,14 @@ class Deck {
         return true;
     }
 
+    public ArrayList<Card> getDeck() {
+        return deck;
+    }
+
+    public void setDeck(ArrayList<Card> newDeck) {
+        deck = newDeck;
+    }
+
     public boolean isEmpty() {
         return deck.isEmpty();
     }

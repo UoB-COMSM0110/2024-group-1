@@ -22,6 +22,10 @@ class Player extends Entity {
         return currEnergy;
     }
 
+    public int refillEnergy() {
+        currEnergy = energyLim;
+    }
+
     public int getEnergyLim() {
         return energyLim;
     }

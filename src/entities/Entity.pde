@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 abstract class Entity {
-
     private int maxHp;
     private int currHp;
     private int strength;
@@ -123,6 +122,13 @@ abstract class Entity {
             activeEffects.add(newStatus);
         } else {
             existingEffect.stackEffect(newStatus);
+        }
+    }
+
+    public void decayEffects() {
+        for (int i=0; i < activeEffects.size(); i++) {
+            StatusEffect currEffect = activeEffects.get(i);
+            currEffect.prepDecrement();
         }
     }
 
