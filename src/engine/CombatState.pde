@@ -16,11 +16,19 @@ class CombatState extends GameState {
         currEncounter.initEncounter();
     }
 
-    public void handleInput() {
-        currEncounter.processInput();
+    public void handleMouseInput() {
+        // currEncounter.processInput();
+    }
+
+    public void handleKeyInput() {
+
     }
 
     public void updateState() {}
+
+    public void pauseState() {}
+
+    public void resumeState() {}
 
     public void drawState() {
         currEncounter.drawCombat();

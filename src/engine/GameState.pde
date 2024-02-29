@@ -4,7 +4,8 @@ abstract class GameState {
   public abstract void resumeState();
   public abstract void updateState();
   public abstract void drawState();
-  public abstract void handleInput();
+  public abstract void handleMouseInput();
+  public abstract void handleKeyInput();
 
   public void changeState(GameEngine engine, GameState newState) {
     engine.changeState(newState);

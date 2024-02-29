@@ -6,8 +6,14 @@ void setup() {
 }
 
 void draw() {
-  engine.handleInput();
   engine.updateGame();
   engine.drawScreen();
 }
 
+void keyPressed() {
+  engine.handleKeyInput();
+}
+
+void mousePressed() {
+  engine.handleMouseInput();
+}
