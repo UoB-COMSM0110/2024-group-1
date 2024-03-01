@@ -1,13 +1,14 @@
 import java.util.ArrayList;
 
 abstract class Entity {
-
     private int maxHp;
     private int currHp;
     private int strength;
     private int dexterity;
     private String name;
     private ArrayList<StatusEffect> activeEffects;
+    private PImage img;
+    private PVector pos;
 
     Entity(String name, int maxHp, int str, int dex) {
         this.maxHp = maxHp;
@@ -16,6 +17,17 @@ abstract class Entity {
         strength = str;
         dexterity = dex;
         activeEffects = new ArrayList<StatusEffect>();
+    }
+
+    Entity(String name, int maxHp, int str, int dex, PImage img, PVector pos) {
+        this.maxHp = maxHp;
+        currHp = maxHp;
+        this.name = name;
+        strength = str;
+        dexterity = dex;
+        activeEffects = new ArrayList<StatusEffect>();
+        this.img = img;
+        this.pos = pos;
     }
 
     public int getCurrHp() {
@@ -113,12 +125,44 @@ abstract class Entity {
         }
     }
 
+    public void decayEffects() {
+        for (int i=0; i < activeEffects.size(); i++) {
+            StatusEffect currEffect = activeEffects.get(i);
+            currEffect.prepDecrement();
+        }
+    }
+
     public void removeStatusEffect(StatusEffect effect) {
         activeEffects.remove(effect);
     }
 
     public ArrayList<StatusEffect> getActiveEffects() {
         return activeEffects;
+    }
+
+    public PImage getImg() {
+        return img;
+    }
+
+    public boolean setImg(PImage toSet) {
+        if (toSet == null) {
+            return false;
+        }
+
+        img = toSet;
+        return true;
+    }
+
+    public PVector getVec() {
+        return pos;
+    }
+
+    public void setVec(Pvector vec) {
+        pos = vec;
+    }
+
+    public boolean isMousedOver() {
+        return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
     }
 
     abstract void die();

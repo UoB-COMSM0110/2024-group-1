@@ -8,12 +8,18 @@ class GameEngine {
     GameEngine() {
         stateStack = new Stack();
         isRunning = true;
+        thePlayer = null;
         // Todo: push main menu state onto state stack here
     }
 
-    public void handleInput() {
+    public void handleMouseInput() {
         GameState curr = stateStack.peek();
-        curr.handleInput();
+        curr.handleMouseInput();
+    }
+
+    public void handleKeyInput() {
+        GameState curr = stateStack.peek();
+        curr.handleKeyInput();
     }
 
     public void updateGame() {
