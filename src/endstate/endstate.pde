@@ -6,6 +6,12 @@ PImage Menu;
 PImage Cards;
 PImage Shop;
 PImage Continue;
+PImage Setting;
+
+int buttonX;
+int buttonY;
+int settingX;
+int settingY;
 
 int actionPoints = 10;
 boolean checkWin = true;
@@ -24,11 +30,17 @@ void setup() {
   Cards = loadImage("buttonCards.png");
   Shop = loadImage("buttonShop.png");
   Continue = loadImage("buttonContinue.png");
+  Setting = loadImage("imageSetting.png");
+  buttonX = Shop.width;
+  buttonY = Shop.height;
+  settingX = Setting.width;
+  settingY = Setting.height;
 }
 
 void draw() {
   if (!pageChange) {
-    background(backgroundImage); 
+    background(backgroundImage);
+    image(Setting, width-100, 0);
     textSize(48);
     textAlign(CENTER, CENTER);
     if (checkWin) {
@@ -62,7 +74,7 @@ void drawWin() {
 
 void drawLose() {
   image(loseImage, 245, -30);
-  fill(255, 0, 0); // 红色表示失败
+  fill(255, 0, 0); // red means failure
   text("\nRemaining Action Points: " + actionPoints, width/2, height/2 -40);
   if (actionPoints < 5) {
     text("\nNot enough Action Points", width/2, height/2);
@@ -91,19 +103,24 @@ void cleanScreen() {
 }
 
 void mousePressed() {
-  if (gameContinue && mouseY > height-175 && mouseY < height-175+Shop.height) {
-    if (mouseX > 40 && mouseX < 40+Shop.width) {
+  if (gameContinue && mouseY > height-175 && mouseY < height-175+buttonY) {
+    if (mouseX > 40 && mouseX < 40+buttonX) {
       pageChange = true;
       //Add codes to go to start stage
-    } else if (mouseX > 215 && mouseX < 215+Shop.width) {
+    } else if (mouseX > 215 && mouseX < 215+buttonX) {
       pageChange = true;
       //Add codes to go to cards stage
-    } else if (mouseX > 400 && mouseX < 400+Shop.width) {
+    } else if (mouseX > 400 && mouseX < 400+buttonX) {
       pageChange = true;
       //Add codes to go to shop stage
-    } else if (mouseX > 575 && mouseX < 575+Shop.width) {
+    } else if (mouseX > 575 && mouseX < 575+buttonX) {
       pageChange = true;
       //Add codes to back to game
+    }
+  } else if (mouseY > 0 && mouseY < settingY) {
+    if (mouseX > width-100 && mouseX < width-100+settingX) {
+      pageChange = true;
+      //Add codes to go to settings
     }
   }
 }

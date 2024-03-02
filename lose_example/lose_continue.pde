@@ -14,7 +14,7 @@ int settingX;
 int settingY;
 
 int actionPoints = 10; // initial actionPoints
-boolean checkWin = true; // check if win a game
+boolean checkWin = false; // check if win a game
 int winBonus = 5; // win the game to get winBonus
 boolean agreeToSacrificeLife = false; // check if agree to sacrifice
 boolean gameContinue = true;
