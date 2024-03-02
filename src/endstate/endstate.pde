@@ -21,7 +21,7 @@ boolean agreeToSacrificeLife = false;
 boolean gameContinue = true;
 boolean pageChange = false;
 
-void setup() {
+public void setupEndstate() {
   size(800, 635); 
   backgroundImage = loadImage("Background.png");
   Score = loadImage("scoreUI.png");
@@ -38,7 +38,7 @@ void setup() {
   settingY = Setting.height;
 }
 
-void draw() {
+public void drawEndstate() {
   if (!pageChange) {
     background(backgroundImage);
     image(Setting, width-100, 0);
@@ -103,7 +103,7 @@ void cleanScreen() {
   background(255);
 }
 
-void mousePressed() {
+public void mousepressEndstate() {
   if (gameContinue && mouseY > height-175 && mouseY < height-175+buttonY) {
     if (mouseX > 40 && mouseX < 40+buttonX) {
       pageChange = true;
