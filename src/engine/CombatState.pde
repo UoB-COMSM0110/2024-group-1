@@ -17,7 +17,7 @@ class CombatState extends GameState {
     }
 
     public void handleMouseInput() {
-        // currEncounter.processInput();
+        currEncounter.processMouseInput();
     }
 
     public void handleKeyInput() {

@@ -8,7 +8,6 @@ abstract class Entity {
     private String name;
     private ArrayList<StatusEffect> activeEffects;
     private PImage img;
-    private PVector pos;
 
     Entity(String name, int maxHp, int str, int dex) {
         this.maxHp = maxHp;
@@ -151,14 +150,6 @@ abstract class Entity {
 
         img = toSet;
         return true;
-    }
-
-    public PVector getVec() {
-        return pos;
-    }
-
-    public void setVec(Pvector vec) {
-        pos = vec;
     }
 
     public boolean isMousedOver() {

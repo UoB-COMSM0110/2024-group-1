@@ -7,6 +7,8 @@ class CombatEncounter {
     private Card activeCard;
     private boolean isPlayerTurn;
     private int drawAmt;
+    private final int ENEMY_BASE_X = 200;
+    private final int CARDS_BASE_X = 50;
 
     CombatEncounter(Player thePlayer, ArrayList<Enemy> enemies) {
         battlePlayer = thePlayer;
@@ -61,11 +63,36 @@ class CombatEncounter {
         battlePlayer.prepDecrement();
     }
 
-    public void processInput() {
-        
+    public void processMouseInput() {
+        if (mousePressed == true) {
+            if (activeCard != null) {
+            // TODO: cycle through enemies to see which to target
+            }
+
+            for (int i=0; i < cardHand.size(); i++) {
+                if (cardHand.get(i).isMousedOver()) {
+                    activeCard = cardHand.get(i);
+                    if (activeCard.getIfTakesTarget() == false) {
+                        // TODO: Play card function
+                    }
+                }
+            }
+        }
     }
 
     public void drawCombat() {
-        
+        int enemyXPos = ENEMY_BASE_X;
+        int cardsXPos = CARDS_BASE_X;
+        image(battlePlayer.getImg(), 50, 100);
+
+        for (int i=0; i < currEnemies.size(); i++) {
+            image(currEnemies.get(i).getImg(), enemyXPos, 100);
+            enemyXPos += 50;
+        }
+
+        for (int j=0; j < cardHand.size(); j++) {
+            image(cardHand.get(j).getImg(), cardsXPos, 300);
+            cardsXPos += 50;
+        }
     }
 }

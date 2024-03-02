@@ -4,6 +4,7 @@ abstract class Card {
     private int energyCost;
     private int shopCost;
     private boolean takesTarget;
+    private PImage img;
 
     Card(String name, CardType type, int energyCost, int shopCost, boolean needsTarget) {
         this.name = name;
@@ -45,5 +46,26 @@ abstract class Card {
 
     public CardType getType() {
         return cardType;
+    }
+
+    public boolean getIfTakesTarget() {
+        return takesTarget;
+    }
+
+    public PImage getImg() {
+        return img;
+    }
+
+    public boolean setImg(PImage toSet) {
+        if (toSet == null) {
+            return false;
+        }
+
+        img = toSet;
+        return true;
+    }
+
+    public boolean isMousedOver() {
+        return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
     }
 }
