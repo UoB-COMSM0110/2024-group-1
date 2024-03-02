@@ -13,9 +13,10 @@ int buttonY;
 int settingX;
 int settingY;
 
-int actionPoints = 10;
+int actionPoints = Player.getActionPts();
+int winBonus = 5; //suppose the player will get 5 points after winning
+int totalPoints = Player.incrementActionPts(winBonus);
 boolean checkWin = true;
-int winBonus = 5;
 boolean agreeToSacrificeLife = false;
 boolean gameContinue = true;
 boolean pageChange = false;
@@ -65,7 +66,7 @@ void drawWin() {
   textAlign(RIGHT, CENTER);
   text("\n"+actionPoints, width/2+205, height/2-30);
   text("\n"+winBonus, width/2+205, height/2+20);
-  text("\n"+(winBonus+actionPoints), width/2+205, height/2+70);
+  text("\n"+totalPoints, width/2+205, height/2+70);
   image(Menu, 40, height-175);
   image(Cards, 215, height-175);
   image(Shop, 400, height-175);
