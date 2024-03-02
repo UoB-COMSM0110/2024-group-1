@@ -62,7 +62,7 @@ void drawWin() {
 
 void drawLose() {
   image(loseImage, 245, -30);
-  fill(255, 0, 0); // 红色表示失败
+  fill(255, 0, 0);
   text("\nRemaining Action Points: " + actionPoints, width/2, height/2 -40);
   if (actionPoints < 5) {
     text("\nNot enough Action Points", width/2, height/2);
