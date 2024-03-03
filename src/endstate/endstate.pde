@@ -1,18 +1,7 @@
 class EndState extends GameState {
-  PImage backgroundImage;
-  PImage winImage;
-  PImage loseImage;
-  PImage Score;
-  PImage Menu;
-  PImage Cards;
-  PImage Shop;
-  PImage Continue;
-  PImage Setting;
-
-  int buttonX;
-  int buttonY;
-  int settingX;
-  int settingY;
+  PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
+  
+  EndButton menuButton, cardsButton, shopButton, continueButton, settingButton;
 
   int actionPoints = Player.getActionPts();
   int winBonus = 5; //suppose the player will get 5 points after winning
@@ -33,29 +22,28 @@ class EndState extends GameState {
     Shop = loadImage("buttonShop.png");
     Continue = loadImage("buttonContinue.png");
     Setting = loadImage("imageSetting.png");
-    buttonX = Shop.width;
-    buttonY = Shop.height;
-    settingX = Setting.width;
-    settingY = Setting.height;
+    menuButton = new EndButton(Menu, 40, height-175);
+    cardsButton = new EndButton(Cards, 215, height-175);
+    shopButton = new EndButton(Shop, 400, height-175);
+    continueButton = new EndButton(Continue, 575, height-175);
+    settingButton = new EndButton(Setting, width-100, 0);
   }
   
   public void handleMouseInput() {
-    if (gameContinue && mouseY > height-175 && mouseY < height-175+buttonY) {
-      if (mouseX > 40 && mouseX < 40+buttonX) {
+    if (mousePressed) {
+      if (menuButton.isClicked()) {
         pageChange = true;
-        //Add codes to go to start stage
-      } else if (mouseX > 215 && mouseX < 215+buttonX) {
+         //Add codes to go to start stage
+      } else if (cardsButton.isClicked()) {
         pageChange = true;
         //Add codes to go to cards stage
-      } else if (mouseX > 400 && mouseX < 400+buttonX) {
+      } else if (shopButton.isClicked()) {
         pageChange = true;
         //Add codes to go to shop stage
-      } else if (mouseX > 575 && mouseX < 575+buttonX) {
+      } else if (continueButton.isClicked()) {
         pageChange = true;
         //Add codes to back to game
-      }
-    } else if (mouseY > 0 && mouseY < settingY) {
-      if (mouseX > width-100 && mouseX < width-100+settingX) {
+      } else if (settingButton.isClicked()) {
         pageChange = true;
         //Add codes to go to settings
       }
@@ -75,6 +63,10 @@ class EndState extends GameState {
     if (!pageChange) {
       background(backgroundImage);
       image(Setting, width-100, 0);
+      image(Menu, 40, height-175);
+      image(Cards, 215, height-175);
+      image(Shop, 400, height-175);
+      image(Continue, 575, height-175);
       textSize(48);
       textAlign(CENTER, CENTER);
       if (checkWin) {
@@ -104,10 +96,6 @@ class EndState extends GameState {
     text("\n"+actionPoints, width/2+205, height/2-30);
     text("\n"+winBonus, width/2+205, height/2+20);
     text("\n"+totalPoints, width/2+205, height/2+70);
-    image(Menu, 40, height-175);
-    image(Cards, 215, height-175);
-    image(Shop, 400, height-175);
-    image(Continue, 575, height-175);
   }
 
   void drawLose() {
@@ -121,17 +109,10 @@ class EndState extends GameState {
       //Add codes to go back to start stage
     } else {
       if (!agreeToSacrificeLife) {
+        text("\nAgree to sacrifice life? (Y/N)", width/2, height/2);
         handleKeyInput();
-      } else {
-        if (!agreeToSacrificeLife) {
-          text("\nAgree to sacrifice life? (Y/N)", width/2, height/2);
-        }
       }
     }
-    image(Menu, 40, height-175);
-    image(Cards, 215, height-175);
-    image(Shop, 400, height-175);
-    image(Continue, 575, height-175);
     //Add codes to go back to game
   }
 }
