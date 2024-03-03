@@ -1,7 +1,7 @@
 class EndState extends GameState {
   PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
   
-  EndButton menuButton, cardsButton, shopButton, continueButton, settingButton;
+  Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
   int actionPoints = Player.getActionPts();
   int winBonus = 5; //suppose the player will get 5 points after winning
@@ -12,7 +12,7 @@ class EndState extends GameState {
   boolean pageChange = false;
 
   public void setupState() {
-    size(800, 635); 
+    size(1300, 800); 
     backgroundImage = loadImage("Background.png");
     Score = loadImage("scoreUI.png");
     winImage = loadImage("imageWin.png");
@@ -22,31 +22,38 @@ class EndState extends GameState {
     Shop = loadImage("buttonShop.png");
     Continue = loadImage("buttonContinue.png");
     Setting = loadImage("imageSetting.png");
-    menuButton = new EndButton(Menu, 40, height-175);
-    cardsButton = new EndButton(Cards, 215, height-175);
-    shopButton = new EndButton(Shop, 400, height-175);
-    continueButton = new EndButton(Continue, 575, height-175);
-    settingButton = new EndButton(Setting, width-100, 0);
+    menuButton = new Button(40, height-175， Menu.width, Menu.height);
+    cardsButton = new Button(215, height-175, Cards.width, Cards.height);
+    shopButton = new Button(400, height-175, Shop.width, Shop.height);
+    continueButton = new Button(575, height-175, Continue.width, Continue.height);
+    settingButton = new Button(width-100, 0, Setting.width, Setting.height);
   }
   
   public void handleMouseInput() {
-    if (mousePressed) {
-      if (menuButton.isClicked()) {
-        pageChange = true;
-         //Add codes to go to start stage
-      } else if (cardsButton.isClicked()) {
-        pageChange = true;
-        //Add codes to go to cards stage
-      } else if (shopButton.isClicked()) {
-        pageChange = true;
-        //Add codes to go to shop stage
-      } else if (continueButton.isClicked()) {
-        pageChange = true;
-        //Add codes to back to game
-      } else if (settingButton.isClicked()) {
-        pageChange = true;
-        //Add codes to go to settings
-      }
+    menuButton.update();
+    if (menuButton.overButton(40, height-175， Menu.width, Menu.height) && mousePressed) {
+      pageChange = true;
+      //Add codes to go to start stage
+    }
+    cardsButton.update();
+    if (cardsButton.overButton(215, height-175, Cards.width, Cards.height) && mousePressed) {
+      pageChange = true;
+      //Add codes to go to cards stage
+    }
+    shopButton.update();
+    if (shopButton.overButton(400, height-175, Shop.width, Shop.height) && mousePressed) {
+      pageChange = true;
+      //Add codes to go to shop stage
+    }
+    continueButton.update();
+    if (continueButton.overButton(575, height-175, Continue.width, Continue.height) && mousePressed) {
+      pageChange = true;
+      //Add codes to back to game
+    }
+    settingButton.update();
+    if (settingButton.overButton(width-100, 0, Setting.width, Setting.height) && mousePressed) {
+      pageChange = true;
+      //Add codes to go to setting stage
     }
   }
   
