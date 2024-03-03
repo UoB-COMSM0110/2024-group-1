@@ -21,7 +21,6 @@ class EndState extends GameState {
   }
 
   public void setupState() {
-    size(1300, 800); 
     backgroundImage = loadImage("Background.png");
     Score = loadImage("scoreUI.png");
     winImage = loadImage("imageWin.png");
