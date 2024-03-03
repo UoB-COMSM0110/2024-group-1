@@ -1,15 +1,21 @@
 class EndState extends GameState {
   PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
-  
   Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
-  int actionPoints = Player.getActionPts();
+  int actionPoints;
   int winBonus = 5; //suppose the player will get 5 points after winning
-  int totalPoints = Player.incrementActionPts(winBonus);
+  int totalPoints;
   boolean checkWin = true;
   boolean agreeToSacrificeLife = false;
   boolean gameContinue = true;
   boolean pageChange = false;
+  
+  EndState(Player player) {
+    actionPoints = player.getActionPts();
+    player.incrementActionPts(winBonus);
+    totalPoints = player.getActionPts();
+    setupState();
+  }
 
   public void setupState() {
     size(1300, 800); 
