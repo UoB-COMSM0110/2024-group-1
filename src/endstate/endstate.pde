@@ -5,14 +5,17 @@ class EndState extends GameState {
   int actionPoints;
   int winBonus = 5; //suppose the player will get 5 points after winning
   int totalPoints;
-  boolean checkWin = true;
+  boolean checkWin;
   boolean agreeToSacrificeLife = false;
   boolean gameContinue = true;
   boolean pageChange = false;
   
-  EndState(Player player) {
+  EndState(Player player, boolean check) {
     actionPoints = player.getActionPts();
-    player.incrementActionPts(winBonus);
+    checkWin = check;
+    if (checkWin) {
+      player.incrementActionPts(winBonus);
+    }
     totalPoints = player.getActionPts();
     setupState();
   }
