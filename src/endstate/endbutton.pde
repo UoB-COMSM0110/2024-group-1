@@ -1,4 +1,4 @@
-class EndButton {
+class EndButton extends Button {
   int buttonX, buttonY, buttonW, buttonH;
   
   EndButton(PImage img, int x, int y) {
