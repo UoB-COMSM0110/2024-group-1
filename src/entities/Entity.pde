@@ -156,5 +156,5 @@ abstract class Entity {
         return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
     }
 
-    abstract void die();
+    abstract public void die();
 }

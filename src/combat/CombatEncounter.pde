@@ -50,7 +50,7 @@ class CombatEncounter {
             discardPile.add(toDiscard);
         }
 
-        For (Enemy nme : currEnemies) {
+        for (Enemy nme : currEnemies) {
             nme.executeMoves();
         }
         startTurn();
@@ -63,21 +63,47 @@ class CombatEncounter {
         battlePlayer.prepDecrement();
     }
 
-    public void processMouseInput() {
-        if (mousePressed == true) {
-            if (activeCard != null) {
-            // TODO: cycle through enemies to see which to target
-            }
+    private void playCard(Card toPlay, Entity target) {
+        toPlay.applyCard(target);
+        if ((target instanceof Enemy) && (target.getCurrHp() <= 0)) {
+            currEnemies.remove(target);
+        }
+        cardHand.remove(toPlay);
+        discardPile.add(toPlay);
+        battlePlayer.decrementEnergy(toPlay.getEnergyCost());
+    }
 
-            for (int i=0; i < cardHand.size(); i++) {
-                if (cardHand.get(i).isMousedOver()) {
-                    activeCard = cardHand.get(i);
-                    if (activeCard.getIfTakesTarget() == false) {
-                        // TODO: Play card function
+    public void processMouseInput() {
+        if ((mousePressed == true) && (isPlayerTurn == true)) {
+            if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
+                for (int n=0; n < currEnemies.size(); n++) {
+                    Enemy currEnemy = currEnemies.get(n);
+                    if (currEnemy.isMousedOver() == true) {
+                        playCard(activeCard, currEnemy);
                     }
                 }
             }
+
+            for (int i=0; i < cardHand.size(); i++) {
+                Card currCard = cardHand.get(i);
+                if (currCard.isMousedOver() == true) {
+                    if (currCard.getEnergyCost() <= battlePlayer.getCurrEnergy()) {
+                        activeCard = currCard;
+                    }
+                }
+            }
+            if (activeCard != null && (activeCard.getIfTakesTarget() == false)) {
+                playCard(activeCard, battlePlayer);
+            }
         }
+    }
+
+    public OutcomeType checkWinLoss() {
+        if (currEnemies.isEmpty() == true) {
+            return OutcomeType.OUTCOME_WIN;
+        } else if (battlePlayer.getCurrHp() <= 0) {
+            return OutcomeType.OUTCOME_LOSS;
+        } else return OutcomeType.OUTCOME_UNDECIDED;
     }
 
     public void drawCombat() {

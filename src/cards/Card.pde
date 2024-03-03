@@ -14,6 +14,8 @@ abstract class Card {
         takesTarget = needsTarget;
     }
 
+    abstract public void applyCard(Entity target);
+
     public int getEnergyCost() {
         return energyCost;
     }
