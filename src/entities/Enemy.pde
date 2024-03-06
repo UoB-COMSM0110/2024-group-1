@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 
 abstract class Enemy extends Entity {
-    ArrayList<Move> moves;
+    private ArrayList<Move> moves;
+    protected Player playerRef;
 
-    Enemy(String name, int hp, int str, int dex) {
+    Enemy(String name, int hp, int str, int dex, Player ref) {
         super(name, hp, str, dex);
         moves = new ArrayList<Move>();
+        playerRef = ref;
     }
 
     public ArrayList<Move> getMoves() {
