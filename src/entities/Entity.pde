@@ -50,7 +50,7 @@ abstract class Entity {
     }
 
     public boolean takeDamage(int initialAmt) {
-        int finalAmt = applyModifiers(EnemyDmgMod.class, initialAmt);
+        int finalAmt = applyModifiers(TakingDmgMod.class, initialAmt);
         if (finalAmt < 0) {
             return false;
         }
@@ -105,6 +105,16 @@ abstract class Entity {
         }
 
         return amt;
+    }
+
+    public <T extends Trigger> void triggerEffects(Class<T> triggerType, Object source) {
+        for (int i=0; i < activeEffects.size(); i++) {
+            StatusEffect curr = activeEffects.get(i);
+
+            if (triggerType.isAssignableFrom(curr.getClass())) {
+                ((T) curr).trigger(source);
+            }
+        }
     }
 
     public void appendStatusEffect(StatusEffect newStatus) {

@@ -26,6 +26,7 @@ class CombatEncounter {
     }
 
     private void startTurn() {
+        battlePlayer.triggerEffects(TurnStartTrigger.class, null);
         decayStatuses();
         battlePlayer.refillEnergy();
         for (Enemy nme : currEnemies) {

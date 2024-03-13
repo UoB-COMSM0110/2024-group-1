@@ -20,9 +20,9 @@ class CombatState extends GameState {
         currEncounter.processMouseInput();
     }
 
-    public void handleKeyInput() {
+    public void handleMouseWheel(MouseEvent e) {}
 
-    }
+    public void handleKeyInput() {}
 
     public void updateState() {
         OutcomeType combatOutcome = currEncounter.checkWinLoss();

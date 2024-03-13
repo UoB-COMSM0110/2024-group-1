@@ -17,6 +17,11 @@ class GameEngine {
         curr.handleMouseInput();
     }
 
+    public void handleMouseWheel(MouseEvent e) {
+        GameState curr = stateStack.peek();
+        curr.handleMouseWheel(e);
+    }
+
     public void handleKeyInput() {
         GameState curr = stateStack.peek();
         curr.handleKeyInput();

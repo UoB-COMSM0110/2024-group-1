@@ -17,3 +17,7 @@ void keyPressed() {
 void mousePressed() {
   engine.handleMouseInput();
 }
+
+void mouseWheel(MouseEvent event) {
+  
+}
