@@ -21,15 +21,15 @@ class EndState extends GameState {
   }
 
   public void setupState() {
-    backgroundImage = loadImage("Background.png");
-    Score = loadImage("scoreUI.png");
-    winImage = loadImage("imageWin.png");
-    loseImage = loadImage("imageLose.png");
-    Menu = loadImage("buttonMenu.png");
-    Cards = loadImage("buttonCards.png");
-    Shop = loadImage("buttonShop.png");
-    Continue = loadImage("buttonContinue.png");
-    Setting = loadImage("imageSetting.png");
+    backgroundImage = loadImage("../assets/endscreen/Background.png");
+    Score = loadImage("../assets/endscreen/scoreUI.png");
+    winImage = loadImage("../assets/endscreen/imageWin.png");
+    loseImage = loadImage("../assets/endscreen/imageLose.png");
+    Menu = loadImage("../assets/endscreen/buttonMenu.png");
+    Cards = loadImage("../assets/endscreen/buttonCards.png");
+    Shop = loadImage("../assets/endscreen/buttonShop.png");
+    Continue = loadImage("../assets/endscreen/buttonContinue.png");
+    Setting = loadImage("../assets/endscreen/imageSetting.png");
     menuButton = new Button(40, height-175, Menu.width, Menu.height);
     cardsButton = new Button(215, height-175, Cards.width, Cards.height);
     shopButton = new Button(400, height-175, Shop.width, Shop.height);
