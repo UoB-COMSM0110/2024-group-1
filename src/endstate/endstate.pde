@@ -30,7 +30,7 @@ class EndState extends GameState {
     Shop = loadImage("buttonShop.png");
     Continue = loadImage("buttonContinue.png");
     Setting = loadImage("imageSetting.png");
-    menuButton = new Button(40, height-175， Menu.width, Menu.height);
+    menuButton = new Button(40, height-175, Menu.width, Menu.height);
     cardsButton = new Button(215, height-175, Cards.width, Cards.height);
     shopButton = new Button(400, height-175, Shop.width, Shop.height);
     continueButton = new Button(575, height-175, Continue.width, Continue.height);
@@ -39,7 +39,7 @@ class EndState extends GameState {
   
   public void handleMouseInput() {
     menuButton.update();
-    if (menuButton.overButton(40, height-175， Menu.width, Menu.height) && mousePressed) {
+    if (menuButton.overButton(40, height-175, Menu.width, Menu.height) && mousePressed) {
       pageChange = true;
       //Add codes to go to start stage
     }

@@ -3,5 +3,6 @@ public enum StateEnum {
   STATE_COMBAT,
   STATE_MAP,
   STATE_VICTORY,
-  STATE_DEFEAT
+  STATE_DEFEAT,
+  STATE_SHOP
 }

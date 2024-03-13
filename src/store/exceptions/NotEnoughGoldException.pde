@@ -1,4 +1,4 @@
-package store.exceptions;
+//package store.exceptions;
 
 public class NotEnoughGoldException extends Exception {
     private static final String MESSAGE = "Not enough gold";

@@ -1,36 +1,81 @@
-package store;
+//package store;
+PImage shopBackground;
 
+
+//array of cards
+//could do multiple shops -> don't want to have the same cards each time
+//pass the player into the shop 
+//poison card 
+//don't need to worry about cost -> card class will handle it 
+//get price from card 
+
+
+/*
 import cards.Card;
 import entities.Player;
 import store.exceptions.DeckFullException;
 import store.exceptions.ItemNotAvailable;
 import store.exceptions.NotEnoughGoldException;
-
+*/
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+//might not need import statements whilst having build folder 
 
-public class Store {
-    private static final String FILE_PATH = "shop.csv";
-    private final ArrayList<Item> items;
-
-    public Store() {
-        this.items = new ArrayList<>();
-        readFile();
+public class Store extends GameState {
+    private static final String FILE_PATH = "shop.csv"; //file path of shop data filel
+    private final ArrayList<Item> items; //items available in the store
+    
+    Store() {
+        this.items = new ArrayList<>(); //initialise items 
+        readFile(); //read item data from csv 
+        //add in game engine and player 
     }
 
-    public ArrayList<Item> getItems() {
-        return items;
+    private ArrayList<Item> getItems() {
+        return items; //access to items array list 
     }
 
-    private void readFile() throws FileNotFoundException {
+    private void readFile() throws IOException { //read item data from csv + fills arraylist 
+        File file = new File(FILE_PATH); //create file object 
+        Scanner scanner = new Scanner(file); //read from file
+        String[] row; //store values from csv 
+        
+        while (scanner.hasNext()) { // check if another line available -> read from file 
+          row = scanner.nextLine().split(", "); //split into strings -separate values
+          //file
+          String path = row[0]; //first value from row and assign to path 
+          String name = row[1]; //second value from array -> name of card etc
+          CardType cardType = CardType.factory(row[2]); 
+          int energyCost = Integer.parseInt(row[3]);
+          int shopCost = Integer.parseInt(row[4]);
+          boolean takesTarget = row[5].equals("true");
+          boolean available = row[6].equals("true");
+          
+          Card card = new Card(path, name, cardType, energyCost, shopCost, needsTarget);
+          items.add(new Item(card, shopCost, available)); //add new item to items list 
+        }
+        
+        //in map could have url -> for file 
+        //in map -> initialise shop node -> list of items -> display the itesm
+        
+        
+        scanner.close();
+    }
+    
+    public void writeFile() throws IOException { //writes item data to csv file 
         File file = new File(FILE_PATH);
-        Scanner scanner = new Scanner(file);
-
+        FileWriter writer = new FileWriter(file);
+        
+        for (Item item : items) { //iterate over each item in items list  and converts item data to csv string
+            writer.write(item.toCsv() + "\n");
+        }
+        
+        writer.close();
     }
 
-    public Card buyCard(Player player, int index) {
+    private Card buyCard(Player player, int index) { //player purchase card from store at specific index
         try {
             Item item;
 
@@ -40,7 +85,7 @@ public class Store {
                 throw new IndexOutOfBoundsException("Item not found");
             }
 
-            Card card = item.buy(player);
+            Card card = item.buy(player); //item available -> buy
 
             items.remove(index);
 
@@ -50,4 +95,16 @@ public class Store {
             return null;
         }
     }
+   
+  public void setupState(){
+  shopBackground = loadImage("../assetsshopBackground.jpeg");
+   } //loading in the images 
+  
+
+public void pauseState(){}
+  public void resumeState(){}
+  public void updateState(){}
+  public void drawState(){} //editing the images 
+  public void handleMouseInput(){}
+  public void handleKeyInput(){}
 }

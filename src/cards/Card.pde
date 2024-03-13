@@ -1,15 +1,17 @@
 abstract class Card {
+  private String path; //equal to the path of the image ??
     private String name;
     private CardType cardType;
     private int energyCost;
     private int shopCost;
     private boolean takesTarget;
 
-    Card(String name, CardType type, int energyCost, int shopCost, boolean needsTarget) {
+    Card(String path, String name, CardType type, int energyCost, int shopCost, boolean needsTarget) {
+      this.path = path; //path pointing to image ?? 
         this.name = name;
         cardType = type;
         this.energyCost = energyCost;
-        this.shopCost = shopCost;
+        this.shopCost = shopCost; //already in item don't need this?? 
         takesTarget = needsTarget;
     }
 
@@ -45,5 +47,9 @@ abstract class Card {
 
     public CardType getType() {
         return cardType;
+    }
+    
+    public boolean getTakesTarget() {
+      return takesTarget;
     }
 }

@@ -9,16 +9,16 @@ import store.exceptions.NotEnoughGoldException;
 
 public class Item {
     private final Card card;
-    private final int cost;
-    private boolean available;
+    private final int cost; //might not need this if covered by card class? 
+    private boolean available; //whether item is available
 
-    public Item(Card card, int cost, boolean available) {
-        this.card = card;
-        this.cost = cost;
+    Item(Card card, int cost, boolean available) {
+        this.card = card; //initialising -> creating item object 
+        this.cost = cost; //
         this.available = available;
     }
 
-    public Card getCard() {
+    public Card getCard() { //provide access to card cost and available
         return card;
     }
 
@@ -35,9 +35,10 @@ public class Item {
     }
 
     public Card buy(Player player) throws ItemNotAvailable, NotEnoughGoldException, DeckFullException {
-        if (!available) {
-            throw new ItemNotAvailable();
+        if (!available) { 
+            throw new ItemNotAvailable(); //check if item available for purchase if not throws exception
         }
+        
 
         if (player.getGoldOnHand() < cost) {
             throw new NotEnoughGoldException();
@@ -47,8 +48,24 @@ public class Item {
             throw new DeckFullException();
         }
 
-        player.decrementGold(cost);
+        player.decrementGold(cost); //if passes decrement gold by item cost 
 
-        return card;
+        return card; 
     }
+    
+    public String toCsv() {
+      return  card.getPath() + ", " + card.getName() + ", " + card.getType().toString() + ", " +
+              card.getEnergyCost() + ", " + card.getShopCost() + ", " + card.getTakesTarget() + ", " + available;
+    } //csv item attributes to csv -> path etc 
+    
+    /*
+          String path = row[0];
+          String name = row[1];
+          CardType cardType = CardType.factory(row[2]);
+          int energyCost = Integer.parseInt(row[3]);
+          int shopCost = Integer.parseInt(row[4]);
+          boolean takesTarget = row[5].equals("true");
+          boolean available = row[6].equals("true");
+    */
+    //void set up -> to see the visual 
 }

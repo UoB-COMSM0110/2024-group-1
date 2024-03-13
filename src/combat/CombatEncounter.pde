@@ -48,7 +48,7 @@ class CombatEncounter {
             discardPile.add(toDiscard);
         }
 
-        For (Enemy nme : currEnemies) {
+        for(Enemy nme : currEnemies) {
             nme.executeMoves();
         }
         startTurn();
