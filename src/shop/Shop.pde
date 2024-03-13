@@ -1,5 +1,4 @@
-//package store;
-PImage shopBackground;
+package shop;
 
 
 //array of cards
@@ -13,9 +12,9 @@ PImage shopBackground;
 /*
 import cards.Card;
 import entities.Player;
-import store.exceptions.DeckFullException;
-import store.exceptions.ItemNotAvailable;
-import store.exceptions.NotEnoughGoldException;
+import shop.exceptions.DeckFullException;
+import shop.exceptions.ItemNotAvailable;
+import shop.exceptions.NotEnoughGoldException;
 */
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,14 +22,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 //might not need import statements whilst having build folder 
 
-public class Store extends GameState {
+public class Shop extends GameState {
+  PImage shopBackground,startImage;
+  Button startButton;
+
     private static final String FILE_PATH = "shop.csv"; //file path of shop data filel
-    private final ArrayList<Item> items; //items available in the store
+    private final ArrayList<Item> items; //items available in the shop
     
-    Store() {
+    
+      GameEngine engineRef; //passing in game engine and player? 
+    private Player passedPlayer;
+    
+    
+    Shop(GameEngine engine, Player thePlayer) { //check this 
         this.items = new ArrayList<>(); //initialise items 
         readFile(); //read item data from csv 
         //add in game engine and player 
+        engineRef = engine;
+        passedPlayer = thePlayer;
+        //pass in set up state? 
+        
     }
 
     private ArrayList<Item> getItems() {
@@ -40,7 +51,7 @@ public class Store extends GameState {
     private void readFile() throws IOException { //read item data from csv + fills arraylist 
         File file = new File(FILE_PATH); //create file object 
         Scanner scanner = new Scanner(file); //read from file
-        String[] row; //store values from csv 
+        String[] row; //shop values from csv 
         
         while (scanner.hasNext()) { // check if another line available -> read from file 
           row = scanner.nextLine().split(", "); //split into strings -separate values
@@ -75,7 +86,7 @@ public class Store extends GameState {
         writer.close();
     }
 
-    private Card buyCard(Player player, int index) { //player purchase card from store at specific index
+    private Card buyCard(Player player, int index) { //player purchase card from shop at specific index
         try {
             Item item;
 
@@ -97,14 +108,32 @@ public class Store extends GameState {
     }
    
   public void setupState(){
-  shopBackground = loadImage("../assetsshopBackground.jpeg");
+  shopBackground = loadImage("../assets/main/shopBackground.png");
+  startImage = loadImage("../assets/main/start.png");
+
+  startButton = new Button(600, 300, 230, 60);
+
    } //loading in the images 
   
 
 public void pauseState(){}
   public void resumeState(){}
   public void updateState(){}
-  public void drawState(){} //editing the images 
-  public void handleMouseInput(){}
+  public void handleMouseWheel(MouseEvent e) {}
+  
+  public void drawState(){
+  image(startImage, 600, 300, 230, 60);  
+  image(shopBackground, 0, 0, width, height); 
+  } //editing the images 
+  
+  
+  public void handleMouseInput(){  /* change game state to MAP_STATE */
+        startButton.update();
+        if (startButton.overButton(600, 300, 230, 60) && mousePressed){
+            background(240, 210, 200); /* for test */
+            //MapState mapState = new MapState();
+            //GameState.changeState(engineRef, mapState);
+        }
+} //add in button for map state here //check 
   public void handleKeyInput(){}
 }

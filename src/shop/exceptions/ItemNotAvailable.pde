@@ -1,4 +1,4 @@
-//package store.exceptions;
+//package shop.exceptions;
 
 public class ItemNotAvailable extends Exception {
   

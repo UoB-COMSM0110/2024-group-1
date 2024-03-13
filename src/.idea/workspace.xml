@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="faef7fb4-ceb2-4da7-8ee9-fb128fe1ca22" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/cards/Card.pde" beforeDir="false" afterPath="$PROJECT_DIR$/cards/Card.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cards/CardType.pde" beforeDir="false" afterPath="$PROJECT_DIR$/cards/CardType.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/combat/CombatEncounter.pde" beforeDir="false" afterPath="$PROJECT_DIR$/combat/CombatEncounter.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/endstate/endstate.pde" beforeDir="false" afterPath="$PROJECT_DIR$/endstate/endstate.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine/StateEnum.pde" beforeDir="false" afterPath="$PROJECT_DIR$/engine/StateEnum.pde" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/store/Item.pde" beforeDir="false" afterPath="$PROJECT_DIR$/store/Item.pde" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/store/Store.pde" beforeDir="false" afterPath="$PROJECT_DIR$/store/Store.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/exceptions/DeckFullException.pde" beforeDir="false" afterPath="$PROJECT_DIR$/store/exceptions/DeckFullException.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/exceptions/ItemNotAvailable.pde" beforeDir="false" afterPath="$PROJECT_DIR$/store/exceptions/ItemNotAvailable.pde" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/exceptions/NotEnoughGoldException.pde" beforeDir="false" afterPath="$PROJECT_DIR$/store/exceptions/NotEnoughGoldException.pde" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,29 +16,29 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2dd5048sXsQo7sSX1A7W9ZCGKwt" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "store-state",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/jasmine/code/Software Engineering/2024-group-1/src",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;store-state&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jasmine/code/Software Engineering/2024-group-1/src&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -63,6 +55,7 @@
       <option name="presentableId" value="Default" />
       <updated>1710324889734</updated>
       <workItem from="1710324892632" duration="890000" />
+      <workItem from="1710340590813" duration="1000" />
     </task>
     <servers />
   </component>

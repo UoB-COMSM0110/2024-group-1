@@ -1,11 +1,11 @@
-package store;
+package shop;
 
 import cards.Card;
 import cards.Deck;
 import entities.Player;
-import store.exceptions.DeckFullException;
-import store.exceptions.ItemNotAvailable;
-import store.exceptions.NotEnoughGoldException;
+import shop.exceptions.DeckFullException;
+import shop.exceptions.ItemNotAvailable;
+import shop.exceptions.NotEnoughGoldException;
 
 public class Item {
     private final Card card;
@@ -21,10 +21,29 @@ public class Item {
     public Card getCard() { //provide access to card cost and available
         return card;
     }
+    
+    
+public int getCardShopCost() {
+        return card.getShopCost();
+    }
 
-    public int getCost() {
+ //check this 
+
+   
+    /*public int getCost() {
         return cost;
     }
+    */ don't need this ? 
+    
+     // Create an instance of Card
+        card = new Card(3, 50);
+
+        // Accessing energy cost and shop cost
+        int energyCost = card.getEnergyCost();
+        int shopCost = card.getShopCost();
+
+
+
 
     public boolean isAvailable() {
         return available;
