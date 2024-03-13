@@ -19,5 +19,5 @@ void mousePressed() {
 }
 
 void mouseWheel(MouseEvent event) {
-  
+  engine.handleMouseWheel(event);
 }
