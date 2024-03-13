@@ -2,12 +2,13 @@ class Node {
     PVector position; 
     float radius; 
     boolean isMouseOver; 
-    Player passedPlayer;
+    protected Player passedPlayer;
 
-    Node(float x, float y, float radius) {
+    Node(float x, float y, float radius, Player passedPlayer) {
         this.position = new PVector(x, y);
         this.radius = radius;
         this.isMouseOver = false;
+        this.passedPlayer = passedPlayer;
     }
 
     void display() {
