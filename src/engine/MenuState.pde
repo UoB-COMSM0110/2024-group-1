@@ -16,11 +16,11 @@ class MenuState extends GameState {
         passedPlayer = new Player("Initial", 40, 5, 5, 5, 6, 20); //Initialize the player
         
 
-        bg = loadImage("menu_bg.jpeg");
-        startImage = loadImage("start.png");
-        combatImage = loadImage("combat.png");
-        helpImage = loadImage("help.png");
-        shopImage = loadImage("shop.png");
+        bg = loadImage("../assets/main/menu_bg.jpeg");
+        startImage = loadImage("../assets/main/start.png");
+        combatImage = loadImage("../assets/main/combat.png");
+        helpImage = loadImage("../assets/main/help.png");
+        shopImage = loadImage("../assets/main/shop.png");
   
         startButton = new Button(600, 300, 230, 60);
         combatButton = new Button(600, 400, 230, 60);
