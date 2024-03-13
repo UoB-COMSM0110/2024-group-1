@@ -5,7 +5,7 @@ class MenuState extends GameState {
     GameEngine engineRef;
     private Player passedPlayer;
 
-    CombatState(GameEngine engine, Player thePlayer) {
+    MenuState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
         passedPlayer = thePlayer;
         setupState();
