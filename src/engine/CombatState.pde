@@ -1,14 +1,14 @@
 class CombatState extends GameState {
-    GameEngine engineRef;
+    private GameEngine engineRef;
     private Player passedPlayer;
-    ArrayList<Enemy> encounterEnemies;
+    private ArrayList<Enemy> encounterEnemies;
     private CombatEncounter currEncounter;
 
     CombatState(GameEngine engine, Player thePlayer, ArrayList<Enemy> enemies) {
         engineRef = engine;
         passedPlayer = thePlayer;
         encounterEnemies = enemies;
-        currEncounter = new CombatEncounter(passedPlayer, encounterEnemies);
+        currEncounter = new CombatEncounter(engineRef, passedPlayer, encounterEnemies);
         setupState();
     }
 
@@ -17,14 +17,29 @@ class CombatState extends GameState {
     }
 
     public void handleMouseInput() {
-        // currEncounter.processInput();
+        currEncounter.processMouseInput();
     }
 
-    public void handleKeyInput() {
+    public void handleMouseWheel(MouseEvent e) {}
 
+    public void handleKeyInput() {}
+
+    public void updateState() {
+        OutcomeType combatOutcome = currEncounter.checkWinLoss();
+
+        switch (combatOutcome) {
+            case OutcomeType.OUTCOME_WIN:
+                EndState toChangeTo = new EndState(passedPlayer, true)
+                changeState(engineRef, toChangeTo);
+                break;
+            case OutcomeType.OUTCOME_LOSS:
+                EndState toChangeTo = new EndState(passedPlayer, false)
+                changeState(engineRef, toChangeTo);
+                break;
+            default:
+                break;
+        }
     }
-
-    public void updateState() {}
 
     public void pauseState() {}
 

@@ -8,7 +8,6 @@ abstract class Entity {
     private String name;
     private ArrayList<StatusEffect> activeEffects;
     private PImage img;
-    private PVector pos;
 
     Entity(String name, int maxHp, int str, int dex) {
         this.maxHp = maxHp;
@@ -51,7 +50,7 @@ abstract class Entity {
     }
 
     public boolean takeDamage(int initialAmt) {
-        int finalAmt = applyModifiers(EnemyDmgMod.class, initialAmt);
+        int finalAmt = applyModifiers(TakingDmgMod.class, initialAmt);
         if (finalAmt < 0) {
             return false;
         }
@@ -108,6 +107,16 @@ abstract class Entity {
         return amt;
     }
 
+    public <T extends Trigger> void triggerEffects(Class<T> triggerType, Object source) {
+        for (int i=0; i < activeEffects.size(); i++) {
+            StatusEffect curr = activeEffects.get(i);
+
+            if (triggerType.isAssignableFrom(curr.getClass())) {
+                ((T) curr).trigger(source);
+            }
+        }
+    }
+
     public void appendStatusEffect(StatusEffect newStatus) {
         StatusEffect existingEffect = null;
 
@@ -153,17 +162,9 @@ abstract class Entity {
         return true;
     }
 
-    public PVector getVec() {
-        return pos;
-    }
-
-    public void setVec(Pvector vec) {
-        pos = vec;
-    }
-
     public boolean isMousedOver() {
         return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
     }
 
-    abstract void die();
+    abstract public void die();
 }
