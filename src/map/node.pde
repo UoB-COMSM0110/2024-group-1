@@ -2,6 +2,7 @@ class Node {
     PVector position; 
     float radius; 
     boolean isSelected; 
+    Player passedPlayer;
 
     Node(float x, float y, float radius) {
         this.position = new PVector(x, y);

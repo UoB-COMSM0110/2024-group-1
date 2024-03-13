@@ -1,8 +1,8 @@
-class Button {
+class MapButton {
   float x, y, w, h;
   String label;
   
-  Button(float x, float y, float w, float h, String label) {
+  MapButton(float x, float y, float w, float h, String label) {
     this.x = x;
     this.y = y;
     this.w = w;
