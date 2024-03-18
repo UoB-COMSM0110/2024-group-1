@@ -34,8 +34,8 @@ class MenuState extends GameState {
         startButton.update();
         if (startButton.overButton(600, 300, 230, 60) && mousePressed){
             background(240, 210, 200); /* for test */
-            // MapState mapState = new MapState();
-            // GameState.changeState(engineRef, mapState);
+            MapState mapState = new MapState(engineRef, passedPlayer);
+            engineRef.changeState(mapState);
         }
 
         /* change game state to COMBAT_STATE */

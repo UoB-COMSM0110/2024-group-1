@@ -6,8 +6,9 @@ class Deck {
     int deckLimit;
     
     Deck(int limit) {
+        deck = new ArrayList<Card>();
         deckLimit = limit;
-        // Todo: add initialization of starting deck here
+        initDeck();
     }
 
     public void shuffle() {
@@ -38,7 +39,7 @@ class Deck {
         }
 
         ArrayList<Card> toRet = new ArrayList<Card>();
-        int toDraw = Math.min(numCards, deck.size());
+        int toDraw = min(numCards, deck.size());
 
         while (toDraw > 0) {
             Card drawn = deck.get(0);
@@ -67,5 +68,13 @@ class Deck {
 
     public boolean isEmpty() {
         return deck.isEmpty();
+    }
+
+    private void initDeck() {
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
     }
 }
