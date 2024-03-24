@@ -8,7 +8,6 @@ class CombatEncounter {
     private boolean isPlayerTurn;
     private int drawAmt;
     private final int ENEMY_BASE_X = 200;
-    private final int CARDS_BASE_X = 50;
 
     CombatEncounter(Player thePlayer, ArrayList<Enemy> enemies) {
         battlePlayer = thePlayer;
@@ -109,7 +108,6 @@ class CombatEncounter {
 
     public void drawCombat() {
         int enemyXPos = ENEMY_BASE_X;
-        int cardsXPos = CARDS_BASE_X;
         //image(battlePlayer.getImg(), 50, 100);
 
         for (int i=0; i < currEnemies.size(); i++) {
@@ -118,8 +116,7 @@ class CombatEncounter {
         }
 
         for (int j=0; j < cardHand.size(); j++) {
-            //image(cardHand.get(j).getImg(), cardsXPos, 300);
-            cardsXPos += 50;
+            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y);
         }
     }
 }
