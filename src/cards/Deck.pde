@@ -4,10 +4,14 @@ import java.util.Collections;
 class Deck {
     private ArrayList<Card> deck;
     int deckLimit;
+    private final int CARDS_BASE_X = 50;
+    private CardImgLoader cardImages;
     
     Deck(int limit) {
+        deck = new ArrayList<Card>();
+        cardImages = new CardImgLoader();
         deckLimit = limit;
-        // Todo: add initialization of starting deck here
+        initDeck();
     }
 
     public void shuffle() {
@@ -38,13 +42,17 @@ class Deck {
         }
 
         ArrayList<Card> toRet = new ArrayList<Card>();
-        int toDraw = Math.min(numCards, deck.size());
+        int toDraw = min(numCards, deck.size());
+        int drawX = CARDS_BASE_X;
 
         while (toDraw > 0) {
             Card drawn = deck.get(0);
             deck.remove(0);
+            drawn.setPos(drawX, 300);
+            drawn.setImg(cardImages.getImg(drawn.getName()));
             toRet.add(drawn);
             toDraw--;
+            drawX += 50;
         }
 
         return toRet;
@@ -67,5 +75,13 @@ class Deck {
 
     public boolean isEmpty() {
         return deck.isEmpty();
+    }
+
+    private void initDeck() {
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
+        deck.add(new StrikeCard());
     }
 }
