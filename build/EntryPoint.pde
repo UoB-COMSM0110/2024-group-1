@@ -1,7 +1,10 @@
 GameEngine engine;
 
+void settings() {
+  size(displayWidth, displayHeight-50, P3D);
+}
+
 void setup() {
-  size(1000, 800, P3D);
   engine = new GameEngine();
 }
 
