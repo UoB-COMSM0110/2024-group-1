@@ -41,16 +41,19 @@ class CombatEncounter {
         battlePlayer.triggerEffects(TurnStartTrigger.class, null);
         decayStatuses();
         battlePlayer.refillEnergy();
+
         for (Enemy nme : currEnemies) {
             nme.readyMoves();
         }
+
         isPlayerTurn = true;
         cardHand = drawDeck.drawNCards(drawAmt);
         if (cardHand.size() < drawAmt) {
             drawDeck.setDeck(discardPile);
             drawDeck.shuffle();
             discardPile.clear();
-            cardHand = drawDeck.drawNCards(drawAmt-cardHand.size());
+            ArrayList<Card> extraCards = drawDeck.drawNCards(drawAmt-cardHand.size());
+            cardHand.addAll(extraCards);
         }
     }
 
@@ -58,11 +61,8 @@ class CombatEncounter {
         isPlayerTurn = false;
         activeCard = null;
 
-        for (int i=0; i < cardHand.size(); i++) {
-            Card toDiscard = cardHand.get(i);
-            cardHand.remove(i);
-            discardPile.add(toDiscard);
-        }
+        discardPile.addAll(cardHand);
+        cardHand.clear();
 
         for (Enemy nme : currEnemies) {
             nme.executeMoves();
