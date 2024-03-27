@@ -30,11 +30,12 @@ class EndState extends GameState {
     Shop = loadImage("../assets/endscreen/buttonShop.png");
     Continue = loadImage("../assets/endscreen/buttonContinue.png");
     Setting = loadImage("../assets/endscreen/imageSetting.png");
-    menuButton = new Button(40, height-175, Menu.width, Menu.height, Menu);
-    cardsButton = new Button(215, height-175, Cards.width, Cards.height, Cards);
-    shopButton = new Button(400, height-175, Shop.width, Shop.height, Shop);
-    continueButton = new Button(575, height-175, Continue.width, Continue.height, Continue);
-    settingButton = new Button(width-100, 0, Setting.width, Setting.height, Setting);
+    backgroundImage.resize(displayWidth, displayHeight-50);
+    menuButton = new Button(0, height-400, Menu.width, Menu.height, Menu);
+    cardsButton = new Button(width/2-600, height-400, Cards.width, Cards.height, Cards);
+    shopButton = new Button(width/2+100, height-400, Shop.width, Shop.height, Shop);
+    continueButton = new Button(width-500, height-400, Continue.width, Continue.height, Continue);
+    settingButton = new Button(width-300, 0, Setting.width, Setting.height, Setting);
   }
   
   public void handleMouseInput() {
@@ -77,7 +78,7 @@ class EndState extends GameState {
       cardsButton.drawButton();
       shopButton.drawButton();
       continueButton.drawButton();
-      textSize(48);
+      textSize(64);
       textAlign(CENTER, CENTER);
       if (checkWin) {
         drawWin();
@@ -95,21 +96,21 @@ class EndState extends GameState {
   }
   
   void drawWin() {
-    image(winImage, 245, -30);
-    image(Score, 105, 125); 
+    image(winImage, displayWidth/2-230, -50);
+    image(Score, width/2-350, height/2-250); 
     fill(255, 255, 255);
     textAlign(LEFT, CENTER);
-    text("\nAction Points: ", width/2-190, height/2-30);
-    text("\nWin Bonus: ", width/2-190, height/2+20);
-    text("\nTotal: ", width/2-190, height/2+70);
+    text("\nAction Points: ", width/2-200, height/2-30);
+    text("\nWin Bonus: ", width/2-200, height/2+20);
+    text("\nTotal: ", width/2-200, height/2+70);
     textAlign(RIGHT, CENTER);
-    text("\n"+actionPoints, width/2+205, height/2-30);
-    text("\n"+winBonus, width/2+205, height/2+20);
-    text("\n"+totalPoints, width/2+205, height/2+70);
+    text("\n"+actionPoints, width/2+240, height/2-30);
+    text("\n"+winBonus, width/2+240, height/2+20);
+    text("\n"+totalPoints, width/2+240, height/2+70);
   }
 
   void drawLose() {
-    image(loseImage, 245, -30);
+    image(loseImage, displayWidth/2-230, -50);
     fill(255, 0, 0); // red means failure
     text("\nRemaining Action Points: " + actionPoints, width/2, height/2 -40);
     if (actionPoints < 5) {
