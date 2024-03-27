@@ -193,7 +193,7 @@ class MapState extends GameState {
         pushStyle();
         
         // Set the clipping area to only display a portion of the embedded canvas's content
-        clip(canvasX, canvasY, embeddedCanvasWidth, embeddedCanvasHeight);
+        //clip(canvasX, canvasY, embeddedCanvasWidth, embeddedCanvasHeight);
         
         // Display the corresponding part of the image based on the scroll offset
         image(desertImage, canvasX, canvasY - scrollOffset, embeddedCanvasWidth, desertImage.height);

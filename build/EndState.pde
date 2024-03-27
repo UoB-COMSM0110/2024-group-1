@@ -30,36 +30,31 @@ class EndState extends GameState {
     Shop = loadImage("../assets/endscreen/buttonShop.png");
     Continue = loadImage("../assets/endscreen/buttonContinue.png");
     Setting = loadImage("../assets/endscreen/imageSetting.png");
-    menuButton = new Button(40, height-175, Menu.width, Menu.height);
-    cardsButton = new Button(215, height-175, Cards.width, Cards.height);
-    shopButton = new Button(400, height-175, Shop.width, Shop.height);
-    continueButton = new Button(575, height-175, Continue.width, Continue.height);
-    settingButton = new Button(width-100, 0, Setting.width, Setting.height);
+    menuButton = new Button(40, height-175, Menu.width, Menu.height, Menu);
+    cardsButton = new Button(215, height-175, Cards.width, Cards.height, Cards);
+    shopButton = new Button(400, height-175, Shop.width, Shop.height, Shop);
+    continueButton = new Button(575, height-175, Continue.width, Continue.height, Continue);
+    settingButton = new Button(width-100, 0, Setting.width, Setting.height, Setting);
   }
   
   public void handleMouseInput() {
-    menuButton.update();
-    if (menuButton.overButton(40, height-175, Menu.width, Menu.height) && mousePressed) {
+    if (menuButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to go to start stage
     }
-    cardsButton.update();
-    if (cardsButton.overButton(215, height-175, Cards.width, Cards.height) && mousePressed) {
+    if (cardsButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to go to cards stage
     }
-    shopButton.update();
-    if (shopButton.overButton(400, height-175, Shop.width, Shop.height) && mousePressed) {
+    if (shopButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to go to shop stage
     }
-    continueButton.update();
-    if (continueButton.overButton(575, height-175, Continue.width, Continue.height) && mousePressed) {
+    if (continueButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to back to game
     }
-    settingButton.update();
-    if (settingButton.overButton(width-100, 0, Setting.width, Setting.height) && mousePressed) {
+    if (settingButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to go to setting stage
     }
@@ -77,11 +72,11 @@ class EndState extends GameState {
   public void drawState() {
     if (!pageChange) {
       background(backgroundImage);
-      image(Setting, width-100, 0);
-      image(Menu, 40, height-175);
-      image(Cards, 215, height-175);
-      image(Shop, 400, height-175);
-      image(Continue, 575, height-175);
+      settingButton.drawButton();
+      menuButton.drawButton();
+      cardsButton.drawButton();
+      shopButton.drawButton();
+      continueButton.drawButton();
       textSize(48);
       textAlign(CENTER, CENTER);
       if (checkWin) {

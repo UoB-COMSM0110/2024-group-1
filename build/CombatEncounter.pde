@@ -7,7 +7,11 @@ class CombatEncounter {
     private Card activeCard;
     private boolean isPlayerTurn;
     private int drawAmt;
-    private final int ENEMY_BASE_X = 200;
+    private final int ENEMY_BASE_X = (width/2);
+    private final int ENEMY_BASE_Y = 600;
+    private PImage background;
+    private Button endTurnBtn;
+    private EntityImgLoader entityImgs;
 
     CombatEncounter(Player thePlayer, ArrayList<Enemy> enemies) {
         battlePlayer = thePlayer;
@@ -15,10 +19,19 @@ class CombatEncounter {
         activeCard = null;
         cardHand = new ArrayList<Card>();
         discardPile = new ArrayList<Card>();
+        entityImgs = new EntityImgLoader();
         drawAmt = 5;
+
+        background = loadImage("../assets/combat/battle_background.png");
+        endTurnBtn = new Button(width-300, height-400, 256, 256, loadImage("../assets/combat/turn_end_button.png"));
     }
 
     public void initEncounter() {
+        for (Enemy nme : currEnemies) {
+            nme.setImg(entityImgs.getImg(nme.getName()));
+            nme.setPos(ENEMY_BASE_X, ENEMY_BASE_Y);
+        }
+
         drawDeck = battlePlayer.getDeck();
         drawDeck.shuffle();
         startTurn();
@@ -37,6 +50,7 @@ class CombatEncounter {
             drawDeck.setDeck(discardPile);
             drawDeck.shuffle();
             discardPile.clear();
+            cardHand = drawDeck.drawNCards(drawAmt-cardHand.size());
         }
     }
 
@@ -71,10 +85,14 @@ class CombatEncounter {
         cardHand.remove(toPlay);
         discardPile.add(toPlay);
         battlePlayer.decrementEnergy(toPlay.getEnergyCost());
+        activeCard = null;
     }
 
     public void processMouseInput() {
-        if ((mousePressed == true) && (isPlayerTurn == true)) {
+        if (mousePressed && isPlayerTurn) {
+            if (endTurnBtn.overButton()) {
+                endTurn();
+            }
             if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
                 for (int n=0; n < currEnemies.size(); n++) {
                     Enemy currEnemy = currEnemies.get(n);
@@ -107,16 +125,32 @@ class CombatEncounter {
     }
 
     public void drawCombat() {
-        int enemyXPos = ENEMY_BASE_X;
-        //image(battlePlayer.getImg(), 50, 100);
+        image(background, 0, 0, width, height);
+        drawHUDElements();
 
-        for (int i=0; i < currEnemies.size(); i++) {
-            //image(currEnemies.get(i).getImg(), enemyXPos, 100);
-            enemyXPos += 50;
-        }
+        //image(battlePlayer.getImg(), 50, 100);
+        drawEnemies();
 
         for (int j=0; j < cardHand.size(); j++) {
-            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y);
+            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, 512, 512);
+        }
+    }
+
+    private void drawHUDElements() {
+        String activeCardName = activeCard != null ? activeCard.getName() : "None";
+        textSize(64);
+        text("Active Card: " + activeCardName, 50, 90);
+        text("HP: " + battlePlayer.getCurrHp() + "/" + battlePlayer.getMaxHp(), width-300, 90);
+        text("Energy: " + battlePlayer.getCurrEnergy() + "/" + battlePlayer.getEnergyLim(), width-350, 150);
+        endTurnBtn.drawButton();
+    }
+
+    private void drawEnemies() {
+        textSize(32);
+
+        for (int i=0; i < currEnemies.size(); i++) {
+            image(currEnemies.get(i).getImg(), currEnemies.get(i).getPos().x, currEnemies.get(i).getPos().y);
+            text(currEnemies.get(i).getCurrHp() + "/" + currEnemies.get(i).getMaxHp(), currEnemies.get(i).getPos().x-20, 650);
         }
     }
 }
