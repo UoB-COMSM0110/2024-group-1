@@ -9,7 +9,7 @@ class CombatEncounter {
     private int drawAmt;
     private final int ENEMY_BASE_X = (width/2);
     private final int ENEMY_BASE_Y = 600;
-    private PImage background;
+    private PImage[] encounterImgs;
     private Button endTurnBtn;
     private EntityImgLoader entityImgs;
 
@@ -22,8 +22,12 @@ class CombatEncounter {
         entityImgs = new EntityImgLoader();
         drawAmt = 5;
 
-        background = loadImage("../assets/combat/battle_background.png");
-        endTurnBtn = new Button(width-300, height-400, 256, 256, loadImage("../assets/combat/turn_end_button.png"));
+        encounterImgs = new PImage[4];
+        encounterImgs[0] = loadImage("../assets/combat/battle_background.png");
+        encounterImgs[1] = loadImage("../assets/combat/turn_end_button.png");
+        encounterImgs[2] = loadImage("../assets/combat/attack_icon.png");
+        encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
+        endTurnBtn = new Button(width-300, height-400, 256, 256, encounterImgs[1]);
     }
 
     public void initEncounter() {
@@ -125,7 +129,7 @@ class CombatEncounter {
     }
 
     public void drawCombat() {
-        image(background, 0, 0, width, height);
+        image(encounterImgs[0], 0, 0, width, height);
         drawHUDElements();
 
         //image(battlePlayer.getImg(), 50, 100);
@@ -149,8 +153,22 @@ class CombatEncounter {
         textSize(32);
 
         for (int i=0; i < currEnemies.size(); i++) {
-            image(currEnemies.get(i).getImg(), currEnemies.get(i).getPos().x, currEnemies.get(i).getPos().y);
-            text(currEnemies.get(i).getCurrHp() + "/" + currEnemies.get(i).getMaxHp(), currEnemies.get(i).getPos().x-20, 650);
+            Enemy curr = currEnemies.get(i);
+            image(curr.getImg(), curr.getPos().x, curr.getPos().y);
+            text(curr.getCurrHp() + "/" + curr.getMaxHp(), curr.getPos().x-20, curr.getPos().y+300);
+
+            ArrayList<Move> moves = curr.getMoves();
+            for (int j=0; j < moves.size(); j++) {
+                MoveType type = moves.get(j).getType();
+                switch (type) {
+                    case MOVETYPE_ATTACK:
+                        image(encounterImgs[2], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
+                        break;
+                    case MOVETYPE_DEFENCE:
+                        image(encounterImgs[3], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
+                        break;
+                }
+            }
         }
     }
 }
