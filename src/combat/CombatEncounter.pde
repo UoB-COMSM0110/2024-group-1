@@ -82,7 +82,17 @@ class CombatEncounter {
     }
 
     private void playCard(Card toPlay, Entity target) {
-        toPlay.applyCard(target);
+        battlePlayer.triggerEffects(CardPlayTrigger.class, null);
+        handleSpecialCardEffects(toPlay);
+
+        if (!toPlay.getIfIsAoE()) {
+            toPlay.applyCard(target);
+        } else {
+            for (Enemy nme : currEnemies) {
+                toPlay.applyCard(nme);
+            }
+        }
+
         if ((target instanceof Enemy) && (target.getCurrHp() <= 0)) {
             currEnemies.remove(target);
         }
@@ -122,8 +132,10 @@ class CombatEncounter {
 
     public OutcomeType checkWinLoss() {
         if (currEnemies.isEmpty() == true) {
+            processBattleEnd();
             return OutcomeType.OUTCOME_WIN;
         } else if (battlePlayer.getCurrHp() <= 0) {
+            processBattleEnd();
             return OutcomeType.OUTCOME_LOSS;
         } else return OutcomeType.OUTCOME_UNDECIDED;
     }
@@ -157,18 +169,52 @@ class CombatEncounter {
             image(curr.getImg(), curr.getPos().x, curr.getPos().y);
             text(curr.getCurrHp() + "/" + curr.getMaxHp(), curr.getPos().x-20, curr.getPos().y+300);
 
-            ArrayList<Move> moves = curr.getMoves();
-            for (int j=0; j < moves.size(); j++) {
-                MoveType type = moves.get(j).getType();
-                switch (type) {
-                    case MOVETYPE_ATTACK:
-                        image(encounterImgs[2], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
-                        break;
-                    case MOVETYPE_DEFENCE:
-                        image(encounterImgs[3], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
-                        break;
-                }
+            drawMoveIntentions(curr);
+        }
+    }
+
+    private void drawMoveIntentions(Enemy curr) {
+        ArrayList<Move> moves = curr.getMoves();
+
+        for (int j=0; j < moves.size(); j++) {
+            MoveType type = moves.get(j).getType();
+            switch (type) {
+                case MOVETYPE_ATTACK:
+                    image(encounterImgs[2], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
+
+                    AttackMove casted = (AttackMove)moves.get(j);
+                    int dmg = casted.getDmg();
+                    text(dmg, curr.getPos().x+45, curr.getPos().y+40);
+                    break;
+                case MOVETYPE_DEFENCE:
+                    image(encounterImgs[3], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
+                    break;
+                default:
+                    return;
             }
         }
+    }
+
+    private void handleSpecialCardEffects(Card played) {
+        String cardName = played.getName();
+
+        switch (cardName) {
+            case "Anger":
+                discardPile.add(new AngerCard());
+                break;
+            case "Blizzard":
+                ((BlizzardCard) played).setDmgAmt(currEnemies.size()*2);
+                break;
+            default:
+                return;
+        }
+    }
+
+    private void processBattleEnd() {
+        discardPile.addAll(cardHand);
+        cardHand.clear();
+        drawDeck.getDeck().addAll(discardPile);
+        battlePlayer.setDeck(drawDeck);
+        battlePlayer.clearAllEffects();
     }
 }

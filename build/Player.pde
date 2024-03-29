@@ -19,6 +19,10 @@ class Player extends Entity {
         return cardDeck;
     }
 
+    public void setDeck(Deck newDeck) {
+        cardDeck = newDeck;
+    }
+
     public int getCurrEnergy() {
         return currEnergy;
     }
