@@ -1,26 +1,28 @@
 class Node {
+    int id;
+    int[] connectedIds;
+    boolean clickable;
     PVector position; 
-    float radius; 
-    boolean isMouseOver; 
-    protected Player passedPlayer;
+    String level;
 
-    public Node(float x, float y, float radius, Player passedPlayer) {
-        this.position = new PVector(x, y);
-        this.radius = radius;
-        this.isMouseOver = false;
-        this.passedPlayer = passedPlayer;
+    public Node(int id, int[] connectedIds, boolean clickable, PVector position, int x, int y, String level) {
+        this.id = id;
+        this.connectedIds = connectedIds;
+        this.clickable = clickable;
+        this.position = new PVector(x,y);
+        this.level = level;
     }
 
-    void display() {
-        fill(0, 47, 167); 
-        noStroke(); 
-        ellipse(position.x, position.y, radius*2, radius*2);
+    public void display() {
+        // Default display for unknown type node
+        fill(255); // White
+        ellipse(position.x, position.y, 20, 20); 
     }
 
-    boolean isMouseOver(float scrollOffset) {
-        float distance = dist(mouseX, mouseY + scrollOffset, position.x, position.y);
-        return distance < radius;
+    public boolean isMouseOver(float mouseX, float mouseY) {
+        float distance = PVector.dist(new PVector(mouseX, mouseY), this.position);
+        return distance < 20; 
     }
-
 }
+
 

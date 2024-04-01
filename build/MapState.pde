@@ -1,132 +1,97 @@
 class MapState extends GameState {
+    Button backButton,tutorialButton,entranceButton;
+    Node[] nodes; 
+    MapLoader mapLoader;
+
     GameEngine engineRef;
     private Player passedPlayer;
-    private float scrollOffset = 0;//Scroll offset used to control map display part
-    PGraphics nodeLayer;// Used to store static node visual element
-    PImage desertImage;//Used to generate a nice background image of map
-    ArrayList<ArrayList<CombatNode>> nodesByRow = new ArrayList<ArrayList<CombatNode>>(); //Store the position of each node
-    MapButton[] buttons;
-    private boolean displayTextBox = false;
-    int embeddedCanvasWidth = 500;// The visible dimensions of the embedded canvas
-    int embeddedCanvasHeight = 650;// The visible dimensions of the embedded canvas
-    int contentHeight = 1200;// The content height of the embedded canvas is taller than its actual height, allowing for scrolling
 
+    private float scrollOffset = 0;//Scroll offset used to control map display part
+    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon;//Used to generate a nice background image of map
+    
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
         passedPlayer = thePlayer;
         setupState();
-        // drawNode();
         drawState();
     }
 
     public void setupState() {
-        // Initialize Button
-            buttons = new MapButton[3];
-            buttons[0] = new MapButton(50, 50, 100, 50, "Back");
-            buttons[1] = new MapButton(50, 150, 100, 50, "Start Menu");
-            buttons[2] = new MapButton(50, 250, 100, 50, "Tutorial");
-  
+
         // Initialize Material
+        backImage = loadImage("../assets/map/backButton.png");
+        tutorialImage = loadImage("../assets/map/tutorialButton.png");
+        entranceImage = loadImage("../assets/map/enterButton.png");
         desertImage = loadImage("../assets/map/MapBackground.jpg"); 
-        nodesByRow = new ArrayList<ArrayList<CombatNode>>();
-        nodeLayer = createGraphics(width, height);
-        createNode();
-        drawNodesOnce(); 
-    }
+        combatIcon = loadImage("../assets/map/combatIcon.png");
+        combatIcon.resize(45,0);
+        shopIcon = loadImage("../assets/map/shopIcon.png");
+        shopIcon.resize(45,0);
 
-    void createNode(){
-        nodesByRow.clear();
-        float minDistance = 30; 
-        float diameter = 30;
-        for (int i = 5; i > 0; i--) {
-            ArrayList<CombatNode> row = new ArrayList<CombatNode>();
-            int circlesInRow = (int)random(1, 5);
-            float sectionWidth = (embeddedCanvasWidth - (circlesInRow + 1) * minDistance) / circlesInRow;
-            for (int j = 0; j < circlesInRow; j++) {
-                float xStart = minDistance + j * (sectionWidth + minDistance);
-                float x = random(xStart, xStart + sectionWidth);
-                float y = i * (contentHeight / 7.0) + (contentHeight / 7.0) / 2;
-                CombatNode node = new CombatNode(x, y, diameter / 2, passedPlayer);
-                row.add(node);
-            }
-            nodesByRow.add(row);
-        }
-        // Top row
-        ArrayList<CombatNode> topRow = new ArrayList<CombatNode>();
-        float topX = embeddedCanvasWidth / 2.0;
-        float topY = contentHeight / 14.0; 
-        CombatNode topNode = new CombatNode(topX, topY, diameter / 2, passedPlayer);
-        topRow.add(topNode);
-        nodesByRow.add(0, topRow); 
-        // bottom row
-        ArrayList<CombatNode> bottomRow = new ArrayList<CombatNode>();
-        int circlesAtBottom = 3; // Three nodes in the bottom row 
-        float bottomSectionWidth = embeddedCanvasWidth / (circlesAtBottom + 1);
-        for (int i = 1; i <= circlesAtBottom; i++) {
-            float x = i * bottomSectionWidth;
-            float y = 6 * (contentHeight / 7.0) + (contentHeight / 7.0) / 2; // 使用相似的逻辑来定位底部节点
-            CombatNode bottomNode = new CombatNode(x, y, diameter / 2, passedPlayer);
-            bottomRow.add(bottomNode);
-        }
-        nodesByRow.add(bottomRow); 
+        // Initialize universal Button
+        backButton = new Button(100, 50,230,60,backImage);
+        tutorialButton = new Button(100, 150, 230, 60, tutorialImage);
+        entranceButton = new Button(100, 250, 230, 60, entranceImage);
 
-    }
-
-    void drawNodesOnce() {
-        nodeLayer.beginDraw();
-        nodeLayer.clear(); 
-        for (ArrayList<CombatNode> row : nodesByRow) {
-            for (CombatNode node : row) {
-                nodeLayer.fill(0, 47, 167); 
-                nodeLayer.noStroke(); 
-                nodeLayer.ellipse(node.position.x, node.position.y, node.radius*2, node.radius*2);
-            }
-        }
-        nodeLayer.endDraw();
+        // Initialize map from json map loader
+        MapLoader mapLoader = new MapLoader(); // 假设这里不需要参数的构造函数或已经提供了一个空构造函数
+        String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
+        String jsonString = join(jsonLines, "");
+        mapLoader.loadNodesFromJSON(jsonString); // 从JSON字符串加载节点
+        nodes = mapLoader.loadNodes(); // 创建Node数组
     }
 
     public void handleMouseInput() {
-        //mouseClick on buttons
-        for (int i = 0; i < buttons.length; i++) {
-            if (buttons[i].isMouseOver()) {
-                println("Button " + (i + 1) + " clicked: " + buttons[i].label);
-                if (buttons[i].label.equals("Tutorial")) {
-                    displayTextBox = !displayTextBox; // Change the state
-                    break; // Don't check another operation
-                }
+
+        /* change game state to MENU_STATE */
+        if (backButton.overButton() && mousePressed){
+            background(240, 210, 200); /* for test */
+            MenuState menuState = new MenuState(engineRef, passedPlayer);
+            engineRef.changeState(menuState);
+        }
+
+        /* change game state to COMBAT_STATE */
+        if (entranceButton.overButton() && mousePressed){
+            ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
+            Worm worm = new Worm(passedPlayer);
+            enemies.add(worm);
+            CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+            engineRef.changeState(combatState);
+        }
+
+        /* basic interactive function for combat node*/
+        for (Node node : nodes) {
+            if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
+                goToCombat();
+                break; // 假设一次只能点击一个节点
             }
         }
 
-        //mouseClick on nodes
-        for (ArrayList<CombatNode> row : nodesByRow) {
-            for (CombatNode node : row) {
-                if (node.isMouseOver(scrollOffset)) {
-                    if(node instanceof CombatNode){
-                        ArrayList<Enemy> nextEnemy = node.getNextEnemy();
-                        CombatState newCombat = new CombatState(engineRef,passedPlayer,nextEnemy);
-                        engineRef.changeState(newCombat);
-                    }
-                    return; 
+        /* change game state to COMBAT_STATE or SHOP_STATE*/
+        /*test
+               for(){
+            if(node.isMouseOver(mouseX,mouseY)){
+                if(node instanceof CombatNode){
+                    ArrayList<Enemy> nextEnemy = node.getNextEnemy();
+                    CombatState newCombat = new CombatState(engineRef,passedPlayer,nextEnemy);
+                    engineRef.changeState(newCombat);
+                }else if (node instanceof ShopNode) {
+                    ShopState newShop = new ShopState(engineRef,passedPlayer);
+                    engineRef.changeState(newShop);
                 }
             }
         }
+        test*/        
     }
 
     public void handleMouseWheel(MouseEvent e){
-        float event = e.getCount();
-        scrollOffset += event*20; // Move 20 pixels each scrolling
-        scrollOffset = constrain(scrollOffset, 0, contentHeight - embeddedCanvasHeight);
+        //float event = e.getCount();
+        //scrollOffset += event*20; // Move 20 pixels each scrolling
+        //scrollOffset = constrain(scrollOffset, 0, contentHeight - embeddedCanvasHeight);
     }
 
     public void handleKeyInput() {
-        if (key == CODED) {
-            if (keyCode == UP) {
-                scrollOffset -= 20;
-            } else if (keyCode == DOWN) {
-                scrollOffset += 20;
-            }
-            scrollOffset = constrain(scrollOffset, 0, contentHeight - embeddedCanvasHeight);
-        }
+
     }
 
     public void updateState() {}
@@ -136,42 +101,70 @@ class MapState extends GameState {
     public void resumeState() {}
 
     public void drawState() {
-        background(0);
+        image(desertImage,0,0,width,height);
+
         // Draw Button
-            for (int i = 0; i < buttons.length; i++) {
-                buttons[i].display();
-            }
+            backButton.drawButton();
+            tutorialButton.drawButton();
+            entranceButton.drawButton();
   
         // Draw Status Information
             drawStatusInfo();
  
         // Draw Map
-            drawEmbeddedCanvas();
-            image(nodeLayer, 0, 0); 
+            for (Node node : nodes) {
+                if(node instanceof CombatNode){
+                    ((CombatNode)node).display(combatIcon);
+                }else{
+                    node.display(); 
+                }
+                // Draw connections
+                for (int connectedId : node.connectedIds) {
+                    Node connectedNode = findNodeById(connectedId);
+                    if (connectedNode != null) {
+                        line(node.position.x, node.position.y, connectedNode.position.x, connectedNode.position.y);
+                    }
+                }
+            }
+
+        // Draw connection line
+            
   
         // If Tutorial button clicked show text 
-            if (displayTextBox) {
-            drawTextBox();
-        }
+            //if (displayTextBox) {
+            //    drawTextBox();
+            //}
     }
 
     private void drawStatusInfo() {
         // Draw Health Point
             fill(255, 0, 0);
-            ellipse(870, 50, 30, 30); // Red shape
+            ellipse(1670, 50, 30, 30); // Red shape
             fill(255);
             textSize(12);
             textAlign(RIGHT, CENTER);
             int currHP = passedPlayer.getCurrHp();
             int maxHP = passedPlayer.getMaxHp();
-            text("HP "+currHP+"/"+maxHP, 850, 50); // HP value info
+            text("HP "+currHP+"/"+maxHP, 1650, 50); // HP value info
   
         // Draw Action Point
             fill(0, 255, 0);
-            ellipse(870, 90, 30, 30); // Green shape
+            ellipse(1670, 90, 30, 30); // Green shape
             fill(255);
             int currAP = passedPlayer.getActionPts();
-            text("MP "+currAP, 850, 90); // MP value info
+            /*Optimize visual effect*/
+            if(currAP <= 99999 && currAP >=10000){
+                text("AP     "+currAP, 1650, 90); // MP value info
+            }else if(currAP >= 1000 && currAP <= 9999){
+                text("AP       "+currAP, 1650, 90); // MP value info
+            }else if(currAP >= 100 && currAP <= 999){
+                text("AP         "+currAP, 1650, 90); // MP value info
+            }else if(currAP >= 10 && currAP <= 99){
+                text("AP           "+currAP, 1650, 90); // MP value info
+            }else if(currAP >= 0 && currAP <= 9){
+                text("AP             "+currAP, 1650, 90); // MP value info
+            }
+            //text("AP "+currAP, 1650, 90); // MP value info
     }
 
     private void drawTextBox() {
@@ -183,24 +176,24 @@ class MapState extends GameState {
         text(textContent, 325, 300, 300, 100); 
     }
 
-    private void drawEmbeddedCanvas() {
-        // Set the visible range of the embedded canvas based on the scroll offset
-        int canvasX = width/2 - embeddedCanvasWidth/2;
-        int canvasY = height/2 - embeddedCanvasHeight/2;
-            
-        // Save the current drawing state
-        pushMatrix();
-        pushStyle();
-        
-        // Set the clipping area to only display a portion of the embedded canvas's content
-        //clip(canvasX, canvasY, embeddedCanvasWidth, embeddedCanvasHeight);
-        
-        // Display the corresponding part of the image based on the scroll offset
-        image(desertImage, canvasX, canvasY - scrollOffset, embeddedCanvasWidth, desertImage.height);
-        // fix the visible nodeLayer' position according to the scrolling offset
-        image(nodeLayer, canvasX, canvasY - scrollOffset);
-        // Restore the previous drawing state
-        popStyle();
-        popMatrix();
+    private void drawMap(){}
+
+    // Utility method to find a node by its ID
+    private Node findNodeById(int id) {
+        for (Node n : nodes) {
+            if (n.id == id) {
+                return n;
+            }
+        }
+        return null;
     }
+
+    private void goToCombat() {
+        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+        Worm worm = new Worm(passedPlayer);
+        enemies.add(worm);
+        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+        engineRef.changeState(combatState);
+    }
+
 }
