@@ -141,7 +141,7 @@ class MapState extends GameState {
             fill(255, 0, 0);
             ellipse(1670, 50, 30, 30); // Red shape
             fill(255);
-            textSize(12);
+            textSize(64);
             textAlign(RIGHT, CENTER);
             int currHP = passedPlayer.getCurrHp();
             int maxHP = passedPlayer.getMaxHp();

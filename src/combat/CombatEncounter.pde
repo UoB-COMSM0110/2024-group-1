@@ -106,26 +106,26 @@ class CombatEncounter {
         if (mousePressed && isPlayerTurn) {
             if (endTurnBtn.overButton()) {
                 endTurn();
-            }
-            if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
+                activeCard = null;
+            } else if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
                 for (int n=0; n < currEnemies.size(); n++) {
                     Enemy currEnemy = currEnemies.get(n);
                     if (currEnemy.isMousedOver() == true) {
                         playCard(activeCard, currEnemy);
                     }
                 }
-            }
-
-            for (int i=0; i < cardHand.size(); i++) {
-                Card currCard = cardHand.get(i);
-                if (currCard.isMousedOver() == true) {
-                    if (currCard.getEnergyCost() <= battlePlayer.getCurrEnergy()) {
-                        activeCard = currCard;
+            } else {
+                for (int i=0; i < cardHand.size(); i++) {
+                    Card currCard = cardHand.get(i);
+                    if (currCard.isMousedOver() == true) {
+                        if (currCard.getEnergyCost() <= battlePlayer.getCurrEnergy()) {
+                            activeCard = currCard;
+                        }
                     }
+                }   
+                if (activeCard != null && (activeCard.getIfTakesTarget() == false)) {
+                    playCard(activeCard, battlePlayer);
                 }
-            }
-            if (activeCard != null && (activeCard.getIfTakesTarget() == false)) {
-                playCard(activeCard, battlePlayer);
             }
         }
     }
@@ -154,6 +154,7 @@ class CombatEncounter {
 
     private void drawHUDElements() {
         String activeCardName = activeCard != null ? activeCard.getName() : "None";
+        textAlign(LEFT, BASELINE);
         textSize(64);
         text("Active Card: " + activeCardName, 50, 90);
         text("HP: " + battlePlayer.getCurrHp() + "/" + battlePlayer.getMaxHp(), width-300, 90);
@@ -166,8 +167,8 @@ class CombatEncounter {
 
         for (int i=0; i < currEnemies.size(); i++) {
             Enemy curr = currEnemies.get(i);
-            image(curr.getImg(), curr.getPos().x, curr.getPos().y);
-            text(curr.getCurrHp() + "/" + curr.getMaxHp(), curr.getPos().x-20, curr.getPos().y+300);
+            image(curr.getImg(), curr.getPos().x, curr.getPos().y, 360, 360);
+            text(curr.getCurrHp() + "/" + curr.getMaxHp(), curr.getPos().x+80, curr.getPos().y+300);
 
             drawMoveIntentions(curr);
         }
@@ -180,14 +181,14 @@ class CombatEncounter {
             MoveType type = moves.get(j).getType();
             switch (type) {
                 case MOVETYPE_ATTACK:
-                    image(encounterImgs[2], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
+                    image(encounterImgs[2], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
 
                     AttackMove casted = (AttackMove)moves.get(j);
                     int dmg = casted.getDmg();
-                    text(dmg, curr.getPos().x+45, curr.getPos().y+40);
+                    text(dmg, curr.getPos().x+85, curr.getPos().y+40);
                     break;
                 case MOVETYPE_DEFENCE:
-                    image(encounterImgs[3], curr.getPos().x+50, curr.getPos().y-50, 85, 85);
+                    image(encounterImgs[3], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
                     break;
                 default:
                     return;

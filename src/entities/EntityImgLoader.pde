@@ -5,7 +5,7 @@ class EntityImgLoader {
 
     EntityImgLoader() {
         entityImgs = new HashMap<String, PImage>();
-        entityImgs.put("Worm", loadImage("../assets/entities/placeholderworm.png"));
+        entityImgs.put("Worm", loadImage("../assets/entities/worm.png"));
     }
 
     public PImage getImg(String entityName) {
