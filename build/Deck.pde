@@ -84,5 +84,10 @@ class Deck {
         deck.add(new StrikeCard());
         deck.add(new StrikeCard());
         deck.add(new StrikeCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
     }
 }
