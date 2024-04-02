@@ -22,12 +22,13 @@ class CombatEncounter {
         entityImgs = new EntityImgLoader();
         drawAmt = 5;
 
-        encounterImgs = new PImage[5];
+        encounterImgs = new PImage[6];
         encounterImgs[0] = loadImage("../assets/combat/battle_background.png");
         encounterImgs[1] = loadImage("../assets/combat/turn_end_button.png");
         encounterImgs[2] = loadImage("../assets/combat/attack_icon.png");
         encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
         encounterImgs[4] = loadImage("../assets/combat/poison_icon.png");
+        encounterImgs[5] = loadImage("../assets/combat/attack_buff_icon.png");
         endTurnBtn = new Button(width-300, height-400, 256, 256, encounterImgs[1]);
     }
 
@@ -189,11 +190,24 @@ class CombatEncounter {
                 case MOVETYPE_DEFENCE:
                     image(encounterImgs[3], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
                     break;
-                case MOVETYPE_POISON:
-                    image(encounterImgs[4], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
+                case MOVETYPE_STRATEGY:
+                    List<StatusEffect> effects = ((StatusEffectMove) moves.get(j)).getEffects();
+                    drawStrategyIntentions(curr, effects);
                     break;
                 default:
                     return;
+            }
+        }
+    }
+
+    private void drawStrategyIntentions(Enemy currEnemy, List<StatusEffect> fxList) {
+        for (int n=0; n < fxList.size(); n++) {
+            StatusEffect currEffect = fxList.get(n);
+
+            if (currEffect instanceof Poison) {
+                image(encounterImgs[4], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
+            } else if (currEffect instanceof AttackBoost) {
+                image(encounterImgs[5], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
             }
         }
     }

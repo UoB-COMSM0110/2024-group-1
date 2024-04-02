@@ -2,7 +2,7 @@ class StatusEffectMove extends Move {
     private List<StatusEffect> statusEffects;
 
     StatusEffectMove(Entity attacker, Entity target, List<StatusEffect> effects) {
-        super(attacker, target, MoveType.MOVETYPE_POISON);
+        super(attacker, target, MoveType.MOVETYPE_STRATEGY);
         statusEffects = effects;
     }
 
@@ -10,5 +10,9 @@ class StatusEffectMove extends Move {
         for (StatusEffect effect : statusEffects) {
             target.appendStatusEffect(effect);
         }
+    }
+
+    public List<StatusEffect> getEffects() {
+        return statusEffects;
     }
 }
