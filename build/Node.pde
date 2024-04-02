@@ -24,5 +24,3 @@ class Node {
         return distance < 20; 
     }
 }
-
-

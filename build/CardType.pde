@@ -1,5 +1,5 @@
 public enum CardType {
     CARDTYPE_ATTACK,
-    CARDTYPE_DEFENCE,
+    CARDTYPE_DEFENSE,
     CARDTYPE_STRATEGY
 }

@@ -12,4 +12,3 @@ class CombatNode extends Node {
         image(combatIcon, imageX, imageY);
     }
 }
-

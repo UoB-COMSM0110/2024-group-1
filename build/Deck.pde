@@ -77,6 +77,10 @@ class Deck {
     public boolean isEmpty() {
         return deck.isEmpty();
     }
+    
+    public boolean isFull() {
+      return deck.size() == deckLimit;
+    }
 
     private void initDeck() {
         deck.add(new StrikeCard());
