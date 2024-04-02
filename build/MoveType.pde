@@ -1,4 +1,5 @@
 public enum MoveType {
     MOVETYPE_ATTACK,
-    MOVETYPE_DEFENCE
+    MOVETYPE_DEFENCE,
+    MOVETYPE_POISON
 }

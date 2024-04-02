@@ -22,11 +22,12 @@ class CombatEncounter {
         entityImgs = new EntityImgLoader();
         drawAmt = 5;
 
-        encounterImgs = new PImage[4];
+        encounterImgs = new PImage[5];
         encounterImgs[0] = loadImage("../assets/combat/battle_background.png");
         encounterImgs[1] = loadImage("../assets/combat/turn_end_button.png");
         encounterImgs[2] = loadImage("../assets/combat/attack_icon.png");
         encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
+        encounterImgs[4] = loadImage("../assets/combat/poison_icon.png");
         endTurnBtn = new Button(width-300, height-400, 256, 256, encounterImgs[1]);
     }
 
@@ -51,14 +52,7 @@ class CombatEncounter {
         }
 
         isPlayerTurn = true;
-        cardHand = drawDeck.drawNCards(drawAmt);
-        if (cardHand.size() < drawAmt) {
-            drawDeck.setDeck(discardPile);
-            drawDeck.shuffle();
-            discardPile.clear();
-            ArrayList<Card> extraCards = drawDeck.drawNCards(drawAmt-cardHand.size());
-            cardHand.addAll(extraCards);
-        }
+        handleCardDraw(drawAmt);
     }
 
     private void endTurn() {
@@ -153,6 +147,7 @@ class CombatEncounter {
     }
 
     private void drawHUDElements() {
+        fill(255);
         String activeCardName = activeCard != null ? activeCard.getName() : "None";
         textAlign(LEFT, BASELINE);
         textSize(64);
@@ -169,6 +164,10 @@ class CombatEncounter {
             Enemy curr = currEnemies.get(i);
             image(curr.getImg(), curr.getPos().x, curr.getPos().y, 360, 360);
             text(curr.getCurrHp() + "/" + curr.getMaxHp(), curr.getPos().x+80, curr.getPos().y+300);
+            fill(250, 172, 15);
+            rect(curr.getPos().x+80, curr.getPos().y+350, 200, 20, 30);
+            fill(161, 18, 18);
+            rect(curr.getPos().x+80, curr.getPos().y+350, 200*((float)curr.getCurrHp()/(float)curr.getMaxHp()), 20, 30);
 
             drawMoveIntentions(curr);
         }
@@ -176,7 +175,7 @@ class CombatEncounter {
 
     private void drawMoveIntentions(Enemy curr) {
         ArrayList<Move> moves = curr.getMoves();
-
+        fill(255);
         for (int j=0; j < moves.size(); j++) {
             MoveType type = moves.get(j).getType();
             switch (type) {
@@ -190,9 +189,23 @@ class CombatEncounter {
                 case MOVETYPE_DEFENCE:
                     image(encounterImgs[3], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
                     break;
+                case MOVETYPE_POISON:
+                    image(encounterImgs[4], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
+                    break;
                 default:
                     return;
             }
+        }
+    }
+
+    private void handleCardDraw(int numCards) {
+        cardHand = drawDeck.drawNCards(numCards);
+        if (cardHand.size() < numCards) {
+            drawDeck.setDeck(discardPile);
+            drawDeck.shuffle();
+            discardPile.clear();
+            ArrayList<Card> extraCards = drawDeck.drawNCards(numCards-cardHand.size());
+            cardHand.addAll(extraCards);
         }
     }
 
