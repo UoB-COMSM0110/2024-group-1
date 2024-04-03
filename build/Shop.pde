@@ -13,35 +13,30 @@
 
 
 public class Shop extends GameState {
-  PImage shopBackground,startImage;
-  Button startButton;
+  private PImage shopBackground;
+  private PImage backImage;
+  private Button backButton;
 
-    private static final String FILE_PATH = "shop.csv"; //file path of shop data file
-    private final ArrayList<Item> items; //items available in the shop
+  //private static final String FILE_PATH = "shop.csv"; //file path of shop data file
+  private final ArrayList<Card> items; //items available in the shop
     
     
-      GameEngine engineRef; //passing in game engine and player? 
-    private Player passedPlayer;
+  GameEngine engineRef; //passing in game engine and player? 
+  private Player passedPlayer;
     
     
-    Shop(GameEngine engine, Player thePlayer) { //check this 
-        this.items = new ArrayList<>(); //initialise items 
-        initItems(); //read item data from csv 
+    Shop(GameEngine engine, Player thePlayer, ArrayList<Card> cards) { //check this 
+        this.items = cards;
+         
         //add in game engine and player 
         engineRef = engine;
         passedPlayer = thePlayer;
-        //pass in set up state? 
-        
-    }
-    
-    private void initItems() {
-      items.add(new Item(new AngerCard(), 20, true)); 
-      items.add(new Item(new BashCard(), 20, true)); 
-      items.add(new Item(new PoisonCard(), 20, true)); 
-      items.add(new Item(new AngerCard(), 20, true)); 
+       
+        setupState();
+        drawState();        
     }
 
-    private ArrayList<Item> getItems() {
+    private ArrayList<Card> getItems() {
         return items; //access to items array list 
     }
 
@@ -86,7 +81,7 @@ public class Shop extends GameState {
 */
     private Card buyCard(Player player, int index) { //player purchase card from shop at specific index
         try {
-            Item item;
+            Card item;
 
             try {
                 item = items.get(index);
@@ -94,44 +89,69 @@ public class Shop extends GameState {
                 throw new IndexOutOfBoundsException("Item not found");
             }
 
-            Card card = item.buy(player); //item available -> buy
+            item.buy(player); //item available -> buy
 
-            items.remove(index);
+            items.remove(index); 
 
-            return card;
-        } catch (DeckFullException | ItemNotAvailable | NotEnoughGoldException | IndexOutOfBoundsException e) {
+            return item;
+        } catch (DeckFullException | NotEnoughGoldException | IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
    
   public void setupState(){
-    shopBackground = loadImage("../assets/main/shopBackground.png");
-    startImage = loadImage("../assets/map/back.png");
-
-    startButton = new Button(600, 300, 230, 60, startImage);
+    shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
+    backImage = loadImage("../assets/shop/backButton.png");
+    
+    backButton = new Button(215, 720, 230, 60, backImage);
+//    prevButton = new Button(320, 720, 230, 60, prevImage);
+//    nextButton = new Button(880, 720, 230, 60, nextImage);
+//    purchaseButton = new Button(600, 720, 230, 60, purchaseImage);
 
   } //loading in the images 
   
 
-public void pauseState(){}
+  public void pauseState(){}
   public void resumeState(){}
   public void updateState(){}
   public void handleMouseWheel(MouseEvent e) {}
   
   public void drawState(){
-  image(startImage, 600, 300, 230, 60);  
-  image(shopBackground, 0, 0, width, height); 
+    image(shopBackground, 0, 0, width, height);
+    image(backImage, 50, height - 80, 230, 60);  
+    
+    int gap = 30;
+    int cardWidth = (width - (10 * gap)) / 5;
+    int cardHeight = (height - (80 + 3 * gap)) / 2;
+    int x = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
+    int y = ((height - 80)/ 2) - cardHeight - (gap / 2);
+    
+    textSize(40);
+    textAlign(CENTER);
+    
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < Math.min(5, items.size() - (i * 5)); j++) {
+        Card card = items.get(i * 5 + j);
+        int posX = x + (cardWidth + gap) * j;
+        int posY = y + (cardHeight + gap) * i;
+        image(card.getImg(), posX, posY, cardWidth, cardHeight);
+        text(card.getShopCost() + "£", posX + cardWidth / 2, posY + cardHeight + gap / 5);
+      }
+    }
+    
+    textSize(60);
+    textAlign(RIGHT);
+     text(passedPlayer.getGoldInHand() + "£", width - 50, height - 80);
   } //editing the images 
   
   
-  public void handleMouseInput(){  /* change game state to MAP_STATE */
-        startButton.update();
-        if (startButton.overButton(600, 300, 230, 60) && mousePressed){
-            background(240, 210, 200); /* for test */
-            //MapState mapState = new MapState();
-            //GameState.changeState(engineRef, mapState);
-        }
-} //add in button for map state here //check 
+  public void handleMouseInput() {  /* change game state to MAP_STATE */
+    if (backButton.overButton() && mousePressed) {
+      background(240, 210, 200); /* for test */
+      MapState mapState = new MapState(engineRef, passedPlayer);
+      engineRef.changeState(mapState);
+    }
+  } //add in button for map state here //check 
   public void handleKeyInput(){}
 }

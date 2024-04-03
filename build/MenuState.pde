@@ -53,7 +53,15 @@ class MenuState extends GameState {
   
         /* change to shop interface */
         if (shopButton.overButton() && mousePressed){
+          ArrayList<Card> cards = new ArrayList<>();
+          cards.add(new AngerCard());
+          cards.add(new PoisonCard());
+          cards.add(new StrikeCard());
+          cards.add(new AngerCard());
+          cards.add(new BashCard());
+          cards.add(new StrikeCard());
             background(200, 300, 250);  // for test
+            engineRef.changeState(new Shop(engineRef, passedPlayer, cards));
         }
     }
 

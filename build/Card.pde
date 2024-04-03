@@ -13,6 +13,8 @@ abstract class Card {
         this.energyCost = energyCost;
         this.shopCost = shopCost;
         takesTarget = needsTarget;
+        CardImgLoader cIL = new CardImgLoader();
+        this.img = cIL.getImg(name);
     }
 
     abstract public void applyCard(Entity target);
@@ -74,6 +76,19 @@ abstract class Card {
 
         img = toSet;
         return true;
+    }
+    
+    
+    public void buy(Player player) throws NotEnoughGoldException, DeckFullException {
+        if (player.getGoldOnHand() < shopCost) {
+            throw new NotEnoughGoldException();
+        }
+
+        if (player.getDeck().isFull()) {
+            throw new DeckFullException();
+        }
+
+        player.decrementGold(shopCost); //if passes decrement gold by item cost 
     }
 
     public boolean isMousedOver() {

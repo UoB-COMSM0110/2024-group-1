@@ -55,9 +55,8 @@ class MapState extends GameState {
             ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
             Worm worm = new Worm(passedPlayer);
             enemies.add(worm);
-            engineRef.changeState(new Shop (engineRef, passedPlayer));
-            //CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-            //engineRef.changeState(combatState);
+            CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+            engineRef.changeState(combatState);
             
          /*change game state to Shop_state */
          
