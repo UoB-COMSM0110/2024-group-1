@@ -53,7 +53,14 @@ class CombatEncounter {
         }
 
         isPlayerTurn = true;
-        handleCardDraw(drawAmt);
+        cardHand = drawDeck.drawNCards(drawAmt);
+        if (cardHand.size() < drawAmt) {
+            drawDeck.setDeck(discardPile);
+            drawDeck.shuffle();
+            discardPile.clear();
+            ArrayList<Card> extraCards = drawDeck.drawNCards(drawAmt-cardHand.size());
+            cardHand.addAll(extraCards);
+        }
     }
 
     private void endTurn() {
@@ -232,6 +239,38 @@ class CombatEncounter {
                 break;
             case "Blizzard":
                 ((BlizzardCard) played).setDmgAmt(currEnemies.size()*2);
+                break;
+            case "Bodyslam":
+                ArrayList<StatusEffect> activeFx = battlePlayer.getActiveEffects();
+                int defendAmt = 0;
+                for (StatusEffect effect : activeFx) {
+                    if (effect instanceof Defend) {
+                        defendAmt = effect.getLifeCounter();
+                    }
+                }
+                ((BodyslamCard) played).setDmgAmt(defendAmt);
+                break;
+            case "Hemokinesis":
+                battlePlayer.takeDamage(2);
+                break;
+            case "Iron Wave":
+                battlePlayer.appendStatusEffect(new Defend(5));
+                break;
+            case "Shrug It Off":
+                Card drawn = drawDeck.drawSingleCard();
+                if (drawn == null) {
+                    drawDeck.getDeck().addAll(discardPile);
+                    discardPile.clear();
+                    drawn = drawDeck.drawSingleCard();
+                }
+                cardHand.add(drawn);
+                break;
+            case "Headbutt":
+                int randIdx = CombatUtility.pickRandomIdxFromDiscard(discardPile);
+                if (randIdx == -1) return;
+                Card randDrawn = discardPile.get(randIdx);
+                discardPile.remove(randIdx);
+                drawDeck.getDeck().add(0, randDrawn);
                 break;
             default:
                 return;

@@ -1,3 +1,5 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 public static class CombatUtility {
 
     public static int pickIndex(double[] arr) {
@@ -12,5 +14,10 @@ public static class CombatUtility {
         }
 
         return arr.length-1;
+    }
+
+    public static int pickRandomIdxFromDiscard(ArrayList<Card> discardPile) {
+        if (discardPile.isEmpty()) return -1;
+        return ThreadLocalRandom.current().nextInt(0, discardPile.size()+1);
     }
 }
