@@ -60,8 +60,11 @@ class MenuState extends GameState {
           cards.add(new AngerCard());
           cards.add(new BashCard());
           cards.add(new StrikeCard());
-            background(200, 300, 250);  // for test
-            engineRef.changeState(new Shop(engineRef, passedPlayer, cards));
+          cards.add(new StrikeCard());
+          cards.add(new AngerCard());
+          cards.add(new BashCard());
+          cards.add(new StrikeCard());
+          engineRef.changeState(new Shop(engineRef, passedPlayer, cards));
         }
     }
 

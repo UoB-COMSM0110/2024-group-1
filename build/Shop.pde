@@ -19,11 +19,13 @@ public class Shop extends GameState {
 
   //private static final String FILE_PATH = "shop.csv"; //file path of shop data file
   private final ArrayList<Card> items; //items available in the shop
-    
+  private final int gap, cardWidth, cardHeight, divX, divY;
     
   GameEngine engineRef; //passing in game engine and player? 
   private Player passedPlayer;
     
+  private boolean showAlert;
+  private String alertMessage = "";
     
     Shop(GameEngine engine, Player thePlayer, ArrayList<Card> cards) { //check this 
         this.items = cards;
@@ -31,6 +33,12 @@ public class Shop extends GameState {
         //add in game engine and player 
         engineRef = engine;
         passedPlayer = thePlayer;
+       
+        gap = 30;
+        cardWidth = (width - (10 * gap)) / 5;
+        cardHeight = (height - (80 + 6 * gap)) / 2;
+        divX = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
+        divY = ((height - 80)/ 2) - cardHeight - gap;
        
         setupState();
         drawState();        
@@ -79,24 +87,27 @@ public class Shop extends GameState {
         writer.close();
     }
 */
-    private Card buyCard(Player player, int index) { //player purchase card from shop at specific index
+    private boolean buyCard(int index) { //player purchase card from shop at specific index
         try {
             Card item;
-
+            
             try {
                 item = items.get(index);
             } catch (IndexOutOfBoundsException e) {
                 throw new IndexOutOfBoundsException("Item not found");
             }
 
-            item.buy(player); //item available -> buy
+            item.buy(passedPlayer); //item available -> buy
 
             items.remove(index); 
 
-            return item;
+            System.out.println(passedPlayer.getDeck().toString());
+            return passedPlayer.getDeck().addCard(item);
         } catch (DeckFullException | NotEnoughGoldException | IndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
-            return null;
+          alertMessage = e.getMessage();
+          showAlert = true;
+          
+          return false;
         }
     }
    
@@ -104,12 +115,8 @@ public class Shop extends GameState {
     shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
     
-    backButton = new Button(215, 720, 230, 60, backImage);
-//    prevButton = new Button(320, 720, 230, 60, prevImage);
-//    nextButton = new Button(880, 720, 230, 60, nextImage);
-//    purchaseButton = new Button(600, 720, 230, 60, purchaseImage);
-
-  } //loading in the images 
+    backButton = new Button(50, height - 80, 230, 60, backImage);
+  } 
   
 
   public void pauseState(){}
@@ -121,37 +128,91 @@ public class Shop extends GameState {
     image(shopBackground, 0, 0, width, height);
     image(backImage, 50, height - 80, 230, 60);  
     
-    int gap = 30;
-    int cardWidth = (width - (10 * gap)) / 5;
-    int cardHeight = (height - (80 + 3 * gap)) / 2;
-    int x = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
-    int y = ((height - 80)/ 2) - cardHeight - (gap / 2);
-    
     textSize(40);
     textAlign(CENTER);
     
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < Math.min(5, items.size() - (i * 5)); j++) {
         Card card = items.get(i * 5 + j);
-        int posX = x + (cardWidth + gap) * j;
-        int posY = y + (cardHeight + gap) * i;
+        int posX = divX + (cardWidth + gap) * j;
+        int posY = divY + (cardHeight + 2 * gap) * i;
+        card.setPos(posX, posY);
+        rect(posX, posY, cardWidth, cardHeight);
         image(card.getImg(), posX, posY, cardWidth, cardHeight);
-        text(card.getShopCost() + "£", posX + cardWidth / 2, posY + cardHeight + gap / 5);
+        text(card.getShopCost() + "£", posX + cardWidth / 2, posY + cardHeight + 35);
       }
     }
     
     textSize(60);
     textAlign(RIGHT);
-     text(passedPlayer.getGoldInHand() + "£", width - 50, height - 80);
+    text(passedPlayer.getGoldOnHand() + "£", width - 80, height - 40);
+    
+    if (showAlert) {
+      rect(width / 2 - 250, height / 2 - 50, 500, 100);
+      textSize(40);
+      textAlign(CENTER);
+      fill(#000000);
+      text(alertMessage, width / 2, height / 2 + 5);
+      fill(#FFFFFF);
+    }
   } //editing the images 
-  
+
+  /*
+  public void mouseClicked() {
+      System.out.println("[DEBUG] Mouse clicked");
+      if (backButton.overButton()) {
+        background(240, 210, 200);
+        MapState mapState = new MapState(engineRef, passedPlayer);
+        engineRef.changeState(mapState);
+      }
+      
+      for (int i = 0; i < items.size(); i++) {
+        if (items.get(i).isMousedOver()) {
+          if (buyCard(i)) {
+            drawState();
+          }
+        }
+      }
+    }
+    */
   
   public void handleMouseInput() {  /* change game state to MAP_STATE */
-    if (backButton.overButton() && mousePressed) {
-      background(240, 210, 200); /* for test */
-      MapState mapState = new MapState(engineRef, passedPlayer);
-      engineRef.changeState(mapState);
+    if (showAlert) {
+      showAlert = false;
+      return;
+    }
+    if (mousePressed && !showAlert) {
+      System.out.println("[DEBUG] Mouse clicked (" + mouseX + ", " + mouseY + ")");
+      if (backButton.overButton()) {
+        MapState mapState = new MapState(engineRef, passedPlayer);
+        engineRef.changeState(mapState);
+        return;
+      }
+      
+      int index = mouseOverCard();
+      if (index != -1) {
+        if (buyCard(index)) {
+          drawState();
+        } else {
+          System.out.println("[DEBUG] Couldn't buy card");
+        }
+      }
     }
   } //add in button for map state here //check 
   public void handleKeyInput(){}
+  
+  private int mouseOverCard() {
+    for (int i = 0; i < items.size(); i++) {
+      Card card = items.get(i);
+      
+      if (mouseX >= card.getPos().x &&
+          mouseX <= card.getPos().x + cardWidth &&
+          mouseY >= card.getPos().y &&
+          mouseY <= card.getPos().y + cardHeight) {
+        return i;
+      }
+    }
+    
+    return -1;
+  }
 }

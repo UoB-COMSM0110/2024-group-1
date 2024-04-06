@@ -89,4 +89,17 @@ class Deck {
         deck.add(new StrikeCard());
         deck.add(new StrikeCard());
     }
+    
+    @Override
+    public String toString() {
+      StringBuilder string = new StringBuilder("(" + deck.size() + ") : {");
+      
+      for (Card card : deck) {
+        string.append(card.getName()).append("; ");
+      }
+      
+      string.append("}");
+      
+      return string.toString();
+    }
 }
