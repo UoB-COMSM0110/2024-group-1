@@ -38,6 +38,8 @@ class MapState extends GameState {
         String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
         String jsonString = join(jsonLines, "");
         mapLoader.loadNodesFromJSON(jsonString); // 从JSON字符串加载节点
+        
+        //System.out.println("[DEBUG] Loading map");
         nodes = mapLoader.loadNodes(); // 创建Node数组
     }
 
@@ -65,9 +67,13 @@ class MapState extends GameState {
 
         /* basic interactive function for combat node*/
         for (Node node : nodes) {
-            if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
-                goToCombat();
-                break; // 假设一次只能点击一个节点
+            if ((node.isMouseOver(mouseX, mouseY))&&/*(node instanceof CombatNode)&&*/(node.clickable)) {
+              //System.out.println("[DEBUG] Clicked on node");
+              background(240, 210, 200);
+              
+              node.enterNode(engineRef, passedPlayer);
+              //goToCombat();
+              break; // 假设一次只能点击一个节点
             }
         }
 
@@ -119,6 +125,8 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if(node instanceof CombatNode){
                     ((CombatNode)node).display(combatIcon);
+                } else if (node instanceof ShopNode) {
+                  ((ShopNode)node).display(shopIcon);
                 }else{
                     node.display(); 
                 }

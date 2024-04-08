@@ -101,7 +101,7 @@ public class Shop extends GameState {
 
             items.remove(index); 
 
-            System.out.println(passedPlayer.getDeck().toString());
+            //System.out.println(passedPlayer.getDeck().toString());
             return passedPlayer.getDeck().addCard(item);
         } catch (DeckFullException | NotEnoughGoldException | IndexOutOfBoundsException e) {
           alertMessage = e.getMessage();

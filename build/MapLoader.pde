@@ -35,7 +35,33 @@ class MapLoader {
 
             // create node 
             Node node = createNode(id, connectedIds, clickable, new PVector(x, y), x, y, level, type);
+            
+            if (type.equals("ShopNode")) {
+              ArrayList<Card> cards = new ArrayList<>();
+//              System.out.println("[DEBUG] 
+              
+              JSONArray jsonCards = nodeJson.getJSONArray("cards");
+              
+              for (int j = 0; j < jsonCards.size(); j++) {
+                JSONObject cardJson = jsonCards.getJSONObject(j);
+                String cardName = cardJson.getString("name");
+                
+                if (cardName.equals("AngerCard")) {
+                  cards.add(new AngerCard());
+                } else if (cardName.equals("Poison")) {
+                  cards.add(new PoisonCard());
+                } else if (cardName.equals("Bash")) {
+                  cards.add(new BashCard());
+                } else if (cardName.equals("Strike")) {
+                  cards.add(new StrikeCard());
+                }
+              }
+              
+              ((ShopNode)node).setCards(cards);
+            }
+            
             nodes.add(node);
+            //System.out.println("[DEBUG] Added node: " + node.toString());
         }
 
         return nodes.toArray(new Node[nodes.size()]);
@@ -45,9 +71,10 @@ class MapLoader {
         switch (type) {
             case "CombatNode":
                 return new CombatNode(id, connectedIds, clickable, position, x, y, level);
-            // case "ShopNode"
+            case "ShopNode":
+                return new ShopNode(id, connectedIds, clickable, position, x, y, level);
             default:
-                return new Node(id, connectedIds, clickable, position, x, y, level);
+                return null;// new Node(id, connectedIds, clickable, position, x, y, level);
         }
     }
 }
