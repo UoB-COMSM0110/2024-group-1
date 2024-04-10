@@ -152,6 +152,10 @@ abstract class Entity {
         }
     }
 
+    public void clearAllEffects() {
+        activeEffects = new ArrayList<StatusEffect>();
+    }
+
     public void removeStatusEffect(StatusEffect effect) {
         activeEffects.remove(effect);
     }

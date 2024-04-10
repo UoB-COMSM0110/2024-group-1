@@ -1,8 +1,7 @@
 public class StrikeCard extends Card {
-    private static final String strikePath = "../assets/cards/Attack_Strike.png";
     
     public StrikeCard() {
-        super("Strike", CardType.CARDTYPE_ATTACK, 1, int(random(45, 55)), true);
+        super("Strike", CardType.CARDTYPE_ATTACK, 1, int(random(55, 100)), true, false);
     }
 
     public void applyCard(Entity target) {

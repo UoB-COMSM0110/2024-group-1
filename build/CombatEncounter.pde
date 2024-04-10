@@ -9,7 +9,7 @@ class CombatEncounter {
     private int drawAmt;
     private final int ENEMY_BASE_X = (width/2);
     private final int ENEMY_BASE_Y = 600;
-    private PImage background;
+    private PImage[] encounterImgs;
     private Button endTurnBtn;
     private EntityImgLoader entityImgs;
 
@@ -22,8 +22,14 @@ class CombatEncounter {
         entityImgs = new EntityImgLoader();
         drawAmt = 5;
 
-        background = loadImage("../assets/combat/battle_background.png");
-        endTurnBtn = new Button(width-300, height-400, 256, 256, loadImage("../assets/combat/turn_end_button.png"));
+        encounterImgs = new PImage[6];
+        encounterImgs[0] = loadImage("../assets/combat/battle_background.png");
+        encounterImgs[1] = loadImage("../assets/combat/turn_end_button.png");
+        encounterImgs[2] = loadImage("../assets/combat/attack_icon.png");
+        encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
+        encounterImgs[4] = loadImage("../assets/combat/poison_icon.png");
+        encounterImgs[5] = loadImage("../assets/combat/attack_buff_icon.png");
+        endTurnBtn = new Button(width-300, height-400, 256, 256, encounterImgs[1]);
     }
 
     public void initEncounter() {
@@ -78,7 +84,17 @@ class CombatEncounter {
     }
 
     private void playCard(Card toPlay, Entity target) {
-        toPlay.applyCard(target);
+        battlePlayer.triggerEffects(CardPlayTrigger.class, null);
+        handleSpecialCardEffects(toPlay);
+
+        if (!toPlay.getIfIsAoE()) {
+            toPlay.applyCard(target);
+        } else {
+            for (Enemy nme : currEnemies) {
+                toPlay.applyCard(nme);
+            }
+        }
+
         if ((target instanceof Enemy) && (target.getCurrHp() <= 0)) {
             currEnemies.remove(target);
         }
@@ -92,40 +108,42 @@ class CombatEncounter {
         if (mousePressed && isPlayerTurn) {
             if (endTurnBtn.overButton()) {
                 endTurn();
-            }
-            if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
+                activeCard = null;
+            } else if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
                 for (int n=0; n < currEnemies.size(); n++) {
                     Enemy currEnemy = currEnemies.get(n);
                     if (currEnemy.isMousedOver() == true) {
                         playCard(activeCard, currEnemy);
                     }
                 }
-            }
-
-            for (int i=0; i < cardHand.size(); i++) {
-                Card currCard = cardHand.get(i);
-                if (currCard.isMousedOver() == true) {
-                    if (currCard.getEnergyCost() <= battlePlayer.getCurrEnergy()) {
-                        activeCard = currCard;
+            } else {
+                for (int i=0; i < cardHand.size(); i++) {
+                    Card currCard = cardHand.get(i);
+                    if (currCard.isMousedOver() == true) {
+                        if (currCard.getEnergyCost() <= battlePlayer.getCurrEnergy()) {
+                            activeCard = currCard;
+                        }
                     }
+                }   
+                if (activeCard != null && (activeCard.getIfTakesTarget() == false)) {
+                    playCard(activeCard, battlePlayer);
                 }
-            }
-            if (activeCard != null && (activeCard.getIfTakesTarget() == false)) {
-                playCard(activeCard, battlePlayer);
             }
         }
     }
 
     public OutcomeType checkWinLoss() {
         if (currEnemies.isEmpty() == true) {
+            processBattleEnd();
             return OutcomeType.OUTCOME_WIN;
         } else if (battlePlayer.getCurrHp() <= 0) {
+            processBattleEnd();
             return OutcomeType.OUTCOME_LOSS;
         } else return OutcomeType.OUTCOME_UNDECIDED;
     }
 
     public void drawCombat() {
-        image(background, 0, 0, width, height);
+        image(encounterImgs[0], 0, 0, width, height);
         drawHUDElements();
 
         //image(battlePlayer.getImg(), 50, 100);
@@ -137,7 +155,9 @@ class CombatEncounter {
     }
 
     private void drawHUDElements() {
+        fill(255);
         String activeCardName = activeCard != null ? activeCard.getName() : "None";
+        textAlign(LEFT, BASELINE);
         textSize(64);
         text("Active Card: " + activeCardName, 50, 90);
         text("HP: " + battlePlayer.getCurrHp() + "/" + battlePlayer.getMaxHp(), width-300, 90);
@@ -149,8 +169,119 @@ class CombatEncounter {
         textSize(32);
 
         for (int i=0; i < currEnemies.size(); i++) {
-            image(currEnemies.get(i).getImg(), currEnemies.get(i).getPos().x, currEnemies.get(i).getPos().y);
-            text(currEnemies.get(i).getCurrHp() + "/" + currEnemies.get(i).getMaxHp(), currEnemies.get(i).getPos().x-20, 650);
+            Enemy curr = currEnemies.get(i);
+            image(curr.getImg(), curr.getPos().x, curr.getPos().y, 360, 360);
+            text(curr.getCurrHp() + "/" + curr.getMaxHp(), curr.getPos().x+80, curr.getPos().y+300);
+            fill(250, 172, 15);
+            rect(curr.getPos().x+80, curr.getPos().y+350, 200, 20, 30);
+            fill(161, 18, 18);
+            rect(curr.getPos().x+80, curr.getPos().y+350, 200*((float)curr.getCurrHp()/(float)curr.getMaxHp()), 20, 30);
+
+            drawMoveIntentions(curr);
         }
+    }
+
+    private void drawMoveIntentions(Enemy curr) {
+        ArrayList<Move> moves = curr.getMoves();
+        fill(255);
+        for (int j=0; j < moves.size(); j++) {
+            MoveType type = moves.get(j).getType();
+            switch (type) {
+                case MOVETYPE_ATTACK:
+                    image(encounterImgs[2], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
+
+                    AttackMove casted = (AttackMove)moves.get(j);
+                    int dmg = casted.getDmg();
+                    text(dmg, curr.getPos().x+85, curr.getPos().y+40);
+                    break;
+                case MOVETYPE_DEFENCE:
+                    image(encounterImgs[3], curr.getPos().x+90, curr.getPos().y-50, 85, 85);
+                    break;
+                case MOVETYPE_STRATEGY:
+                    List<StatusEffect> effects = ((StatusEffectMove) moves.get(j)).getEffects();
+                    drawStrategyIntentions(curr, effects);
+                    break;
+                default:
+                    return;
+            }
+        }
+    }
+
+    private void drawStrategyIntentions(Enemy currEnemy, List<StatusEffect> fxList) {
+        for (int n=0; n < fxList.size(); n++) {
+            StatusEffect currEffect = fxList.get(n);
+
+            if (currEffect instanceof Poison) {
+                image(encounterImgs[4], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
+            } else if (currEffect instanceof AttackBoost) {
+                image(encounterImgs[5], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
+            }
+        }
+    }
+
+    private void handleCardDraw(int numCards) {
+        cardHand = drawDeck.drawNCards(numCards);
+        if (cardHand.size() < numCards) {
+            drawDeck.setDeck(discardPile);
+            drawDeck.shuffle();
+            discardPile.clear();
+            ArrayList<Card> extraCards = drawDeck.drawNCards(numCards-cardHand.size());
+            cardHand.addAll(extraCards);
+        }
+    }
+
+    private void handleSpecialCardEffects(Card played) {
+        String cardName = played.getName();
+
+        switch (cardName) {
+            case "Anger":
+                discardPile.add(new AngerCard());
+                break;
+            case "Blizzard":
+                ((BlizzardCard) played).setDmgAmt(currEnemies.size()*2);
+                break;
+            case "Bodyslam":
+                ArrayList<StatusEffect> activeFx = battlePlayer.getActiveEffects();
+                int defendAmt = 0;
+                for (StatusEffect effect : activeFx) {
+                    if (effect instanceof Defend) {
+                        defendAmt = effect.getLifeCounter();
+                    }
+                }
+                ((BodyslamCard) played).setDmgAmt(defendAmt);
+                break;
+            case "Hemokinesis":
+                battlePlayer.takeDamage(2);
+                break;
+            case "Iron Wave":
+                battlePlayer.appendStatusEffect(new Defend(5));
+                break;
+            case "Shrug It Off":
+                Card drawn = drawDeck.drawSingleCard();
+                if (drawn == null) {
+                    drawDeck.getDeck().addAll(discardPile);
+                    discardPile.clear();
+                    drawn = drawDeck.drawSingleCard();
+                }
+                cardHand.add(drawn);
+                break;
+            case "Headbutt":
+                int randIdx = CombatUtility.pickRandomIdxFromDiscard(discardPile);
+                if (randIdx == -1) return;
+                Card randDrawn = discardPile.get(randIdx);
+                discardPile.remove(randIdx);
+                drawDeck.getDeck().add(0, randDrawn);
+                break;
+            default:
+                return;
+        }
+    }
+
+    private void processBattleEnd() {
+        discardPile.addAll(cardHand);
+        cardHand.clear();
+        drawDeck.getDeck().addAll(discardPile);
+        battlePlayer.setDeck(drawDeck);
+        battlePlayer.clearAllEffects();
     }
 }

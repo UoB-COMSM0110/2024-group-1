@@ -2,7 +2,7 @@ class DefenceMove extends Move {
     private int defenceAmt;
 
     DefenceMove(Entity defender, int amt) {
-        super(defender, defender);
+        super(defender, defender, MoveType.MOVETYPE_DEFENCE);
         defenceAmt = amt;
     }
 
