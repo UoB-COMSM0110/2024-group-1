@@ -13,11 +13,11 @@ class CombatNode extends Node {
     }
     
     @Override
-    public void enterNode(GameEngine gameEngine, Player passedPlayer) {
+    public void enterNode(GameEngine engineRef, Player passedPlayer) {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
         Worm worm = new Worm(passedPlayer);
         enemies.add(worm);
-        CombatState combatState = new CombatState(gameEngine, passedPlayer, enemies);
-        gameEngine.changeState(combatState);
+        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+        engineRef.changeState(combatState);
     }
 }

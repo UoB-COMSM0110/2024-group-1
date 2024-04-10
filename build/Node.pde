@@ -28,5 +28,5 @@ abstract class Node {
         return distance < 20; 
     }
     
-    public abstract void enterNode(GameEngine gameEngine, Player passedPlayer);
+    public abstract void enterNode(GameEngine engineRef, Player passedPlayer);
 }

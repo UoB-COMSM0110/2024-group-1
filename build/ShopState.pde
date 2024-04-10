@@ -9,13 +9,13 @@ public class ShopState extends GameState {
   
   private final CardImgLoader imageLoader;
   
-  GameEngine engineRef; //passing in game engine and player? 
+  GameEngine engineRef; 
   private Player passedPlayer;
     
   private boolean showAlert;
   private String alertMessage = "";
     
-    ShopState(GameEngine engine, Player thePlayer, ArrayList<Card> cards) { //check this 
+    ShopState(GameEngine engine, Player thePlayer, ArrayList<Card> cards) {
         this.items = cards;
         
         imageLoader = new CardImgLoader();
@@ -68,7 +68,6 @@ public class ShopState extends GameState {
 
       //System.out.println(passedPlayer.getDeck().toString());
       return passedPlayer.getDeck().addCard(item);
-        
     }
    
   public void setupState(){
@@ -116,25 +115,6 @@ public class ShopState extends GameState {
       fill(#FFFFFF);
     }
   } //editing the images 
-
-  /*
-  public void mouseClicked() {
-      System.out.println("[DEBUG] Mouse clicked");
-      if (backButton.overButton()) {
-        background(240, 210, 200);
-        MapState mapState = new MapState(engineRef, passedPlayer);
-        engineRef.changeState(mapState);
-      }
-      
-      for (int i = 0; i < items.size(); i++) {
-        if (items.get(i).isMousedOver()) {
-          if (buyCard(i)) {
-            drawState();
-          }
-        }
-      }
-    }
-    */
   
   public void handleMouseInput() {  /* change game state to MAP_STATE */
     if (showAlert) {

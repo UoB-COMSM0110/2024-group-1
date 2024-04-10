@@ -71,7 +71,7 @@ class MapState extends GameState {
               //System.out.println("[DEBUG] Clicked on node");
               background(240, 210, 200);
               
-              node.enterNode(engineRef, passedPlayer);
+              node.enterNode(engineRef, passedPlayer); // Polymorphism (CombatNode method has the implementation of goToCombat())
               //goToCombat();
               break; // 假设一次只能点击一个节点
             }
