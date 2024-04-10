@@ -1,5 +1,5 @@
 class EndState extends GameState {
-  PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
+  PImage backgroundImage, winImage, loseImage, score, menu, cards, shop, continue, setting;
   Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
   int actionPoints;
@@ -22,20 +22,20 @@ class EndState extends GameState {
 
   public void setupState() {
     backgroundImage = loadImage("../assets/endscreen/Background.png");
-    Score = loadImage("../assets/endscreen/scoreUI.png");
+    scoreUIcore = loadImage("../assets/endscreen/scoreUI.png");
     winImage = loadImage("../assets/endscreen/imageWin.png");
     loseImage = loadImage("../assets/endscreen/imageLose.png");
-    Menu = loadImage("../assets/endscreen/buttonMenu.png");
-    Cards = loadImage("../assets/endscreen/buttonCards.png");
-    Shop = loadImage("../assets/endscreen/buttonShop.png");
-    Continue = loadImage("../assets/endscreen/buttonContinue.png");
-    Setting = loadImage("../assets/endscreen/imageSetting.png");
+    menu = loadImage("../assets/endscreen/buttonMenu.png");
+    cards = loadImage("../assets/endscreen/buttonCards.png");
+    shop = loadImage("../assets/endscreen/buttonShop.png");
+    continue = loadImage("../assets/endscreen/buttonContinue.png");
+    setting = loadImage("../assets/endscreen/imageSetting.png");
     backgroundImage.resize(displayWidth, displayHeight-50);
-    menuButton = new Button(0, height-400, Menu.width, Menu.height, Menu);
-    cardsButton = new Button(width/2-600, height-400, Cards.width, Cards.height, Cards);
-    shopButton = new Button(width/2+100, height-400, Shop.width, Shop.height, Shop);
-    continueButton = new Button(width-500, height-400, Continue.width, Continue.height, Continue);
-    settingButton = new Button(width-300, 0, Setting.width, Setting.height, Setting);
+    menuButton = new Button(0, height-400, menu.width, menu.height, menu);
+    cardsButton = new Button(width/2-600, height-400, cards.width, cards.height, cards);
+    shopButton = new Button(width/2+100, height-400, shop.width, shop.height, shop);
+    continueButton = new Button(width-500, height-400, continue.width, continue.height, continue);
+    settingButton = new Button(width-300, 0, setting.width, setting.height, setting);
   }
   
   public void handleMouseInput() {
@@ -97,7 +97,7 @@ class EndState extends GameState {
   
   void drawWin() {
     image(winImage, displayWidth/2-230, -50);
-    image(Score, width/2-350, height/2-250); 
+    image(score, width/2-350, height/2-250); 
     fill(255, 255, 255);
     textAlign(LEFT, CENTER);
     text("\nAction Points: ", width/2-200, height/2-30);
