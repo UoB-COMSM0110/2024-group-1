@@ -1,4 +1,4 @@
-class Node {
+abstract class Node {
     int id;
     int[] connectedIds;
     boolean clickable;
@@ -18,11 +18,15 @@ class Node {
         fill(255); // White
         ellipse(position.x, position.y, 20, 20); 
     }
+    
+    public void setClickable(boolean clickable) {
+      this.clickable = clickable;
+    }
 
     public boolean isMouseOver(float mouseX, float mouseY) {
         float distance = PVector.dist(new PVector(mouseX, mouseY), this.position);
         return distance < 20; 
     }
+    
+    public abstract void enterNode(GameEngine engineRef, Player passedPlayer);
 }
-
-

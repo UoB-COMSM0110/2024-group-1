@@ -30,11 +30,12 @@ class EndState extends GameState {
     Shop = loadImage("../assets/endscreen/buttonShop.png");
     Continue = loadImage("../assets/endscreen/buttonContinue.png");
     Setting = loadImage("../assets/endscreen/imageSetting.png");
-    menuButton = new Button(40, height-175, Menu.width, Menu.height, Menu);
-    cardsButton = new Button(215, height-175, Cards.width, Cards.height, Cards);
-    shopButton = new Button(400, height-175, Shop.width, Shop.height, Shop);
-    continueButton = new Button(575, height-175, Continue.width, Continue.height, Continue);
-    settingButton = new Button(width-100, 0, Setting.width, Setting.height, Setting);
+    backgroundImage.resize(displayWidth, displayHeight-50);
+    menuButton = new Button(0, height-400, Menu.width, Menu.height, Menu);
+    cardsButton = new Button(width/2-600, height-400, Cards.width, Cards.height, Cards);
+    shopButton = new Button(width/2+100, height-400, Shop.width, Shop.height, Shop);
+    continueButton = new Button(width-500, height-400, Continue.width, Continue.height, Continue);
+    settingButton = new Button(width-300, 0, Setting.width, Setting.height, Setting);
   }
   
   public void handleMouseInput() {
