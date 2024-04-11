@@ -39,6 +39,7 @@ exercise as it helped other team members, less familiar with video games and the
 *The paper prototype for the card-based game concept.*
 
 [![Alt text](https://img.youtube.com/vi/VUtbDt9KXXw/0.jpg)](https://www.youtube.com/watch?v=VUtbDt9KXXw)
+
 *Right-click and select "Open link in new tab" to watch the video without leaving GitHub.*
 
 ![IMG_8772 2](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/1431ac4d-13f1-4315-8d47-d8e789c5737e)
@@ -101,3 +102,54 @@ strategic depth so that I feel challenged and entertained.
 and feel a sense of urgency during the game.
 
 > As a player, I want the game to have a variety of different encounters in order to keep the game fresh and provide a challenge.
+
+# Implementation
+
+Three key challenges emerged over the course of development and the brainstorming process which preceded it. Namely, these were:
+
+1. How to most efficiently create, load and display game assets.
+
+2. Combat/encounter design
+
+3. 
+
+The specifics of each challenge and how we dealt with it will be elaborated in turn.
+
+## Game Asset Handling
+
+The card-based nature of our game made it more asset-heavy to implement than an alternative game concept (such as a platformer) may have been.
+Broadly speaking, our team's members lacked 2D art skills, posing something of a challenge to creating passable game assets.
+A key aspect to how we got around this obstacle was the use of AI image generation tools, which were used to enable the rapid generation of 
+certain assets. Specifically, AI tools were used for the creation of the main screen, combat end screen and card illustrations. 
+
+To help save time in the creation of cards, our team put together a card template using Adobe PhotoShop with layers for different parts of a card,
+a move which enabled the quick iteration of new cards while maintaining a consistent format and style.
+
+![CardLayers](./assets/psds/Layer-function-description-1.jpg)
+
+*An image highlighting the different layers of the card template .psd file*
+
+Despite the value of AI tools for quick image generation, difficulty in using them for art direction and flaws in some of the AI generated images
+meant that we did not rely exclusively on AI images for the game. Maya, a 3D modeling software, was used to create several combat state-related
+assets. Though the creation process was longer and more complex than using AI tools, it allowed more freedom for the creation of a tailor-made
+environment which could be easily edited to meet our needs.
+
+![3DEnvironment](./images/3DEnvironmentShot.png)
+*A view of the 3D environment created for the battle screen's background from within Maya*
+
+A second dimension of challenge came from loading the images. Originally each card was intended to load its own associated image. However, it became 
+clear that this would cause excessive image loading. Instead we created a `CardImgLoader` class which loaded each card image only once and mapped them
+to each card's name. A similar class was created for game entities. This choice reduced the previous excessive image loading, though the large number of assets nevertheless meant that some loading times were hard to avoid.
+
+## Encounter Design
+
+When it came to encounter and combat design, the first question our team confronted was around how or where to use procedural generation. After an 
+initial attempt at developing the map screen in a procedural manner, it became evident that using that approach was proving too complicated,
+and so our team opted for a hand-crafted map and combat encounters instead. Besides the complications in implementing procedural generation itself,
+we also decided to abandon that approach owing to the challenge it would have posed for game balance.
+
+Another aspect which proved challenging was how to lay out classes in a way that allowed for certain gameplay features to be implemented. Though our team had, using the class and use case diagrams, developed a good idea of the program's high level structure at an early stage, it was only after the key combat-related classes (`CombatEncounter`, `Card`, `Enemy`, etc) had been set up that it became clear that features like cards with effects based on
+the current state of combat would be a challenge to implement, as the `Card` class maintained no awareness of combat state. We were able to implement
+this feature by extending `CombatEncounter` to process the active card in order to calculate and apply state-related effects using a private function
+making use of a switch statement.
+
