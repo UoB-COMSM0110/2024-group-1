@@ -2,10 +2,8 @@ class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
     Node[] nodes; 
     MapLoader mapLoader;
-
     GameEngine engineRef;
     private Player passedPlayer;
-
     private float scrollOffset = 0;//Scroll offset used to control map display part
     PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon;//Used to generate a nice background image of map
     
@@ -15,9 +13,7 @@ class MapState extends GameState {
         setupState();
         drawState();
     }
-
     public void setupState() {
-
         // Initialize Material
         backImage = loadImage("../assets/map/backButton.png");
         tutorialImage = loadImage("../assets/map/tutorialButton.png");
@@ -27,31 +23,24 @@ class MapState extends GameState {
         combatIcon.resize(45,0);
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
-
         // Initialize universal Button
         backButton = new Button(100, 50,230,60,backImage);
         tutorialButton = new Button(100, 150, 230, 60, tutorialImage);
         entranceButton = new Button(100, 250, 230, 60, entranceImage);
-
         // Initialize map from json map loader
         MapLoader mapLoader = new MapLoader(); // 假设这里不需要参数的构造函数或已经提供了一个空构造函数
         String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
         String jsonString = join(jsonLines, "");
         mapLoader.loadNodesFromJSON(jsonString); // 从JSON字符串加载节点
-        
-        //System.out.println("[DEBUG] Loading map");
         nodes = mapLoader.loadNodes(); // 创建Node数组
     }
-
     public void handleMouseInput() {
-
         /* change game state to MENU_STATE */
         if (backButton.overButton() && mousePressed){
             background(240, 210, 200); /* for test */
             MenuState menuState = new MenuState(engineRef, passedPlayer);
             engineRef.changeState(menuState);
         }
-
         /* change game state to COMBAT_STATE */
         if (entranceButton.overButton() && mousePressed){
             ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
@@ -59,24 +48,15 @@ class MapState extends GameState {
             enemies.add(worm);
             CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
             engineRef.changeState(combatState);
-            
-         /*change game state to Shop_state */
-         
-         
         }
 
         /* basic interactive function for combat node*/
         for (Node node : nodes) {
-            if ((node.isMouseOver(mouseX, mouseY))&&/*(node instanceof CombatNode)&&*/(node.clickable)) {
-              //System.out.println("[DEBUG] Clicked on node");
-              background(240, 210, 200);
-              
-              node.enterNode(engineRef, passedPlayer); // Polymorphism (CombatNode method has the implementation of goToCombat())
-              //goToCombat();
-              break; // 假设一次只能点击一个节点
+            if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
+                goToCombat();
+                break; // 假设一次只能点击一个节点
             }
         }
-
         /* change game state to COMBAT_STATE or SHOP_STATE*/
         /*test
                for(){
@@ -93,26 +73,18 @@ class MapState extends GameState {
         }
         test*/        
     }
-
     public void handleMouseWheel(MouseEvent e){
         //float event = e.getCount();
         //scrollOffset += event*20; // Move 20 pixels each scrolling
         //scrollOffset = constrain(scrollOffset, 0, contentHeight - embeddedCanvasHeight);
     }
-
     public void handleKeyInput() {
-
     }
-
     public void updateState() {}
-
     public void pauseState() {}
-
     public void resumeState() {}
-
     public void drawState() {
         image(desertImage,0,0,width,height);
-
         // Draw Button
             backButton.drawButton();
             tutorialButton.drawButton();
@@ -125,8 +97,6 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if(node instanceof CombatNode){
                     ((CombatNode)node).display(combatIcon);
-                } else if (node instanceof ShopNode) {
-                  ((ShopNode)node).display(shopIcon);
                 }else{
                     node.display(); 
                 }
@@ -138,7 +108,6 @@ class MapState extends GameState {
                     }
                 }
             }
-
         // Draw connection line
             
   
@@ -147,7 +116,6 @@ class MapState extends GameState {
             //    drawTextBox();
             //}
     }
-
     private void drawStatusInfo() {
         // Draw Health Point
             fill(255, 0, 0);
@@ -178,7 +146,6 @@ class MapState extends GameState {
             }
             //text("AP "+currAP, 1650, 90); // MP value info
     }
-
     private void drawTextBox() {
         fill(255);
         rect(325, 300, 300, 100); 
@@ -187,9 +154,7 @@ class MapState extends GameState {
         String textContent = "Scroll down or using ↑/↓ on keyboard to preview the route to top of Tower;\nClick to choose the start node or next node;\nUsing move point to move up;\nDouble click to close Tutorial.";
         text(textContent, 325, 300, 300, 100); 
     }
-
     private void drawMap(){}
-
     // Utility method to find a node by its ID
     private Node findNodeById(int id) {
         for (Node n : nodes) {
@@ -199,7 +164,6 @@ class MapState extends GameState {
         }
         return null;
     }
-
     private void goToCombat() {
         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
         Worm worm = new Worm(passedPlayer);

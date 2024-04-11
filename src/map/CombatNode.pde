@@ -10,16 +10,5 @@ class CombatNode extends Node {
         float imageX = position.x - combatIcon.width / 2;
         float imageY = position.y - combatIcon.height / 2;
         image(combatIcon, imageX, imageY);
-    }
-    
-    @Override
-    public void enterNode(GameEngine engineRef, Player passedPlayer) {/*
-        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        Worm worm = new Worm(passedPlayer);
-        enemies.add(worm);
-        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-        engineRef.changeState(combatState);
-        */
-    }
-    
+    }   
 }

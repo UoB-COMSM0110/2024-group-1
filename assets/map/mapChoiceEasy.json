@@ -88,48 +88,16 @@
       "connected_ids": [4, 5, 6, 12, 13, 14],
       "x": 700,
       "y": 670,
-      "clickable": true
+      "clickable": false
     },
     {
       "level": "level_4",
       "id": 11,
-      "type": "ShopNode",
+      "type": "CombatNode",
       "connected_ids": [7, 8, 9, 15, 16, 17],
       "x": 1200,
       "y": 670,
-      "clickable": true,
-	  "cards": [
-		  {
-			  "name": "AngerCard"
-		  },
-		  {
-			  "name": "Strike"
-		  },
-		  {
-			  "name": "Bash"
-		  },
-		  {
-			  "name": "Strike"
-		  },
-		  {
-			  "name": "AngerCard"
-		  },
-		  {
-			  "name": "AngerCard"
-		  },
-		  {
-			  "name": "Strike"
-		  },
-		  {
-			  "name": "Poison"
-		  },
-		  {
-			  "name": "Strike"
-		  },
-		  {
-			  "name": "AngerCard"
-		  }
-	  ]
+      "clickable": false
     },
     {
       "level": "level_5",

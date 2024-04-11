@@ -17,10 +17,4 @@ class ShopNode extends Node {
     public void setCards(ArrayList<Card> cards) {
       shopCards = cards;
     }
-
-    @Override
-    public void enterNode(GameEngine engineRef, Player passedPlayer) {
-      ShopState shopState = new ShopState(engineRef, passedPlayer, shopCards);
-      engineRef.changeState(shopState);
-    }
 }
