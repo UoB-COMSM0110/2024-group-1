@@ -7,7 +7,7 @@ Action points are used for movement during the game.
 The player begins with a few action points.
 
 # Basic Flow
-The aim is to reach the top of the tower, which necessitates
+The aim is to reach and beat the boss encounter at the end, which necessitates
 beating enemies to collect action points and items, using them
 to reach the top.
 
