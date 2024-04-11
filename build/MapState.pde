@@ -9,6 +9,11 @@ class MapState extends GameState {
     private float scrollOffset = 0;//Scroll offset used to control map display part
     PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon;//Used to generate a nice background image of map
     
+    int currentNodeIndex = 0;  // Index of the currently highlighted node
+    PVector cursorPosition;    // Position of the cursor or marker
+    boolean showWarning = false; // 是否显示警告
+    String warningMessage = "Blocked! "; // 警告消息内容
+
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
         passedPlayer = thePlayer;
@@ -39,6 +44,12 @@ class MapState extends GameState {
         String jsonString = join(jsonLines, "");
         mapLoader.loadNodesFromJSON(jsonString); // 从JSON字符串加载节点
         nodes = mapLoader.loadNodes(); // 创建Node数组
+
+        // Initialize the marker of current node
+        currentNodeIndex = 0;  // Start at the first node
+        if (nodes.length > 0) {
+            cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
+        }
     }
 
     public void handleMouseInput() {
@@ -52,11 +63,20 @@ class MapState extends GameState {
 
         /* change game state to COMBAT_STATE */
         if (entranceButton.overButton() && mousePressed){
-            ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
+            Node selectedNode = nodes[currentNodeIndex];
+            if (selectedNode.clickable) {
+                // Node is clickable, start combat
+                goToCombat();
+            } else {
+                // Node is not clickable, show warning
+                showWarning("Blocked! ");
+            }
+        /*    ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
             Worm worm = new Worm(passedPlayer);
             enemies.add(worm);
             CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
             engineRef.changeState(combatState);
+            */
         }
 
         /* basic interactive function for combat node*/
@@ -65,6 +85,10 @@ class MapState extends GameState {
                 goToCombat();
                 break; // 假设一次只能点击一个节点
             }
+        }
+
+        if (showWarning && mouseX > width / 2 + 135 && mouseX < width / 2 + 150 && mouseY > height / 2 - 50 && mouseY < height / 2 - 35) {
+            showWarning = false; // Close warning message
         }
 
         /* change game state to COMBAT_STATE or SHOP_STATE*/
@@ -91,7 +115,22 @@ class MapState extends GameState {
     }
 
     public void handleKeyInput() {
-
+        if (keyPressed) {
+            switch (keyCode) {
+                case UP:
+                    moveCursorToDifferentLevel(-1); // Move up a level
+                    break;
+                case DOWN:
+                    moveCursorToDifferentLevel(1); // Move down a level
+                    break;
+                case LEFT:
+                    moveCursorWithinLevel(-1); // Move left within the same level
+                    break;
+                case RIGHT:
+                    moveCursorWithinLevel(1); // Move right within the same level
+                    break;
+            }
+        }
     }
 
     public void updateState() {}
@@ -127,9 +166,23 @@ class MapState extends GameState {
                 }
             }
 
-        // Draw connection line
-            
-  
+        // Draw marker
+        fill(0, 255, 0);  // Green color for cursor
+        ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
+
+        // Draw warning
+        if (showWarning) {
+            displayWarningMessage(); // 显示警告消息的函数
+
+            // 检查是否点击了警告框的关闭区域
+            if (mousePressed && mouseX > width / 2 + 135 && mouseX < width / 2 + 150 &&
+                mouseY > height / 2 - 50 && mouseY < height / 2 - 35) {
+                showWarning = false; // 关闭警告消息
+                mousePressed = false; // 重置鼠标状态，避免重复触发
+            }
+    }
+
+
         // If Tutorial button clicked show text 
             //if (displayTextBox) {
             //    drawTextBox();
@@ -194,6 +247,60 @@ class MapState extends GameState {
         enemies.add(worm);
         CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
         engineRef.changeState(combatState);
+    }
+
+    private void moveCursorToDifferentLevel(int delta) {
+        String currentLevel = nodes[currentNodeIndex].level;
+        int newLevelIndex = Integer.parseInt(currentLevel.split("_")[1]) + delta; // Assumes level format is "level_X"
+        String newLevel = "level_" + newLevelIndex;
+
+        for (int i = 0; i < nodes.length; i++) {
+            if (nodes[i].level.equals(newLevel)) {
+                currentNodeIndex = i;
+                updateCursorPosition();
+                break;
+            }
+        }
+    }
+
+    private void moveCursorWithinLevel(int delta) {
+        String currentLevel = nodes[currentNodeIndex].level;
+        int startIndex = currentNodeIndex;
+        int endIndex = delta > 0 ? nodes.length : -1;
+        int step = delta > 0 ? 1 : -1;
+
+        for (int i = startIndex + step; i != endIndex; i += step) {
+            if (nodes[i].level.equals(currentLevel)) {
+                currentNodeIndex = i;
+                updateCursorPosition();
+                break;
+            }
+        }
+    }
+
+    private void updateCursorPosition() {
+        cursorPosition.set(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
+    }
+
+    private void showWarning(String message) {
+        warningMessage = message;
+        showWarning = true;
+    }
+
+    private void hideWarning() {
+        showWarning = false;
+    }
+
+    private void displayWarningMessage() {
+        fill(255, 255, 0); // Yellow background
+        rect(width / 2 - 150, height / 2 - 50, 300, 100);
+        fill(0); // Black
+        textAlign(CENTER, CENTER);
+        text(warningMessage, width / 2, height / 2);
+
+        // Draw close option
+        fill(255);  // white "X"
+        text("X", width / 2 + 135, height / 2 - 35);
     }
 
 }
