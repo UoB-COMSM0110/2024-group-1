@@ -11,8 +11,8 @@ class MapState extends GameState {
     
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
-    boolean showWarning = false; // 是否显示警告
-    String warningMessage = "Blocked! "; // 警告消息内容
+    boolean showWarning = false; // Show warning or not
+    String warningMessage = "Blocked! "; // Warning message content
 
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
@@ -71,25 +71,35 @@ class MapState extends GameState {
                 // Node is not clickable, show warning
                 showWarning("Blocked! ");
             }
-        /*    ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
-            Worm worm = new Worm(passedPlayer);
-            enemies.add(worm);
-            CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-            engineRef.changeState(combatState);
-            */
         }
 
         /* basic interactive function for combat node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
                 goToCombat();
-                break; // 假设一次只能点击一个节点
+                break; // Assume that node could be clicked only once at a time
+            }
+            if((node.isMouseOver(mouseX, mouseY))&&(!node.clickable)){
+                // Node is not clickable, show warning
+                showWarning("Blocked! ");
             }
         }
 
-        if (showWarning && mouseX > width / 2 + 135 && mouseX < width / 2 + 150 && mouseY > height / 2 - 50 && mouseY < height / 2 - 35) {
+        /* Close the warning message */
+        // define the close 'X' margin
+        int clickMargin = 30; 
+        // Recalculate the center position for the 'X'
+        int rectWidth = 300; // The width of the warning box
+        int rectX = width / 2 - rectWidth / 2 + 600; // Calculate the X position as in displayWarningMessage and adjust
+        int rectY = height / 2 - 100 / 2 - 200; // Calculate the Y position as in displayWarningMessage and adjust
+        int closeX = rectX + rectWidth - 15; // X position of 'X'
+        int closeY = rectY + 15; // Y position of 'X'
+
+        if (showWarning && mouseX > closeX - clickMargin && mouseX < closeX + clickMargin && mouseY > closeY - clickMargin && mouseY < closeY + clickMargin) {
             showWarning = false; // Close warning message
         }
+
+        /* Close the tutorial message */
 
         /* change game state to COMBAT_STATE or SHOP_STATE*/
         /*test
@@ -129,6 +139,17 @@ class MapState extends GameState {
                 case RIGHT:
                     moveCursorWithinLevel(1); // Move right within the same level
                     break;
+                case ENTER:
+                case RETURN:  // Some keyboards might label it as RETURN
+                    Node selectedNode = nodes[currentNodeIndex];
+                    if (selectedNode.clickable) {
+                        // Node is clickable, start combat
+                        goToCombat();
+                    } else {
+                        // Node is not clickable, show warning
+                        showWarning("Blocked!");
+                    }
+                    break;
             }
         }
     }
@@ -167,21 +188,13 @@ class MapState extends GameState {
             }
 
         // Draw marker
-        fill(0, 255, 0);  // Green color for cursor
-        ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
+            fill(0, 255, 0);  // Green color for cursor
+            ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
 
         // Draw warning
-        if (showWarning) {
-            displayWarningMessage(); // 显示警告消息的函数
-
-            // 检查是否点击了警告框的关闭区域
-            if (mousePressed && mouseX > width / 2 + 135 && mouseX < width / 2 + 150 &&
-                mouseY > height / 2 - 50 && mouseY < height / 2 - 35) {
-                showWarning = false; // 关闭警告消息
-                mousePressed = false; // 重置鼠标状态，避免重复触发
+            if (showWarning) {
+                displayWarningMessage(); // Method to show warning
             }
-    }
-
 
         // If Tutorial button clicked show text 
             //if (displayTextBox) {
@@ -207,15 +220,15 @@ class MapState extends GameState {
             int currAP = passedPlayer.getActionPts();
             /*Optimize visual effect*/
             if(currAP <= 99999 && currAP >=10000){
-                text("AP     "+currAP, 1650, 90); // MP value info
+                text("AP  "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 1000 && currAP <= 9999){
-                text("AP       "+currAP, 1650, 90); // MP value info
+                text("AP    "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 100 && currAP <= 999){
-                text("AP         "+currAP, 1650, 90); // MP value info
+                text("AP     "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 10 && currAP <= 99){
-                text("AP           "+currAP, 1650, 90); // MP value info
+                text("AP        "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 0 && currAP <= 9){
-                text("AP             "+currAP, 1650, 90); // MP value info
+                text("AP           "+currAP, 1650, 90); // MP value info
             }
             //text("AP "+currAP, 1650, 90); // MP value info
     }
@@ -292,15 +305,27 @@ class MapState extends GameState {
     }
 
     private void displayWarningMessage() {
-        fill(255, 255, 0); // Yellow background
-        rect(width / 2 - 150, height / 2 - 50, 300, 100);
-        fill(0); // Black
-        textAlign(CENTER, CENTER);
-        text(warningMessage, width / 2, height / 2);
+        // Original location
+        int rectWidth = 300;
+        int rectHeight = 100;
+        int rectX = width / 2 - rectWidth / 2;
+        int rectY = height / 2 - rectHeight / 2;
 
-        // Draw close option
-        fill(255);  // white "X"
-        text("X", width / 2 + 135, height / 2 - 35);
+        // Change the location of warning message，right 600px, up 200px
+        rectX += 600;
+        rectY -= 200;
+
+        // Draw yellow background
+        fill(255, 255, 0);
+        rect(rectX, rectY, rectWidth, rectHeight);
+
+        // Draw warning content
+        fill(0);
+        textAlign(CENTER, CENTER);
+        text(warningMessage, rectX + rectWidth / 2, rectY + rectHeight / 2);
+
+        // Draw the closure option“X”
+        text("x", rectX + rectWidth - 15, rectY + 15);
     }
 
 }
