@@ -7,12 +7,14 @@ class MapState extends GameState {
     private Player passedPlayer;
 
     private float scrollOffset = 0;//Scroll offset used to control map display part
-    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon;//Used to generate a nice background image of map
+    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail;//Used to generate a nice background image of map
     
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
     boolean showWarning = false; // Show warning or not
     String warningMessage = "Blocked! "; // Warning message content
+    boolean showTutorial = false; // Show Tutorial or not
+
 
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
@@ -32,6 +34,8 @@ class MapState extends GameState {
         combatIcon.resize(45,0);
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
+        tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
+        tutorialDetail.resize(500,0);
 
         // Initialize universal Button
         backButton = new Button(100, 50,230,60,backImage);
@@ -99,7 +103,10 @@ class MapState extends GameState {
             showWarning = false; // Close warning message
         }
 
-        /* Close the tutorial message */
+        /* Open and Close the tutorial message */
+        if (tutorialButton.overButton() && mousePressed){
+            showTutorial = ! showTutorial;
+        }
 
         /* change game state to COMBAT_STATE or SHOP_STATE*/
         /*test
@@ -178,15 +185,8 @@ class MapState extends GameState {
                 }else{
                     node.display(); 
                 }
-                // Draw connections
-                for (int connectedId : node.connectedIds) {
-                    Node connectedNode = findNodeById(connectedId);
-                    if (connectedNode != null) {
-                        line(node.position.x, node.position.y, connectedNode.position.x, connectedNode.position.y);
-                    }
-                }
             }
-
+            drawConnection();
         // Draw marker
             fill(0, 255, 0);  // Green color for cursor
             ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
@@ -197,9 +197,7 @@ class MapState extends GameState {
             }
 
         // If Tutorial button clicked show text 
-            //if (displayTextBox) {
-            //    drawTextBox();
-            //}
+            displayTutorialImage();
     }
 
     private void drawStatusInfo() {
@@ -233,14 +231,6 @@ class MapState extends GameState {
             //text("AP "+currAP, 1650, 90); // MP value info
     }
 
-    private void drawTextBox() {
-        fill(255);
-        rect(325, 300, 300, 100); 
-        textAlign(LEFT, TOP);
-        fill(0);
-        String textContent = "Scroll down or using ↑/↓ on keyboard to preview the route to top of Tower;\nClick to choose the start node or next node;\nUsing move point to move up;\nDouble click to close Tutorial.";
-        text(textContent, 325, 300, 300, 100); 
-    }
 
     private void drawMap(){}
 
@@ -328,4 +318,21 @@ class MapState extends GameState {
         text("x", rectX + rectWidth - 15, rectY + 15);
     }
 
+    private void displayTutorialImage() {
+        if (showTutorial) {
+            image(tutorialDetail, (width - tutorialDetail.width) / 2 + 700, (height - tutorialDetail.height) / 2);
+        }
+    }
+
+    private void drawConnection(){
+        for (Node node : nodes) {
+                // Draw connections
+                for (int connectedId : node.connectedIds) {
+                    Node connectedNode = findNodeById(connectedId);
+                    if (connectedNode != null) {
+                        line(node.position.x, node.position.y, connectedNode.position.x, connectedNode.position.y);
+                    }
+                }
+        }
+    }
 }
