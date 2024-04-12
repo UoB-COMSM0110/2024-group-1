@@ -2,13 +2,15 @@ class Node {
     int id;
     int[] connectedIds;
     boolean clickable;
+    boolean currentOrNot;
     PVector position; 
     String level;
 
-    public Node(int id, int[] connectedIds, boolean clickable, PVector position, int x, int y, String level) {
+    public Node(int id, int[] connectedIds, boolean clickable, boolean currentOrNot, PVector position, int x, int y, String level) {
         this.id = id;
         this.connectedIds = connectedIds;
         this.clickable = clickable;
+        this.currentOrNot = currentOrNot;
         this.position = new PVector(x,y);
         this.level = level;
     }

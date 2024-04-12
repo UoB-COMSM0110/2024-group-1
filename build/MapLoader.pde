@@ -29,25 +29,26 @@ class MapLoader {
                 connectedIds[j] = connectedIdsJson.getInt(j);
             }
             boolean clickable = nodeJson.getBoolean("clickable");
+            boolean currentOrNot = nodeJson.getBoolean("currentOrNot");
             int x = nodeJson.getInt("x");
             int y = nodeJson.getInt("y");
             String type = nodeJson.getString("type");
 
             // create node 
-            Node node = createNode(id, connectedIds, clickable, new PVector(x, y), x, y, level, type);
+            Node node = createNode(id, connectedIds, clickable, currentOrNot, new PVector(x, y), x, y, level, type);
             nodes.add(node);
         }
 
         return nodes.toArray(new Node[nodes.size()]);
     }
 
-    private Node createNode(int id, int[] connectedIds, boolean clickable, PVector position, int x, int y, String level, String type) {
+    private Node createNode(int id, int[] connectedIds, boolean clickable, boolean currentOrNot, PVector position, int x, int y, String level, String type) {
         switch (type) {
             case "CombatNode":
-                return new CombatNode(id, connectedIds, clickable, position, x, y, level);
+                return new CombatNode(id, connectedIds, clickable, currentOrNot, position, x, y, level);
             // case "ShopNode"
             default:
-                return new Node(id, connectedIds, clickable, position, x, y, level);
+                return new Node(id, connectedIds, clickable, currentOrNot, position, x, y, level);
         }
     }
 }
