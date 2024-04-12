@@ -90,6 +90,7 @@ class MapState extends GameState {
         /* basic interactive function for combat node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
+                node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
@@ -357,36 +358,47 @@ class MapState extends GameState {
     }
 
     public void updateNodeStates() {
-        ArrayList<Node> currentNodes = new ArrayList<>();
-        int minLevelToUpdate = Integer.MAX_VALUE;
         int currAP = passedPlayer.getActionPts();
+        int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
+        ArrayList<Node> currentLevelNodes = new ArrayList<>();
+        ArrayList<Node> nodesToActivate = new ArrayList<>(); // Store the nodes of the previous layer
 
-        // 第一遍遍历找到currentOrNot为true的节点
+        // Step 1: Find the smallest level where currentOrNot is true.
         for (Node node : nodes) {
             if (node.currentOrNot) {
-                node.currentOrNot = false;
-                node.clickable = false;
-                currentNodes.add(node);
-                minLevelToUpdate = Math.min(minLevelToUpdate, getLevelAsInt(node.level) - 1);
-            }
-        }
-
-        // 更新比currentOrNot为true的节点level小1的节点的clickable属性
-        if (minLevelToUpdate >= 0) {
-            for (Node node : nodes) {
-                if (getLevelAsInt(node.level) == minLevelToUpdate) {
-                    node.clickable = true;
+                int level = getLevelAsInt(node.level);
+                if (level < minLevelWithCurrent) {
+                    minLevelWithCurrent = level;
+                    currentLevelNodes.clear(); // Empty because the node with currentOrNot being true was found at a lower level
+                    currentLevelNodes.add(node);
+                } else if (level == minLevelWithCurrent) {
+                    currentLevelNodes.add(node);
                 }
             }
         }
 
-        // 更新其他所有level小于currentOrNot为true的节点的clickable属性
+        // Step 2: Update node status
         for (Node node : nodes) {
             int nodeLevel = getLevelAsInt(node.level);
-            for (Node currentNode : currentNodes) {
-                int currentLevel = getLevelAsInt(currentNode.level);
-                if (nodeLevel < currentLevel && (currentLevel - nodeLevel) < currAP) {
-                    node.clickable = true;
+            if (nodeLevel == minLevelWithCurrent - 1) {
+                node.clickable = true;
+                node.currentOrNot = true;
+                nodesToActivate.add(node);
+            } else if (nodeLevel >= minLevelWithCurrent) {
+                node.clickable = false;
+                node.currentOrNot = false;
+            }
+        }
+
+        // Step 3: Update the clickable status according to the AP
+        for (Node node : nodes) {
+            int nodeLevel = getLevelAsInt(node.level);
+            if (nodeLevel < minLevelWithCurrent) {
+                for (Node currentNode : nodesToActivate) {
+                    int currentLevel = getLevelAsInt(currentNode.level);
+                    if (currentLevel - nodeLevel < passedPlayer.getActionPts()) {
+                        node.clickable = true;
+                    }
                 }
             }
         }
