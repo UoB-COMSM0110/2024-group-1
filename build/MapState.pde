@@ -1,3 +1,5 @@
+import java.io.File;
+
 class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
     Node[] nodes; 
@@ -6,7 +8,6 @@ class MapState extends GameState {
     GameEngine engineRef;
     private Player passedPlayer;
 
-    private float scrollOffset = 0;//Scroll offset used to control map display part
     PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail;//Used to generate a nice background image of map
     
     int currentNodeIndex = 0;  // Index of the currently highlighted node
@@ -43,11 +44,20 @@ class MapState extends GameState {
         entranceButton = new Button(100, 250, 230, 60, entranceImage);
 
         // Initialize map from json map loader
-        MapLoader mapLoader = new MapLoader(); // 假设这里不需要参数的构造函数或已经提供了一个空构造函数
-        String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
-        String jsonString = join(jsonLines, "");
-        mapLoader.loadNodesFromJSON(jsonString); // 从JSON字符串加载节点
-        nodes = mapLoader.loadNodes(); // 创建Node数组
+        MapLoader mapLoader = new MapLoader(); 
+        // Check mapTemp exists or not 
+        if(checkFileExists("../assets/map/mapTemp.json")){
+            System.out.println("Loading from mapTemp.json");
+            String[] jsonLines = loadStrings("../assets/map/mapTemp.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }else{
+            System.out.println("Loading from mapChoiceEasy.json");
+            String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }
+        nodes = mapLoader.loadNodes(); // set Node array
 
         // Initialize the marker of current node
         currentNodeIndex = 0;  // Start at the first node
@@ -80,6 +90,8 @@ class MapState extends GameState {
         /* basic interactive function for combat node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
+                updateNodeStates();
+                saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
                 break; // Assume that node could be clicked only once at a time
             }
@@ -151,6 +163,8 @@ class MapState extends GameState {
                     Node selectedNode = nodes[currentNodeIndex];
                     if (selectedNode.clickable) {
                         // Node is clickable, start combat
+                        updateNodeStates();
+                        saveMapStateToFile("../assets/map/mapTemp.json");
                         goToCombat();
                     } else {
                         // Node is not clickable, show warning
@@ -334,5 +348,80 @@ class MapState extends GameState {
                     }
                 }
         }
+    }
+
+    private boolean checkFileExists(String filePath){
+        File file = new File(sketchPath(filePath));
+        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        return file.exists();
+    }
+
+    public void updateNodeStates() {
+        ArrayList<Node> currentNodes = new ArrayList<>();
+        int minLevelToUpdate = Integer.MAX_VALUE;
+        int currAP = passedPlayer.getActionPts();
+
+        // 第一遍遍历找到currentOrNot为true的节点
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                node.currentOrNot = false;
+                node.clickable = false;
+                currentNodes.add(node);
+                minLevelToUpdate = Math.min(minLevelToUpdate, getLevelAsInt(node.level) - 1);
+            }
+        }
+
+        // 更新比currentOrNot为true的节点level小1的节点的clickable属性
+        if (minLevelToUpdate >= 0) {
+            for (Node node : nodes) {
+                if (getLevelAsInt(node.level) == minLevelToUpdate) {
+                    node.clickable = true;
+                }
+            }
+        }
+
+        // 更新其他所有level小于currentOrNot为true的节点的clickable属性
+        for (Node node : nodes) {
+            int nodeLevel = getLevelAsInt(node.level);
+            for (Node currentNode : currentNodes) {
+                int currentLevel = getLevelAsInt(currentNode.level);
+                if (nodeLevel < currentLevel && (currentLevel - nodeLevel) < currAP) {
+                    node.clickable = true;
+                }
+            }
+        }
+    }
+
+    public void saveMapStateToFile(String filename) {
+        JSONArray jsonNodes = new JSONArray();
+        for (Node node : nodes) {
+            JSONObject jsonNode = new JSONObject();
+            jsonNode.setInt("id", node.id);
+            jsonNode.setString("type", node instanceof CombatNode ? "CombatNode" : "Node");
+            jsonNode.setBoolean("clickable", node.clickable);
+            jsonNode.setBoolean("currentOrNot", node.currentOrNot);
+            jsonNode.setString("level", node.level);
+            jsonNode.setInt("x", (int) node.position.x);
+            jsonNode.setInt("y", (int) node.position.y);
+
+            JSONArray connectedIds = new JSONArray();
+            for (int id : node.connectedIds) {
+                connectedIds.append(id);
+            }
+            jsonNode.setJSONArray("connected_ids", connectedIds);
+
+            jsonNodes.append(jsonNode);
+        }
+
+        JSONObject mapData = new JSONObject();
+        mapData.setJSONArray("nodes", jsonNodes);
+
+        // Save JSON to file
+        saveJSONObject(mapData, filename);
+    }
+
+    private int getLevelAsInt(String level) {
+        // Assume the format "level_X"
+        return Integer.parseInt(level.split("_")[1]);
     }
 }
