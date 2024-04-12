@@ -109,9 +109,9 @@ Three key challenges emerged over the course of development and the brainstormin
 
 1. How to most efficiently create, load and display game assets.
 
-2. Combat/encounter design
+2. Flexible and balanced combat/encounter design
 
-3. 
+3. How to best integrate game states together
 
 The specifics of each challenge and how we dealt with it will be elaborated in turn.
 
@@ -120,9 +120,9 @@ The specifics of each challenge and how we dealt with it will be elaborated in t
 The card-based nature of our game made it more asset-heavy to implement than an alternative game concept (such as a platformer) may have been.
 Broadly speaking, our team's members lacked 2D art skills, posing something of a challenge to creating passable game assets.
 A key aspect to how we got around this obstacle was the use of AI image generation tools, which were used to enable the rapid generation of 
-certain assets. Specifically, AI tools were used for the creation of the main screen, combat end screen and card illustrations. 
+assets like the main screen, combat end screen and card illustrations. 
 
-To help save time in the creation of cards, our team put together a card template using Adobe PhotoShop with layers for different parts of a card,
+To save time in the creation of cards, our team put together a card template using PhotoShop with layers for different parts of a card,
 a move which enabled the quick iteration of new cards while maintaining a consistent format and style.
 
 ![CardLayers](./assets/psds/Layer-function-description-1.jpg)
@@ -130,9 +130,7 @@ a move which enabled the quick iteration of new cards while maintaining a consis
 *An image highlighting the different layers of the card template .psd file*
 
 Despite the value of AI tools for quick image generation, difficulty in using them for art direction and flaws in some of the AI generated images
-meant that we did not rely exclusively on AI images for the game. Maya, a 3D modeling software, was used to create several combat state-related
-assets. Though the creation process was longer and more complex than using AI tools, it allowed more freedom for the creation of a tailor-made
-environment which could be easily edited to meet our needs.
+meant that we did not rely exclusively on AI images for the game. Maya was used to create several combat state-related assets. Though the creation process was longer than using AI tools, it allowed the creation of a tailor-made environment which could be easily edited to meet our needs.
 
 ![3DEnvironment](./images/3DEnvironmentShot.png)
 *A view of the 3D environment created for the battle screen's background from within Maya*
@@ -143,13 +141,19 @@ to each card's name. A similar class was created for game entities. This choice 
 
 ## Encounter Design
 
-When it came to encounter and combat design, the first question our team confronted was around how or where to use procedural generation. After an 
-initial attempt at developing the map screen in a procedural manner, it became evident that using that approach was proving too complicated,
-and so our team opted for a hand-crafted map and combat encounters instead. Besides the complications in implementing procedural generation itself,
-we also decided to abandon that approach owing to the challenge it would have posed for game balance.
+When it came to encounter and combat design, the first question our team confronted was around the use of procedural generation. After an 
+initial attempt at developing the map screen procedurally, it became evident that using that approach was proving too complicated, prompting our team 
+to opt for a hand-crafted map and encounters instead. Besides implementation complications, we also abandoned procedural generation as a consequence of
+the difficulty it would have posed for consistent game balance.
 
-Another aspect which proved challenging was how to lay out classes in a way that allowed for certain gameplay features to be implemented. Though our team had, using the class and use case diagrams, developed a good idea of the program's high level structure at an early stage, it was only after the key combat-related classes (`CombatEncounter`, `Card`, `Enemy`, etc) had been set up that it became clear that features like cards with effects based on
-the current state of combat would be a challenge to implement, as the `Card` class maintained no awareness of combat state. We were able to implement
-this feature by extending `CombatEncounter` to process the active card in order to calculate and apply state-related effects using a private function
-making use of a switch statement.
+Another aspect which proved challenging was how to lay out classes in a way that allowed for certain gameplay features to be implemented. Though our team had, using the class and use case diagrams, developed a good idea of the program's high level structure at an early stage, it was only after the key combat-related classes had been set up that it became clear that features like cards with effects based on the current state of combat would be a challenge to implement, as the `Card` class maintained no awareness of combat state. We were able to implement this feature by extending `CombatEncounter` to process the active card in order to calculate and apply state-related effects using a private function making use of a switch statement.
 
+This experience highlighted the importance of planning out what features should be present in more detail prior to getting too far in
+implementation.
+
+## Game State System
+
+As our game required various states to interact, it was important for us to develop a system which would make this possible. We opted for a stack-based
+game state system, with each state receiving a reference to the top-level `GameEngine` object. This made it easier to update and pass around the 
+player's data while also permitting each member of the team to work on a different state. This assisted us in dividing work and avoiding merge conflicts.
+Nonetheless, this approach tested our teamwork abilities given that it required close coordination to have the states we were working on integrate together.
