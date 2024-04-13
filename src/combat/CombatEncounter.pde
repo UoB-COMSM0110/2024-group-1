@@ -180,9 +180,7 @@ class CombatEncounter {
             drawMoveIntentions(curr);
         }
     }
-<<<<<<< HEAD
-}
-=======
+
 
     private void drawMoveIntentions(Enemy curr) {
         ArrayList<Move> moves = curr.getMoves();
@@ -288,4 +286,3 @@ class CombatEncounter {
         battlePlayer.clearAllEffects();
     }
 }
->>>>>>> main

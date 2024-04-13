@@ -2,8 +2,8 @@ class ShopNode extends Node {
     boolean isMouseOver;
     private ArrayList<Card> shopCards;
 
-    public ShopNode(int id, int[] connectedIds, boolean clickable, PVector position, int x, int y, String level) {
-        super(id, connectedIds, clickable, position, x, y, level);
+    public ShopNode(int id, int[] connectedIds, boolean clickable, boolean currentOrNot, PVector position, int x, int y, String level) {
+        super(id, connectedIds, clickable, currentOrNot, position, x, y, level);
     }
 
     public void display(PImage shopIcon){
