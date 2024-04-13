@@ -1,4 +1,8 @@
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.LinkedList;
 
 class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
@@ -80,6 +84,9 @@ class MapState extends GameState {
             Node selectedNode = nodes[currentNodeIndex];
             if (selectedNode.clickable) {
                 // Node is clickable, start combat
+                selectedNode.currentOrNot = true;
+                updateNodeStates();
+                saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
             } else {
                 // Node is not clickable, show warning
@@ -164,6 +171,7 @@ class MapState extends GameState {
                     Node selectedNode = nodes[currentNodeIndex];
                     if (selectedNode.clickable) {
                         // Node is clickable, start combat
+                        selectedNode.currentOrNot = true;
                         updateNodeStates();
                         saveMapStateToFile("../assets/map/mapTemp.json");
                         goToCombat();
@@ -362,6 +370,7 @@ class MapState extends GameState {
         int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
         ArrayList<Node> currentLevelNodes = new ArrayList<>();
         ArrayList<Node> nodesToActivate = new ArrayList<>(); // Store the nodes of the previous layer
+        Node currentNode = null; // Declare currentNode here to ensure scope visibility.
 
         // Step 1: Find the smallest level where currentOrNot is true.
         for (Node node : nodes) {
@@ -369,39 +378,40 @@ class MapState extends GameState {
                 int level = getLevelAsInt(node.level);
                 if (level < minLevelWithCurrent) {
                     minLevelWithCurrent = level;
-                    currentLevelNodes.clear(); // Empty because the node with currentOrNot being true was found at a lower level
-                    currentLevelNodes.add(node);
-                } else if (level == minLevelWithCurrent) {
-                    currentLevelNodes.add(node);
+                    currentNode = node;
                 }
             }
         }
 
-        // Step 2: Update node status
-        for (Node node : nodes) {
-            int nodeLevel = getLevelAsInt(node.level);
-            if (nodeLevel == minLevelWithCurrent - 1) {
-                node.clickable = true;
-                node.currentOrNot = true;
-                nodesToActivate.add(node);
-            } else if (nodeLevel >= minLevelWithCurrent) {
-                node.clickable = false;
-                node.currentOrNot = false;
-            }
-        }
 
-        // Step 3: Update the clickable status according to the AP
-        for (Node node : nodes) {
-            int nodeLevel = getLevelAsInt(node.level);
-            if (nodeLevel < minLevelWithCurrent) {
-                for (Node currentNode : nodesToActivate) {
-                    int currentLevel = getLevelAsInt(currentNode.level);
-                    if (currentLevel - nodeLevel < passedPlayer.getActionPts()) {
-                        node.clickable = true;
-                    }
+        if (currentNode != null) {
+            // Step 2: Update node status
+            for (Node node : nodes) {
+                int nodeLevel = getLevelAsInt(node.level);
+                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                    node.clickable = true;
+                    node.currentOrNot = true;
+                    nodesToActivate.add(node);
+                } else if (nodeLevel >= minLevelWithCurrent) {
+                    node.clickable = false;
+                    node.currentOrNot = false;
+                }
+            }
+            // Keep clicked node's currentOrNot as "true"，set its clickable to "false"
+            currentNode.clickable = false;
+
+            // Step 3: Update the clickable status according to the AP
+            for (Node node : nodes) {
+                if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
+                int nodeLevel = getLevelAsInt(node.level);
+                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                    node.clickable = true; // connected with currentNode directly or indirectly
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                    node.clickable = true; // Destination special result
                 }
             }
         }
+
     }
 
     public void saveMapStateToFile(String filename) {
@@ -436,4 +446,51 @@ class MapState extends GameState {
         // Assume the format "level_X"
         return Integer.parseInt(level.split("_")[1]);
     }
+
+    public boolean isConnected(int nodeId1, int nodeId2) {
+        if (nodeId1 == nodeId2) {
+            return true;
+        }
+
+        // Connection by diagram struct
+        HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+        HashMap<Integer, String> nodeLevels = new HashMap<>(); // Store level of each node
+        for (Node node : nodes) {
+            nodeLevels.put(node.id, node.level);
+            if (!node.level.equals("level_1")) { // level1 node could not be the mid node in route
+                graph.putIfAbsent(node.id, new HashSet<>());
+                for (int connectedId : node.connectedIds) {
+                    // Destination level 1 is an exception
+                    if (!nodeLevels.getOrDefault(connectedId, "level_1").equals("level_1")) { 
+                        graph.get(node.id).add(connectedId);
+                        graph.putIfAbsent(connectedId, new HashSet<>());
+                        graph.get(connectedId).add(node.id);
+                    }
+                }
+            }
+        }
+
+        // BFS serching nodeId2 to nodeId2
+        Queue<Integer> queue = new LinkedList<>();
+        HashSet<Integer> visited = new HashSet<>();
+        queue.add(nodeId1);
+        visited.add(nodeId1);
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            if (current == nodeId2) {
+                return true;
+            }
+            for (int neighbor : graph.getOrDefault(current, new HashSet<>())) {
+                // Destination level 1 is an exception
+                if (!visited.contains(neighbor) && !nodeLevels.get(neighbor).equals("level_1")) { 
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
