@@ -53,7 +53,7 @@
     "y": 470,
     "id": 4,
     "type": "CombatNode",
-    "currentOrNot": false
+    "currentOrNot": true
   },
   {
     "level": "level_3",
@@ -66,7 +66,7 @@
     "y": 470,
     "id": 5,
     "type": "CombatNode",
-    "currentOrNot": false
+    "currentOrNot": true
   },
   {
     "level": "level_3",
@@ -79,7 +79,7 @@
     "y": 470,
     "id": 6,
     "type": "CombatNode",
-    "currentOrNot": false
+    "currentOrNot": true
   },
   {
     "level": "level_3",
@@ -92,7 +92,7 @@
     "y": 470,
     "id": 7,
     "type": "CombatNode",
-    "currentOrNot": false
+    "currentOrNot": true
   },
   {
     "level": "level_3",
@@ -105,7 +105,7 @@
     "y": 470,
     "id": 8,
     "type": "CombatNode",
-    "currentOrNot": false
+    "currentOrNot": true
   },
   {
     "level": "level_3",
@@ -118,7 +118,7 @@
     "y": 470,
     "id": 9,
     "type": "CombatNode",
-    "currentOrNot": false
+    "currentOrNot": true
   },
   {
     "level": "level_4",
@@ -130,7 +130,7 @@
       13,
       14
     ],
-    "clickable": true,
+    "clickable": false,
     "x": 700,
     "y": 670,
     "id": 10,
@@ -147,7 +147,7 @@
       16,
       17
     ],
-    "clickable": true,
+    "clickable": false,
     "x": 1200,
     "y": 670,
     "id": 11,

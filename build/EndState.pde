@@ -2,6 +2,8 @@ class EndState extends GameState {
   PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
   Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
+  GameEngine engineRef;
+  private Player passedPlayer;
   int actionPoints;
   int winBonus = 5; //suppose the player will get 5 points after winning
   int totalPoints;
@@ -10,7 +12,9 @@ class EndState extends GameState {
   boolean gameContinue = true;
   boolean pageChange = false;
   
-  EndState(Player player, boolean check) {
+  EndState(GameEngine engine, Player player, boolean check) {
+    passedPlayer = player;
+    engineRef = engine;
     actionPoints = player.getActionPts();
     checkWin = check;
     if (checkWin) {
@@ -42,6 +46,8 @@ class EndState extends GameState {
     if (menuButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to go to start stage
+      MenuState menuState = new MenuState(engineRef, passedPlayer);
+      engineRef.changeState(menuState);
     }
     if (cardsButton.overButton() && mousePressed) {
       pageChange = true;
@@ -54,6 +60,25 @@ class EndState extends GameState {
     if (continueButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to back to game
+       /*MapLoader mapLoader = new MapLoader(); 
+       Node[] nodes;
+        // Check mapTemp exists or not 
+        if(checkFileExists("../assets/map/mapTemp.json")){
+            System.out.println("Loading from mapTemp.json");
+            String[] jsonLines = loadStrings("../assets/map/mapTemp.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }else{
+            System.out.println("Loading from mapChoiceEasy.json");
+            String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }
+        nodes = mapLoader.loadNodes(); // set Node array
+      updateNodeStates();
+      saveMapStateToFile("../assets/map/mapTemp.json");*/
+      MapState mapState = new MapState(engineRef, passedPlayer);
+      engineRef.changeState(mapState);
     }
     if (settingButton.overButton() && mousePressed) {
       pageChange = true;
@@ -126,6 +151,12 @@ class EndState extends GameState {
     }
     //Add codes to go back to game
   }
+  
+  private boolean checkFileExists(String filePath){
+        File file = new File(sketchPath(filePath));
+        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        return file.exists();
+    }
 
   public void pauseState() {}
   public void resumeState() {}
