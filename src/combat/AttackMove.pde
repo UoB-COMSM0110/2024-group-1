@@ -2,7 +2,7 @@ class AttackMove extends Move {
     private int attackDmg;
 
     AttackMove(Entity attacker, Entity target, int dmg) {
-        super(attacker, target);
+        super(attacker, target, MoveType.MOVETYPE_ATTACK);
         attackDmg = dmg;
     }
 

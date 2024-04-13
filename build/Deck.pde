@@ -4,7 +4,7 @@ import java.util.Collections;
 class Deck {
     private ArrayList<Card> deck;
     int deckLimit;
-    private final int CARDS_BASE_X = (width/2)-850;
+    private final int CARDS_BASE_X = (width/2)-1050;
     private CardImgLoader cardImages;
     
     Deck(int limit) {
@@ -88,6 +88,11 @@ class Deck {
         deck.add(new StrikeCard());
         deck.add(new StrikeCard());
         deck.add(new StrikeCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
+        deck.add(new DefenceCard());
     }
     
     @Override

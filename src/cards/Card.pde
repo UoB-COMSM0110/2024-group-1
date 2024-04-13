@@ -4,15 +4,17 @@ abstract class Card {
     private int energyCost;
     private int shopCost;
     private boolean takesTarget;
+    private boolean isAoE;
     private PImage img;
     private PVector pos;
 
-    Card(String name, CardType type, int energyCost, int shopCost, boolean needsTarget) {
+    Card(String name, CardType type, int energyCost, int shopCost, boolean needsTarget, boolean isAoE) {
         this.name = name;
         cardType = type;
         this.energyCost = energyCost;
         this.shopCost = shopCost;
         takesTarget = needsTarget;
+        this.isAoE = isAoE;
     }
 
     abstract public void applyCard(Entity target);
@@ -53,6 +55,10 @@ abstract class Card {
 
     public boolean getIfTakesTarget() {
         return takesTarget;
+    }
+
+    public boolean getIfIsAoE() {
+        return isAoE;
     }
 
     public void setPos(int x, int y) {

@@ -7,7 +7,8 @@
       "connected_ids": [2, 3],
       "x": 900,
       "y": 90,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_2",
@@ -16,7 +17,8 @@
       "connected_ids": [1, 4, 5, 6],
       "x": 700,
       "y": 270,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_2",
@@ -25,7 +27,8 @@
       "connected_ids": [1, 7, 8, 9],
       "x": 1200,
       "y": 270,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_3",
@@ -34,7 +37,8 @@
       "connected_ids": [2, 10],
       "x": 500,
       "y": 470,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_3",
@@ -43,7 +47,8 @@
       "connected_ids": [2, 10],
       "x": 600,
       "y": 470,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_3",
@@ -52,7 +57,8 @@
       "connected_ids": [2, 10],
       "x": 740,
       "y": 470,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_3",
@@ -61,7 +67,8 @@
       "connected_ids": [3, 11],
       "x": 1000,
       "y": 470,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_3",
@@ -70,7 +77,8 @@
       "connected_ids": [3, 11],
       "x": 1200,
       "y": 470,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_3",
@@ -79,7 +87,8 @@
       "connected_ids": [3, 11],
       "x": 1400,
       "y": 470,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_4",
@@ -88,7 +97,8 @@
       "connected_ids": [4, 5, 6, 12, 13, 14],
       "x": 700,
       "y": 670,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_4",
@@ -97,7 +107,8 @@
       "connected_ids": [7, 8, 9, 15, 16, 17],
       "x": 1200,
       "y": 670,
-      "clickable": false
+      "clickable": false,
+      "currentOrNot": false
     },
     {
       "level": "level_5",
@@ -106,7 +117,8 @@
       "connected_ids": [10],
       "x": 350,
       "y": 870,
-      "clickable": true
+      "clickable": true,
+      "currentOrNot": false
     },
     {
       "level": "level_5",
@@ -115,7 +127,8 @@
       "connected_ids": [10],
       "x": 650,
       "y": 870,
-      "clickable": true
+      "clickable": true,
+      "currentOrNot": false
     },
     {
       "level": "level_5",
@@ -124,7 +137,8 @@
       "connected_ids": [10],
       "x": 950,
       "y": 870,
-      "clickable": true
+      "clickable": true,
+      "currentOrNot": false
     },
     {
       "level": "level_5",
@@ -133,7 +147,8 @@
       "connected_ids": [11],
       "x": 1150,
       "y": 870,
-      "clickable": true
+      "clickable": true,
+      "currentOrNot": false
     },
     {
       "level": "level_5",
@@ -142,7 +157,8 @@
       "connected_ids": [11],
       "x": 1350,
       "y": 870,
-      "clickable": true
+      "clickable": true,
+      "currentOrNot": false
     },
     {
       "level": "level_5",
@@ -151,7 +167,8 @@
       "connected_ids": [11],
       "x": 1550,
       "y": 870,
-      "clickable": true
+      "clickable": true,
+      "currentOrNot": false
     }
   ]
 }
