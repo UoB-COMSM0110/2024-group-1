@@ -2,15 +2,20 @@ class EndState extends GameState {
   PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
   Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
+  GameEngine engineRef;
+  private Player passedPlayer;
   int actionPoints;
   int winBonus = 5; //suppose the player will get 5 points after winning
+  int sacrificeFine = 5; //suppose the player will lose 8 points after lose
   int totalPoints;
   boolean checkWin;
   boolean agreeToSacrificeLife = false;
   boolean gameContinue = true;
   boolean pageChange = false;
   
-  EndState(Player player, boolean check) {
+  EndState(GameEngine engine, Player player, boolean check) {
+    passedPlayer = player;
+    engineRef = engine;
     actionPoints = player.getActionPts();
     checkWin = check;
     if (checkWin) {
@@ -42,6 +47,8 @@ class EndState extends GameState {
     if (menuButton.overButton() && mousePressed) {
       pageChange = true;
       //Add codes to go to start stage
+      MenuState menuState = new MenuState(engineRef, passedPlayer);
+      engineRef.changeState(menuState);
     }
     if (cardsButton.overButton() && mousePressed) {
       pageChange = true;
@@ -53,7 +60,11 @@ class EndState extends GameState {
     }
     if (continueButton.overButton() && mousePressed) {
       pageChange = true;
-      //Add codes to back to game
+      MapState mapStateFake = new MapState(engineRef, passedPlayer);
+      mapStateFake.updateNodeStatesOutside();
+      mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
+      MapState mapStateTrue = new MapState(engineRef, passedPlayer);
+      engineRef.changeState(mapStateTrue);
     }
     if (settingButton.overButton() && mousePressed) {
       pageChange = true;
@@ -64,7 +75,9 @@ class EndState extends GameState {
   public void handleKeyInput() {
     if (keyPressed) {
       if (key == 'y' || key == 'Y') {
-        actionPoints -= 5;
+        //actionPoints -= 5;
+        //Fix: Permanently decrease it and save it 
+        passedPlayer.decrementActionPts(sacrificeFine);
         agreeToSacrificeLife = true;
       }
     }
@@ -104,7 +117,7 @@ class EndState extends GameState {
     text("\nWin Bonus: ", width/2-200, height/2+20);
     text("\nTotal: ", width/2-200, height/2+70);
     textAlign(RIGHT, CENTER);
-    text("\n"+actionPoints, width/2+240, height/2-30);
+    text("\n"+passedPlayer.getActionPts(), width/2+240, height/2-30);
     text("\n"+winBonus, width/2+240, height/2+20);
     text("\n"+totalPoints, width/2+240, height/2+70);
   }
@@ -112,8 +125,8 @@ class EndState extends GameState {
   void drawLose() {
     image(loseImage, displayWidth/2-230, -50);
     fill(255, 0, 0); // red means failure
-    text("\nRemaining Action Points: " + actionPoints, width/2, height/2 -40);
-    if (actionPoints < 5) {
+    text("\nRemaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -40);
+    if ((passedPlayer.getActionPts() < sacrificeFine) || (passedPlayer.getActionPts() < 0)) {
       text("\nNot enough Action Points", width/2, height/2);
       text("\nGame End", width/2, height/2+40);
       gameContinue = false;
@@ -126,6 +139,12 @@ class EndState extends GameState {
     }
     //Add codes to go back to game
   }
+  
+  private boolean checkFileExists(String filePath){
+        File file = new File(sketchPath(filePath));
+        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        return file.exists();
+    }
 
   public void pauseState() {}
   public void resumeState() {}
