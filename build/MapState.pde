@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Random;
 
 class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
@@ -270,11 +271,32 @@ class MapState extends GameState {
     }
 
     private void goToCombat() {
-        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        Worm worm = new Worm(passedPlayer);
-        enemies.add(worm);
-        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-        engineRef.changeState(combatState);
+        int currEnemy = randomizeEnemy();
+        System.out.println("Current enemy case is " + currEnemy);
+        switch(currEnemy){
+            //Spider
+            case 0: 
+                ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                Spider spider = new Spider(passedPlayer);
+                enemies.add(spider);
+                CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                engineRef.changeState(combatState);
+                break;
+            //Worm
+            case 1:
+                ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                Worm worm = new Worm(passedPlayer);
+                enemiesDefault.add(worm);
+                CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                engineRef.changeState(combatStateDefault);
+                break;
+        }
+    }
+
+    private int randomizeEnemy(){
+        Random random = new Random();
+        int randomEnemy = random.nextInt(2);
+        return randomEnemy;
     }
 
     private void moveCursorToDifferentLevel(int delta) {
