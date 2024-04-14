@@ -250,6 +250,8 @@ class MapState extends GameState {
                 text("AP        "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 0 && currAP <= 9){
                 text("AP           "+currAP, 1650, 90); // MP value info
+            }else if(currAP <0){
+                text("AP          "+currAP, 1650, 90); // MP value info
             }
             //text("AP "+currAP, 1650, 90); // MP value info
     }
@@ -412,6 +414,54 @@ class MapState extends GameState {
             }
         }
 
+    }
+
+    public void updateNodeStatesOutside(){
+        int currAP = passedPlayer.getActionPts();
+        int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
+        ArrayList<Node> currentLevelNodes = new ArrayList<>();
+        ArrayList<Node> nodesToActivate = new ArrayList<>(); // Store the nodes of the previous layer
+        Node currentNode = null; // Declare currentNode here to ensure scope visibility.
+
+        // Step 1: Find the smallest level where currentOrNot is true.
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                int level = getLevelAsInt(node.level);
+                if (level < minLevelWithCurrent) {
+                    minLevelWithCurrent = level;
+                    currentNode = node;
+                }
+            }
+        }
+
+
+        if (currentNode != null) {
+            // Step 2: Update node status
+            for (Node node : nodes) {
+                int nodeLevel = getLevelAsInt(node.level);
+                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                    node.clickable = true;
+                    node.currentOrNot = true;
+                    nodesToActivate.add(node);
+                } else if (nodeLevel >= minLevelWithCurrent) {
+                    node.clickable = false;
+                    node.currentOrNot = false;
+                }
+            }
+            // Keep clicked node's currentOrNot and clickable as "true"
+            currentNode.clickable = true;
+
+            // Step 3: Update the clickable status according to the AP
+            for (Node node : nodes) {
+                if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
+                int nodeLevel = getLevelAsInt(node.level);
+                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                    node.clickable = true; // connected with currentNode directly or indirectly
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                    node.clickable = true; // Destination special result
+                }
+            }
+        }
     }
 
     public void saveMapStateToFile(String filename) {
