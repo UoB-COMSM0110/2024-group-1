@@ -1,25 +1,30 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 class EndState extends GameState {
   PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
   Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
   GameEngine engineRef;
   private Player passedPlayer;
+  int winBonus = 15; //suppose the player will get 5 points after winning
+  int sacrificeFine = 5; //suppose the player will lose 5 points after lose
+  int sacrificeHp = 10; //suppose the player will get 10 hp after losing 5 points
   int actionPoints;
-  int winBonus = 5; //suppose the player will get 5 points after winning
-  int sacrificeFine = 5; //suppose the player will lose 8 points after lose
   int totalPoints;
+  String warningMessage = "Blocked! "; // Warning message content
   boolean checkWin;
-  boolean agreeToSacrificeLife = false;
-  boolean gameContinue = true;
-  boolean pageChange = false;
+  boolean agreeToSacrificeLife = true;
   
   EndState(GameEngine engine, Player player, boolean check) {
     passedPlayer = player;
     engineRef = engine;
-    actionPoints = player.getActionPts();
     checkWin = check;
+    actionPoints = player.getActionPts();
     if (checkWin) {
       player.incrementActionPts(winBonus);
+    } else {
+      player.decrementActionPts(sacrificeFine);
     }
     totalPoints = player.getActionPts();
     setupState();
@@ -45,46 +50,57 @@ class EndState extends GameState {
   
   public void handleMouseInput() {
     if (menuButton.overButton() && mousePressed) {
-      pageChange = true;
       //Add codes to go to start stage
       MenuState menuState = new MenuState(engineRef, passedPlayer);
       engineRef.changeState(menuState);
     }
     if (cardsButton.overButton() && mousePressed) {
-      pageChange = true;
-      //Add codes to go to cards stage
+      if (checkWin || (!checkWin && totalPoints >= sacrificeFine)) {
+        //Add codes to go to cards stage
+      } else {
+        displayWarningMessage();
+      }
     }
     if (shopButton.overButton() && mousePressed) {
-      pageChange = true;
-      //Add codes to go to shop stage
+      if (checkWin || (!checkWin && totalPoints >= sacrificeFine)) {
+        //Add codes to go to shop stage
+      } else {
+        displayWarningMessage();
+      }
     }
     if (continueButton.overButton() && mousePressed) {
-      pageChange = true;
-      MapState mapStateFake = new MapState(engineRef, passedPlayer);
-      mapStateFake.updateNodeStatesOutside();
-      mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
-      MapState mapStateTrue = new MapState(engineRef, passedPlayer);
-      engineRef.changeState(mapStateTrue);
+      if (checkWin || (!checkWin && (totalPoints >= sacrificeFine) && (passedPlayer.getCurrHp() > 0))) {
+        MapState mapStateFake = new MapState(engineRef, passedPlayer);
+        mapStateFake.updateNodeStatesOutside();
+        mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
+        MapState mapStateTrue = new MapState(engineRef, passedPlayer);
+        engineRef.changeState(mapStateTrue);
+      } else {
+        MenuState menuState = new MenuState(engineRef, passedPlayer);
+        engineRef.changeState(menuState);
+      }
     }
     if (settingButton.overButton() && mousePressed) {
-      pageChange = true;
       //Add codes to go to setting stage
     }
   }
   
   public void handleKeyInput() {
-    if (keyPressed) {
-      if (key == 'y' || key == 'Y') {
-        //actionPoints -= 5;
-        //Fix: Permanently decrease it and save it 
-        passedPlayer.decrementActionPts(sacrificeFine);
-        agreeToSacrificeLife = true;
+    if (keyPressed && agreeToSacrificeLife) {
+      if (key == 'y' || key == 'Y' || key == 'n' || key == 'N') {
+        if (key == 'y' || key == 'Y') {
+          //actionPoints -= 5;
+          //Fix: Permanently decrease it and save it 
+          passedPlayer.decrementActionPts(sacrificeFine);
+          passedPlayer.incrementHp(sacrificeHp);
+          totalPoints = passedPlayer.getActionPts();
+        }
+        agreeToSacrificeLife = false;
       }
     }
   }
   
   public void drawState() {
-    if (!pageChange) {
       background(backgroundImage);
       settingButton.drawButton();
       menuButton.drawButton();
@@ -98,10 +114,6 @@ class EndState extends GameState {
       } else {
         drawLose();
       }
-    } else {
-      cleanScreen();
-      //Add codes to change stage
-    }
   }
   
   void cleanScreen() {
@@ -109,6 +121,7 @@ class EndState extends GameState {
   }
   
   void drawWin() {
+    agreeToSacrificeLife = false;
     image(winImage, displayWidth/2-230, -50);
     image(Score, width/2-350, height/2-250); 
     fill(255, 255, 255);
@@ -117,7 +130,7 @@ class EndState extends GameState {
     text("\nWin Bonus: ", width/2-200, height/2+20);
     text("\nTotal: ", width/2-200, height/2+70);
     textAlign(RIGHT, CENTER);
-    text("\n"+passedPlayer.getActionPts(), width/2+240, height/2-30);
+    text("\n"+actionPoints, width/2+240, height/2-30);
     text("\n"+winBonus, width/2+240, height/2+20);
     text("\n"+totalPoints, width/2+240, height/2+70);
   }
@@ -125,25 +138,55 @@ class EndState extends GameState {
   void drawLose() {
     image(loseImage, displayWidth/2-230, -50);
     fill(255, 0, 0); // red means failure
-    text("\nRemaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -40);
-    if ((passedPlayer.getActionPts() < sacrificeFine) || (passedPlayer.getActionPts() < 0)) {
-      text("\nNot enough Action Points", width/2, height/2);
-      text("\nGame End", width/2, height/2+40);
-      gameContinue = false;
-      //Add codes to go back to start stage
+    text("\nRemaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -60);
+    text("\nRemaining HP: " + passedPlayer.getCurrHp(), width/2, height/2);
+    if (totalPoints < sacrificeFine) {
+      agreeToSacrificeLife = false;
+      text("\nNot enough Action Points, Game End!!!", width/2, height/2+60);
+      String filePath = "../assets/map/mapTemp.json";
+      try {
+      Path path = Paths.get(filePath);
+      Files.deleteIfExists(path);
+      println("Delete successfully: " + filePath);
+      } catch (IOException e) {
+        println("Delete failed: " + e.getMessage());
+        e.printStackTrace();
+      }
     } else {
-      if (!agreeToSacrificeLife) {
-        text("\nAgree to sacrifice life? (Y/N)", width/2, height/2);
-        handleKeyInput();
+      if (agreeToSacrificeLife) {
+        text("\nAgree to sacrifice life? (Y/N)", width/2, height/2+60);
       }
     }
-    //Add codes to go back to game
   }
   
   private boolean checkFileExists(String filePath){
         File file = new File(sketchPath(filePath));
         System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
         return file.exists();
+    }
+    
+  private void displayWarningMessage() {
+        // Original location
+        int rectWidth = 300;
+        int rectHeight = 100;
+        int rectX = width / 2 - rectWidth / 2;
+        int rectY = height / 2 - rectHeight / 2;
+
+        // Change the location of warning message，right 600px, up 200px
+        rectX += 600;
+        rectY -= 200;
+
+        // Draw yellow background
+        fill(255, 255, 0);
+        rect(rectX, rectY, rectWidth, rectHeight);
+
+        // Draw warning content
+        fill(0);
+        textAlign(CENTER, CENTER);
+        text(warningMessage, rectX + rectWidth / 2, rectY + rectHeight / 2);
+
+        // Draw the closure option "X"
+        text("x", rectX + rectWidth - 15, rectY + 15);
     }
 
   public void pauseState() {}

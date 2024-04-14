@@ -38,7 +38,7 @@ abstract class Entity {
         return maxHp;
     }
 
-    private void incrementHp(int amt) {
+    public void incrementHp(int amt) {
         currHp += amt;
         if (currHp > maxHp) {
             currHp = maxHp;
