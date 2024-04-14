@@ -15,6 +15,7 @@ class EndState extends GameState {
   String warningMessage = "Blocked! "; // Warning message content
   boolean checkWin;
   boolean agreeToSacrificeLife = true;
+  boolean checkFinalWin;
   
   EndState(GameEngine engine, Player player, boolean check) {
     passedPlayer = player;
@@ -73,8 +74,24 @@ class EndState extends GameState {
         MapState mapStateFake = new MapState(engineRef, passedPlayer);
         mapStateFake.updateNodeStatesOutside();
         mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
-        MapState mapStateTrue = new MapState(engineRef, passedPlayer);
-        engineRef.changeState(mapStateTrue);
+        checkFinalWin = mapStateFake.checkFinalWin();
+        if(checkFinalWin){
+          System.out.println("WinWinWin!!!");
+          String filePath = "../assets/map/mapTemp.json";
+          try {
+            Path path = Paths.get(sketchPath(filePath));
+            Files.deleteIfExists(path);
+            println("Delete successfully: " + filePath);
+          } catch (IOException e) {
+            println("Delete failed: " + e.getMessage());
+            e.printStackTrace();
+          }
+          MenuState menuState = new MenuState(engineRef, passedPlayer);
+          engineRef.changeState(menuState);
+        }else{
+          MapState mapStateTrue = new MapState(engineRef, passedPlayer);
+          engineRef.changeState(mapStateTrue);
+        }
       } else {
         MenuState menuState = new MenuState(engineRef, passedPlayer);
         engineRef.changeState(menuState);
