@@ -145,7 +145,7 @@ class EndState extends GameState {
       text("\nNot enough Action Points, Game End!!!", width/2, height/2+60);
       String filePath = "../assets/map/mapTemp.json";
       try {
-      Path path = Paths.get(filePath);
+      Path path = Paths.get(sketchPath(filePath));
       Files.deleteIfExists(path);
       println("Delete successfully: " + filePath);
       } catch (IOException e) {
