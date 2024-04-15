@@ -189,6 +189,8 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if(node instanceof CombatNode){
                     ((CombatNode)node).display(combatIcon);
+                }else if(node instanceof ShopNode){
+                    ((ShopNode)node).display(shopIcon);
                 }else{
                     node.display();
                 }
@@ -255,8 +257,10 @@ class MapState extends GameState {
         engineRef.changeState(combatState);
     }
 
-    private void gotoShop(){
-        ShopState shopState = new ShopState(engineRef,passedPlayer,enemies);
+    private void goToShop(){
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new AngerCard());
+        ShopState shopState = new ShopState(engineRef,passedPlayer, cards);
         engineRef.changeState(shopState);
     }
 

@@ -20,7 +20,7 @@ class ShopNode extends Node {
         }
 
         //Draw the cover indicator of clickable visualization
-        rect(imageX, imageY, combatIcon.width, combatIcon.height);
+        rect(imageX, imageY, shopIcon.width, shopIcon.height);
     }
     
     public void setCards(ArrayList<Card> cards) {
