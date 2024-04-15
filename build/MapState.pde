@@ -120,21 +120,20 @@ class MapState extends GameState {
         if (tutorialButton.overButton() && mousePressed){
             showTutorial = ! showTutorial;
         }
-        /* change game state to COMBAT_STATE or SHOP_STATE*/
-        /*test
-               for(){
-            if(node.isMouseOver(mouseX,mouseY)){
-                if(node instanceof CombatNode){
-                    ArrayList<Enemy> nextEnemy = node.getNextEnemy();
-                    CombatState newCombat = new CombatState(engineRef,passedPlayer,nextEnemy);
-                    engineRef.changeState(newCombat);
-                }else if (node instanceof ShopNode) {
-                    ShopState newShop = new ShopState(engineRef,passedPlayer);
-                    engineRef.changeState(newShop);
-                }
+        /* change game state to SHOP_STATE*/
+        for (Node node : nodes) {
+            if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
+                node.currentOrNot = true;
+                updateNodeStates();
+                saveMapStateToFile("../assets/map/mapTemp.json");
+                goToShop();
+                break; // Assume that node could be clicked only once at a time
+            }
+            if((node.isMouseOver(mouseX, mouseY))&&(!node.clickable)){
+                // Node is not clickable, show warning
+                showWarning("Blocked! ");
             }
         }
-        test*/
     }
     public void handleMouseWheel(MouseEvent e){
         //float event = e.getCount();
@@ -254,6 +253,11 @@ class MapState extends GameState {
         enemies.add(worm);
         CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
         engineRef.changeState(combatState);
+    }
+
+    private void gotoShop(){
+        ShopState shopState = new ShopState(engineRef,passedPlayer,enemies);
+        engineRef.changeState(shopState);
     }
 
     private void moveCursorToDifferentLevel(int delta) {

@@ -12,6 +12,15 @@ class ShopNode extends Node {
         float imageY = position.y - shopIcon.height / 2;
         
         image(shopIcon, imageX, imageY);
+        // Set the configuration of indicator
+        if (clickable) {
+            fill(255, 255, 0, 100);  // Yellow transparent
+        } else {
+            fill(255, 0, 0, 100);    // Red transparent
+        }
+
+        //Draw the cover indicator of clickable visualization
+        rect(imageX, imageY, combatIcon.width, combatIcon.height);
     }
     
     public void setCards(ArrayList<Card> cards) {
