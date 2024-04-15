@@ -1,7 +1,0 @@
-public enum StateEnum {
-  STATE_TITLESCREEN,
-  STATE_COMBAT,
-  STATE_MAP,
-  STATE_VICTORY,
-  STATE_DEFEAT
-}

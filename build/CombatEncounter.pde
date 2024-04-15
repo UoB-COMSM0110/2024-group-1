@@ -7,8 +7,8 @@ class CombatEncounter {
     private Card activeCard;
     private boolean isPlayerTurn;
     private int drawAmt;
-    private final int ENEMY_BASE_X = (width/2);
-    private final int ENEMY_BASE_Y = 600;
+    private final int ENEMY_BASE_X = (int)(width*0.43);
+    private final int ENEMY_BASE_Y = (int)(height*0.25);
     private PImage[] encounterImgs;
     private Button endTurnBtn;
     private EntityImgLoader entityImgs;
@@ -29,7 +29,7 @@ class CombatEncounter {
         encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
         encounterImgs[4] = loadImage("../assets/combat/poison_icon.png");
         encounterImgs[5] = loadImage("../assets/combat/attack_buff_icon.png");
-        endTurnBtn = new Button(width-300, height-400, 256, 256, encounterImgs[1]);
+        endTurnBtn = new Button(width-300, (int)(height*0.75), 256, 256, encounterImgs[1]);
     }
 
     public void initEncounter() {
@@ -146,11 +146,10 @@ class CombatEncounter {
         image(encounterImgs[0], 0, 0, width, height);
         drawHUDElements();
 
-        //image(battlePlayer.getImg(), 50, 100);
         drawEnemies();
 
         for (int j=0; j < cardHand.size(); j++) {
-            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, 512, 512);
+            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, width*0.20, height*0.40);
         }
     }
 
