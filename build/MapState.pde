@@ -368,7 +368,7 @@ class MapState extends GameState {
                 engineRef.changeState(shopStateOne);
                 break;
             //Default test
-            case 4:
+            case 2:
                 ArrayList<Card> shopDeckDefault = new ArrayList<Card>();
                 BlizzardCard blizzardCardTwo = new BlizzardCard();
                 shopDeckDefault.add(blizzardCardTwo);
