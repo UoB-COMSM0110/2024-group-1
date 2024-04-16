@@ -334,12 +334,20 @@ class MapState extends GameState {
                 CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
                 engineRef.changeState(combatStateDefault);
                 break;
+            //Golem
+            case 2:
+                ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
+                Golem golem = new Golem(passedPlayer);
+                enemiesGolem.add(golem);
+                CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                engineRef.changeState(combatStateGolem);
+            break;
         }
     }
 
     private int randomizeEnemy(){
         Random random = new Random();
-        int randomEnemy = random.nextInt(2);
+        int randomEnemy = random.nextInt(3);
         return randomEnemy;
     }
 
