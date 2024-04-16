@@ -141,9 +141,7 @@ to each card's name. A similar class was created for game entities. This choice 
 
 ## Encounter Design
 
-When it came to encounter and combat design, the first question our team confronted was around the use of procedural generation. After an 
-initial attempt at developing the map screen procedurally, it became evident that using that approach was proving too complicated, prompting our team 
-to opt for a hand-crafted map and encounters instead. Besides implementation complications, we also abandoned procedural generation as a consequence of
+When it came to encounter and combat design, the first question our team confronted was around using procedural generation. After an initial attempt at developing the map screen procedurally, it became evident that using that approach was proving too complicated, prompting our team to opt for a hand-crafted map and encounters instead. Besides implementation complications, we also abandoned procedural generation as a consequence of
 the difficulty it would have posed for consistent game balance.
 
 Another aspect which proved challenging was how to lay out classes in a way that allowed for certain gameplay features to be implemented. Though our team had, using the class and use case diagrams, developed a good idea of the program's high level structure at an early stage, it was only after the key combat-related classes had been set up that it became clear that features like cards with effects based on the current state of combat would be a challenge to implement, as the `Card` class maintained no awareness of combat state. We were able to implement this feature by extending `CombatEncounter` to process the active card in order to calculate and apply state-related effects using a private function making use of a switch statement.
@@ -157,3 +155,5 @@ As our game required various states to interact, it was important for us to deve
 game state system, with each state receiving a reference to the top-level `GameEngine` object. This made it easier to update and pass around the 
 player's data while also permitting each member of the team to work on a different state. This assisted us in dividing work and avoiding merge conflicts.
 Nonetheless, this approach tested our teamwork abilities given that it required close coordination to have the states we were working on integrate together.
+
+Tying in with encounter design, the use of JSON files for the map and JSON updating functions encapsulated in `MapState` allowed for maps to be easily updated and persisted between state transitions or even play sessions. This allowed us to easily amend game balance in line with feedback.
