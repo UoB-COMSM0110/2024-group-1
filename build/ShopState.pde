@@ -84,6 +84,7 @@ public class ShopState extends GameState {
   public void handleMouseWheel(MouseEvent e) {}
   
   public void drawState(){
+    background(255);//Clear the screen to move lines
     image(shopBackground, 0, 0, width, height);
     image(backImage, 50, height - 80, 230, 60);  
     

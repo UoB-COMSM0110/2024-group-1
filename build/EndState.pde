@@ -118,6 +118,7 @@ class EndState extends GameState {
   }
   
   public void drawState() {
+      cleanScreen();
       background(backgroundImage);
       settingButton.drawButton();
       menuButton.drawButton();

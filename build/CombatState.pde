@@ -47,6 +47,7 @@ class CombatState extends GameState {
     public void resumeState() {}
 
     public void drawState() {
+        background(255);
         currEncounter.drawCombat();
     }
 }

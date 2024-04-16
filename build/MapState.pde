@@ -237,6 +237,7 @@ class MapState extends GameState {
     public void resumeState() {}
 
     public void drawState() {
+        background(255);//Clear the screen for connection lines
         image(desertImage,0,0,width,height);
 
         // Draw Button
