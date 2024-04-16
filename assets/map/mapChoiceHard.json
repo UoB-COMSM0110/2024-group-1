@@ -16,7 +16,7 @@
         "type": "ShopNode",
         "connected_ids": [1, 4, 5, 6],
         "x": 700,
-        "y": 270,
+        "y": 210,
         "clickable": false,
         "currentOrNot": false
       },
@@ -26,7 +26,7 @@
         "type": "CombatNode",
         "connected_ids": [1, 7, 8, 9],
         "x": 1200,
-        "y": 270,
+        "y": 210,
         "clickable": false,
         "currentOrNot": false
       },
@@ -36,7 +36,7 @@
         "type": "ShopNode",
         "connected_ids": [2, 10],
         "x": 500,
-        "y": 370,
+        "y": 330,
         "clickable": false,
         "currentOrNot": false
       },
@@ -46,7 +46,7 @@
         "type": "CombatNode",
         "connected_ids": [2, 10],
         "x": 600,
-        "y": 370,
+        "y": 330,
         "clickable": false,
         "currentOrNot": false
       },
@@ -56,7 +56,7 @@
         "type": "CombatNode",
         "connected_ids": [2, 10],
         "x": 740,
-        "y": 370,
+        "y": 330,
         "clickable": false,
         "currentOrNot": false
       },
@@ -66,7 +66,7 @@
         "type": "CombatNode",
         "connected_ids": [3, 11],
         "x": 1000,
-        "y": 370,
+        "y": 330,
         "clickable": false,
         "currentOrNot": false
       },
@@ -76,7 +76,7 @@
         "type": "ShopNode",
         "connected_ids": [3, 11],
         "x": 1200,
-        "y": 370,
+        "y": 330,
         "clickable": false,
         "currentOrNot": false
       },
@@ -86,7 +86,7 @@
         "type": "ShopNode",
         "connected_ids": [3, 11],
         "x": 1400,
-        "y": 370,
+        "y": 330,
         "clickable": false,
         "currentOrNot": false
       },
@@ -115,7 +115,7 @@
         "id": 12,
         "type": "CombatNode",
         "connected_ids": [10,18],
-        "x": 350,
+        "x": 570,
         "y": 570,
         "clickable": false,
         "currentOrNot": false
@@ -125,7 +125,7 @@
         "id": 13,
         "type": "CombatNode",
         "connected_ids": [10,18],
-        "x": 650,
+        "x": 670,
         "y": 570,
         "clickable": false,
         "currentOrNot": false
@@ -135,7 +135,7 @@
         "id": 14,
         "type": "CombatNode",
         "connected_ids": [10,18],
-        "x": 950,
+        "x": 850,
         "y": 570,
         "clickable": false,
         "currentOrNot": false
@@ -155,7 +155,7 @@
         "id": 16,
         "type": "CombatNode",
         "connected_ids": [11,19],
-        "x": 1350,
+        "x": 1250,
         "y": 570,
         "clickable": false,
         "currentOrNot": false
@@ -165,7 +165,7 @@
         "id": 17,
         "type": "CombatNode",
         "connected_ids": [11,19],
-        "x": 1550,
+        "x": 1350,
         "y": 570,
         "clickable": false,
         "currentOrNot": false
@@ -204,7 +204,7 @@
         "level": "level_7",
         "id": 21,
         "type": "CombatNode",
-        "connected_ids": [18,29,20,31],
+        "connected_ids": [18,29,30,31],
         "x": 650,
         "y": 770,
         "clickable": false,
@@ -215,7 +215,7 @@
         "id": 22,
         "type": "ShopNode",
         "connected_ids": [18,32,33,34],
-        "x": 950,
+        "x": 850,
         "y": 770,
         "clickable": false,
         "currentOrNot": false
@@ -253,9 +253,9 @@
       {
         "level": "level_8",
         "id": 26,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [20],
-        "x": 350,
+        "x": 50,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -263,9 +263,9 @@
       {
         "level": "level_8",
         "id": 27,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [20],
-        "x": 421,
+        "x": 200,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -273,9 +273,9 @@
       {
         "level": "level_8",
         "id": 28,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [20],
-        "x": 491,
+        "x": 400,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -283,7 +283,7 @@
       {
         "level": "level_8",
         "id": 29,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [21],
         "x": 562,
         "y": 870,
@@ -293,7 +293,7 @@
       {
         "level": "level_8",
         "id": 30,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [21],
         "x": 632,
         "y": 870,
@@ -303,7 +303,7 @@
       {
         "level": "level_8",
         "id": 31,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [21],
         "x": 703,
         "y": 870,
@@ -313,7 +313,7 @@
       {
         "level": "level_8",
         "id": 32,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [22],
         "x": 774,
         "y": 870,
@@ -323,7 +323,7 @@
       {
         "level": "level_8",
         "id": 33,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [22],
         "x": 844,
         "y": 870,
@@ -333,7 +333,7 @@
       {
         "level": "level_8",
         "id": 34,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [22],
         "x": 915,
         "y": 870,
@@ -343,7 +343,7 @@
       {
         "level": "level_8",
         "id": 35,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [23],
         "x": 985,
         "y": 870,
@@ -353,7 +353,7 @@
       {
         "level": "level_8",
         "id": 36,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [23],
         "x": 1056,
         "y": 870,
@@ -363,7 +363,7 @@
       {
         "level": "level_8",
         "id": 37,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [23],
         "x": 1126,
         "y": 870,
@@ -373,7 +373,7 @@
       {
         "level": "level_8",
         "id": 38,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [24],
         "x": 1197,
         "y": 870,
@@ -383,9 +383,9 @@
       {
         "level": "level_8",
         "id": 39,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [24],
-        "x": 1268,
+        "x": 1328,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -393,9 +393,9 @@
       {
         "level": "level_8",
         "id": 40,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [24],
-        "x": 1338,
+        "x": 1408,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -403,9 +403,9 @@
       {
         "level": "level_8",
         "id": 41,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [25],
-        "x": 1409,
+        "x": 1470,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -413,9 +413,9 @@
       {
         "level": "level_8",
         "id": 42,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [25],
-        "x": 1479,
+        "x": 1679,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
@@ -423,9 +423,9 @@
       {
         "level": "level_8",
         "id": 43,
-        "type": "ShopNode",
+        "type": "CombatNode",
         "connected_ids": [25],
-        "x": 1550,
+        "x": 1850,
         "y": 870,
         "clickable": true,
         "currentOrNot": false
