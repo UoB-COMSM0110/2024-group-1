@@ -255,8 +255,11 @@ class MapState extends GameState {
         engineRef.changeState(combatState);
     }
 
-    private void gotoShop(){
-        ShopState shopState = new ShopState(engineRef,passedPlayer,enemies);
+    private void goToShop(){
+        ArrayList<Card> cards = new ArrayList<Card>();
+        BlizzardCard blizzardCard = new BlizzardCard();
+        cards.add(blizzardCard);
+        ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
         engineRef.changeState(shopState);
     }
 
