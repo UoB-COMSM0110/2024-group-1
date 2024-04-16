@@ -160,7 +160,7 @@ Tying in with encounter design, the use of JSON files for the map and JSON updat
 
 
 
-#Process
+# Process
 
 
 ## Working as a team
