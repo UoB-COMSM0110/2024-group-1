@@ -141,9 +141,7 @@ to each card's name. A similar class was created for game entities. This choice 
 
 ## Encounter Design
 
-When it came to encounter and combat design, the first question our team confronted was around the use of procedural generation. After an 
-initial attempt at developing the map screen procedurally, it became evident that using that approach was proving too complicated, prompting our team 
-to opt for a hand-crafted map and encounters instead. Besides implementation complications, we also abandoned procedural generation as a consequence of
+When it came to encounter and combat design, the first question our team confronted was around using procedural generation. After an initial attempt at developing the map screen procedurally, it became evident that using that approach was proving too complicated, prompting our team to opt for a hand-crafted map and encounters instead. Besides implementation complications, we also abandoned procedural generation as a consequence of
 the difficulty it would have posed for consistent game balance.
 
 Another aspect which proved challenging was how to lay out classes in a way that allowed for certain gameplay features to be implemented. Though our team had, using the class and use case diagrams, developed a good idea of the program's high level structure at an early stage, it was only after the key combat-related classes had been set up that it became clear that features like cards with effects based on the current state of combat would be a challenge to implement, as the `Card` class maintained no awareness of combat state. We were able to implement this feature by extending `CombatEncounter` to process the active card in order to calculate and apply state-related effects using a private function making use of a switch statement.
@@ -158,11 +156,14 @@ game state system, with each state receiving a reference to the top-level `GameE
 player's data while also permitting each member of the team to work on a different state. This assisted us in dividing work and avoiding merge conflicts.
 Nonetheless, this approach tested our teamwork abilities given that it required close coordination to have the states we were working on integrate together.
 
-Tying in with encounter design, the use of JSON files for the map and JSON updating functions encapsulated in MapState allowed for maps to be easily updated and persisted between state transitions or even play sessions. This allowed us to easily amend game balance in line with feedback.
+Tying in with encounter design, the use of JSON files for the map and JSON updating functions encapsulated in `MapState` allowed for maps to be easily updated and persisted between state transitions or even play sessions. This allowed us to easily amend game balance in line with feedback.
 
 
 
-# Working as a team
+#Process
+
+
+## Working as a team
 The team used the Software Engineering labs as well as weekly in-person meetings to check in on our progress as a team. We used these meetings to identify anything we needed to clarify or get help with. We decided as a team what the essential game states that needed to be achieved for a minimum viable product were and what other game states could be completed later on for the final version of the game. On reflection, it would have been useful to organize an in-person meeting just before the Easter holidays to ensure we all had a clear idea of what we should working on each week of the holidays.
 
 However, we were still able to communicate this effectively throughout the holidays using WhatsApp and GitHub to ensure we all knew what needed to be achieved. In order to communicate with each other, we set up a WhatsApp group chat where we organized in-person meetings. It was also used to check in with each other to assess our progress as a group. In addition, it was used for suggesting any small tweaks that needed to be made to the project.
@@ -179,3 +180,5 @@ We divided the workload of the game according to the different game states. Sam 
 Following the project schedule of the unit, we initially concentrated on creating a minimal viable product. One of the challenges we had was getting a minimum viable prototype working. This meant that we were further behind schedule than was ideal, making it challenging to carry out user testing of the game during the software engineering labs. Instead, we resorted to presenting paper prototypes of our game to users. This meant we still received user feedback and a greater understanding of the Think Aloud and Heuristic Evaluation techniques. We were then able to use these tests later on a far more developed version of the game.
 
 ## Perhaps we faced challenges with getting the minimum viable product working due to the fact that we were working on features individually. This made it more difficult to ensure smooth transitioning between the different game states. To resolve this issue, we carried out game-jam sessions, which helped us make effective progress on the game. Having an in-person session meant that we could discuss things we were unsure of so that we were more aligned on how we wanted to transition between different game states.
+
+

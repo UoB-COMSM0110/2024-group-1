@@ -30,11 +30,11 @@ class CombatState extends GameState {
 
         switch (combatOutcome) {
             case OUTCOME_WIN:
-                toChangeTo = new EndState(passedPlayer, true);
+                toChangeTo = new EndState(engineRef, passedPlayer, true);
                 changeState(engineRef, toChangeTo);
                 break;
             case OUTCOME_LOSS:
-                toChangeTo = new EndState(passedPlayer, false);
+                toChangeTo = new EndState(engineRef, passedPlayer, false);
                 changeState(engineRef, toChangeTo);
                 break;
             default:

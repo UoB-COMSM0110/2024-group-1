@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Random;
 
 class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
@@ -250,6 +251,8 @@ class MapState extends GameState {
                 text("AP        "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 0 && currAP <= 9){
                 text("AP           "+currAP, 1650, 90); // MP value info
+            }else if(currAP <0){
+                text("AP          "+currAP, 1650, 90); // MP value info
             }
             //text("AP "+currAP, 1650, 90); // MP value info
     }
@@ -268,11 +271,32 @@ class MapState extends GameState {
     }
 
     private void goToCombat() {
-        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        Worm worm = new Worm(passedPlayer);
-        enemies.add(worm);
-        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-        engineRef.changeState(combatState);
+        int currEnemy = randomizeEnemy();
+        System.out.println("Current enemy case is " + currEnemy);
+        switch(currEnemy){
+            //Spider
+            case 0: 
+                ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                Spider spider = new Spider(passedPlayer);
+                enemies.add(spider);
+                CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                engineRef.changeState(combatState);
+                break;
+            //Worm
+            case 1:
+                ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                Worm worm = new Worm(passedPlayer);
+                enemiesDefault.add(worm);
+                CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                engineRef.changeState(combatStateDefault);
+                break;
+        }
+    }
+
+    private int randomizeEnemy(){
+        Random random = new Random();
+        int randomEnemy = random.nextInt(2);
+        return randomEnemy;
     }
 
     private void moveCursorToDifferentLevel(int delta) {
@@ -366,6 +390,7 @@ class MapState extends GameState {
     }
 
     public void updateNodeStates() {
+        System.out.println("map updated inside mapstate");
         int currAP = passedPlayer.getActionPts();
         int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
         ArrayList<Node> currentLevelNodes = new ArrayList<>();
@@ -390,11 +415,9 @@ class MapState extends GameState {
                 int nodeLevel = getLevelAsInt(node.level);
                 if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
                     node.clickable = true;
-                    node.currentOrNot = true;
                     nodesToActivate.add(node);
                 } else if (nodeLevel >= minLevelWithCurrent) {
                     node.clickable = false;
-                    node.currentOrNot = false;
                 }
             }
             // Keep clicked node's currentOrNot as "true"，set its clickable to "false"
@@ -410,8 +433,57 @@ class MapState extends GameState {
                     node.clickable = true; // Destination special result
                 }
             }
+            
         }
 
+    }
+
+    public void updateNodeStatesOutside(){
+        System.out.println("map updates outside the mapstate");
+        int currAP = passedPlayer.getActionPts();
+        int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
+        ArrayList<Node> currentLevelNodes = new ArrayList<>();
+        ArrayList<Node> nodesToActivate = new ArrayList<>(); // Store the nodes of the previous layer
+        Node currentNode = null; // Declare currentNode here to ensure scope visibility.
+
+        // Step 1: Find the smallest level where currentOrNot is true.
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                int level = getLevelAsInt(node.level);
+                if (level < minLevelWithCurrent) {
+                    minLevelWithCurrent = level;
+                    currentNode = node;
+                }
+            }
+        }
+
+
+        if (currentNode != null) {
+            // Step 2: Update node status
+            for (Node node : nodes) {
+                int nodeLevel = getLevelAsInt(node.level);
+                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                    node.clickable = true;
+                    nodesToActivate.add(node);
+                } else if (nodeLevel >= minLevelWithCurrent) {
+                    node.clickable = false;
+                    node.currentOrNot = false;
+                }
+            }
+            // Keep clicked node's currentOrNot as "true" and clickable as "false"
+            currentNode.currentOrNot = true;
+
+            // Step 3: Update the clickable status according to the AP
+            for (Node node : nodes) {
+                if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
+                int nodeLevel = getLevelAsInt(node.level);
+                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                    node.clickable = true; // connected with currentNode directly or indirectly
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                    node.clickable = true; // Destination special result
+                }
+            }
+        }
     }
 
     public void saveMapStateToFile(String filename) {
@@ -491,6 +563,26 @@ class MapState extends GameState {
         }
 
         return false;
+    }
+
+    public boolean checkFinalWin(){
+        System.out.println("Checking final win");
+        int minLevel = Integer.MAX_VALUE;
+        boolean winOrNot = false;
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                int level = getLevelAsInt(node.level); 
+                if (level < minLevel) {
+                    minLevel = level;
+                }
+            }
+        }
+        //if the minimum clickable and current node is destination
+        if(minLevel == 1){
+            winOrNot = true;
+        }
+
+        return winOrNot;
     }
 
 }
