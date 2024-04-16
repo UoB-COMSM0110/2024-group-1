@@ -49,3 +49,33 @@ o	‘The yellow and red nodes on first glance look very similar as your eye is f
 o	‘there’s not much in terms of action economy’ 
 
 
+
+-	Participant 5 (Yi )
+-	Date: 2024-04-15
+o	‘The visible lines in Combat and Shop state make me confused.’ 
+o	‘That was fun to play!’ 
+o	‘I need more challenge like harder mode.’
+
+
+
+-	Participant 6 (Ziang )
+-	Date: 2024-04-15
+o	‘The visible lines in endgaming screen trigger my OCD.’ 
+o	‘Tutorial should be call in combat in case I skip it too quick!’ 
+o	‘The signal above enemy should be explained and its effect should too’
+o	‘The definate victory or what is called boss-round (by me) should have different end screen with win result.’
+
+
+
+-	Participant 7 (Chris )
+-	Date: 2024-03-18
+o	‘The visual element to told me "where I am" is important’ 
+o	‘Could it be clearer what HP mean?’ 
+o	‘If tutorial implemented would be great.’
+
+-	Participant 8 (Ali )
+-	Date: 2024-03-18
+o	‘Maybe a clearer button for non-cardgame player to know how to end turn.’ 
+o	‘Mechanism of shuffle deck and draw card should be explained.’ 
+
+
