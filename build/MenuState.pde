@@ -1,9 +1,10 @@
 class MenuState extends GameState {
-    PImage bg, startImage, combatImage, helpImage, shopImage;
-    Button startButton, combatButton, helpButton, shopButton;
+    PImage bg, startImage, combatImage, helpImage, shopImage, easyModeImage, hardModeImage, backImage;
+    Button startButton, combatButton, helpButton, shopButton, easyButton, hardButton, backButton;
 
     GameEngine engineRef;
     private Player passedPlayer;
+    private Boolean modeChoiceVisibility = false;
 
     MenuState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
@@ -21,20 +22,39 @@ class MenuState extends GameState {
         combatImage = loadImage("../assets/main/combat.png");
         helpImage = loadImage("../assets/main/help.png");
         shopImage = loadImage("../assets/main/shop.png");
+        easyModeImage = loadImage("../assets/main/easy.png");
+        hardModeImage = loadImage("../assets/main/hard.png");
+        backImage = loadImage("../assets/map/backButton.png");
   
         startButton = new Button(600, 300, 230, 60, startImage);
         combatButton = new Button(600, 400, 230, 60, combatImage);
         helpButton = new Button(600, 500, 230, 60, helpImage);
         shopButton = new Button(900, 600, 100, 100, shopImage);
+        easyButton = new Button(850,400,230,60,easyModeImage);
+        hardButton = new Button(850,500,230,60,hardModeImage);
+        backButton = new Button(600,300,230,60,backImage);
     }
 
     public void handleMouseInput() {
         
         /* change game state to MAP_STATE */
         if (startButton.overButton() && mousePressed){
-            background(240, 210, 200); /* for test */
-            MapState mapState = new MapState(engineRef, passedPlayer);
-            engineRef.changeState(mapState);
+            if(checkFileExists("../assets/map/mapTemp.json")){
+                System.out.println("Loading from last game");
+                goToEasyMode();
+            }else{
+                modeChoiceVisibility = !modeChoiceVisibility; 
+                System.out.println("Start a new game with mode choice option");
+            }
+            //background(240, 210, 200); /* for test */
+            //MapState mapState = new MapState(engineRef, passedPlayer);
+            //engineRef.changeState(mapState);
+        }
+
+        if (easyButton.overButton() && mousePressed){
+            goToEasyMode();
+        }else if(hardButton.overButton() && mousePressed){
+            goToHardMode();
         }
 
         /* change game state to COMBAT_STATE */
@@ -72,14 +92,41 @@ class MenuState extends GameState {
 
     public void drawState() {
         image(bg, 0, 0, width, height);
-        startButton.drawButton();    /* the same position as Button */
-        combatButton.drawButton();
-        helpButton.drawButton();
-        shopButton.drawButton();
+        
+        if(modeChoiceVisibility){
+            easyButton.drawButton();
+            hardButton.drawButton();
+            backButton.drawButton();
+        }else{
+            startButton.drawButton();    /* the same position as Button */
+            combatButton.drawButton();
+            helpButton.drawButton();
+            shopButton.drawButton();
+        }
     }
 
     public void updateState() {}
     public void pauseState() {}
     public void resumeState() {}
     public void handleMouseWheel(MouseEvent e) {}
+
+    private void goToEasyMode(){
+        background(240, 210, 200); /* for test */
+        MapState mapState = new MapState(engineRef, passedPlayer);
+        engineRef.changeState(mapState);
+    }
+
+    private void goToHardMode(){
+        background(240, 210, 200); /* for test */
+        String hardmode = "Yes";
+        MapState mapState = new MapState(engineRef, passedPlayer,hardmode);
+        engineRef.changeState(mapState);
+    }
+
+    private boolean checkFileExists(String filePath){
+        File file = new File(sketchPath(filePath));
+        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        return file.exists();
+    }
+
 }

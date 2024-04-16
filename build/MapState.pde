@@ -29,6 +29,13 @@ class MapState extends GameState {
         drawState();
     }
 
+    MapState(GameEngine engine, Player thePlayer, String hardmode){
+        engineRef = engine;
+        passedPlayer = thePlayer;
+        setupState(hardmode);
+        drawState();
+    }
+
     public void setupState() {
 
         // Initialize Material
