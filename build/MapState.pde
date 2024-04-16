@@ -58,6 +58,48 @@ class MapState extends GameState {
             mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
         }else{
             System.out.println("Loading from mapChoiceEasy.json");
+            String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }
+        nodes = mapLoader.loadNodes(); // set Node array
+
+        // Initialize the marker of current node
+        currentNodeIndex = 0;  // Start at the first node
+        if (nodes.length > 0) {
+            cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
+        }
+    }
+
+    public void setupState(String hardmode) {
+
+        // Initialize Material
+        backImage = loadImage("../assets/map/backButton.png");
+        tutorialImage = loadImage("../assets/map/tutorialButton.png");
+        entranceImage = loadImage("../assets/map/enterButton.png");
+        desertImage = loadImage("../assets/map/MapBackground.jpg"); 
+        combatIcon = loadImage("../assets/map/combatIcon.png");
+        combatIcon.resize(45,0);
+        shopIcon = loadImage("../assets/map/shopIcon.png");
+        shopIcon.resize(45,0);
+        tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
+        tutorialDetail.resize(500,0);
+
+        // Initialize universal Button
+        backButton = new Button(100, 50,230,60,backImage);
+        tutorialButton = new Button(100, 150, 230, 60, tutorialImage);
+        entranceButton = new Button(100, 250, 230, 60, entranceImage);
+
+        // Initialize map from json map loader
+        MapLoader mapLoader = new MapLoader(); 
+        // Check mapTemp exists or not 
+        if(checkFileExists("../assets/map/mapTemp.json")){
+            System.out.println("Loading from mapTemp.json");
+            String[] jsonLines = loadStrings("../assets/map/mapTemp.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }else{
+            System.out.println("Loading from mapChoiceHard.json");
             String[] jsonLines = loadStrings("../assets/map/mapChoiceHard.json");
             String jsonString = join(jsonLines, "");
             mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
