@@ -1,0 +1,585 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>2660</x><y>2160</y><w>200</w><h>100</h></coordinates><panel_attributes>AngerCard
+--
+- angerPath: String
+--
+&lt;&lt;constructor&gt;&gt;
++ AngerCard()
+- applyCard(target: Entity): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2770</x><y>1990</y><w>110</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>80;10;10;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2710</x><y>1520</y><w>290</w><h>480</h></coordinates><panel_attributes>&lt;&lt;abstract&gt;&gt;
+Card 
+--
+name: String 
+cardType: CardType 
+energyCost: int
+shopCost: int
+takesTarget: boolean
+img: PImage
+pos: PVector  
+--
+ + Card(name: String,          
+             type: CardType,         
+             energyCost: int,        
+             shopCost: int,           
+             needsTarget: boolean)   
+
+ + applyCard(target: Entity):  void                    
+ + getEnergyCost(): int         
+ + increaseEnergyCost(energyAmt: int): void               
+ + decreaseEnergyCost(energyAmt: int): void               
+ + getShopCost(): int           
+ + increaseShopCost(amt: int): void                     
+ + decreaseShopCost(amt: int): void                     
+ + getName(): String            
+ + getType(): CardType          
+ + getIfTakesTarget(): boolean  
+ + setPos(x: int, y: int): void
+ + getPos(): PVector            
+ + getImg(): PImage             
+ + setImg(toSet: PImage): boolean                  
+ + isMousedOver(): boolean  </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2990</x><y>1780</y><w>180</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;20;160;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3150</x><y>1760</y><w>210</w><h>70</h></coordinates><panel_attributes>CardType
+--
+- ATTACK 
+- DEFENCE
+- STRATEGY
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2300</x><y>290</y><w>370</w><h>650</h></coordinates><panel_attributes>Entity
+--
+ - maxHp: int                   
+ - currHp: int                  
+ - strength: int                
+ - dexterity: int               
+ - name: String                 
+ - activeEffects: ArrayList&lt;StatusEffect&gt;
+ - img: PImage                  
+ - pos: PVector   
+--
++ Entity(name: String, 
+             maxHp: int,             
+             str: int,               
+             dex: int)               
+
+ + Entity(name: String,        
+              maxHp: int,             
+              str: int,               
+              dex: int,               
+              img: PImage,            
+             pos: PVector)   
+        
+ + getCurrHp(): int             
+ + getMaxHp(): int              
+ + gainHealth(initialAmt: int): void                     
+ + takeDamage(initialAmt: int): boolean                  
+ + dealDamage(initialAmt: int, target: Entity): boolean
+ + getName(): String            
+ + getStr(): int                
+ + getDex(): int                
+ + applyModifiers(modifierType: Class&lt;T&gt;, amt: int): int 
+ + triggerEffects(triggerType:  Class&lt;T&gt;, source: Object[]): void                     
+ + appendStatusEffect(newStatus:   StatusEffect): void     
+ + decayEffects(): void         
+ + removeStatusEffect(effect: StatusEffect): void      
+ + getActiveEffects(): ArrayList&lt;StatusEffect&gt; 
+ + setPos(x: int, y: int): void
+ + getPos(): PVector            
+ + getImg(): PImage             
+ + setImg(toSet: PImage): boolean
+ + isMousedOver(): boolean      
+ + abstract die(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1160</x><y>450</y><w>300</w><h>240</h></coordinates><panel_attributes>StatusEffect
+--
+ - name: String                 
+ - lifeCounter: int             
+ - affected: Entity            
+ - decrementType: DecrementType
+--
+ + StatusEffect(name: String,  counter: int)            
+ + setAffected(target: Entity): void                     
+ + getTarget(): Entity          
+ + setDecrementType(type: DecrementType): void     
+ + getName(): String            
+ + getLifeCounter(): int        
+ + stackEffect(toStack: StatusEffect): void      
+ + prepDecrement(): void        
+ + decrementCounter(amt: int):  void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1200</x><y>890</y><w>240</w><h>110</h></coordinates><panel_attributes>AttackBoost
+--
+            
+ + AttackBoost(lifeCounter: int)
+ + stackEffect(toStack: StatusEffect): void      
+ + modifyInputAmt(input: int): int   
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>880</x><y>650</y><w>210</w><h>60</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+DoingDmgMod
+--
++ modifyInputAmt(input: int):  int   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>970</x><y>700</y><w>360</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>10;10;340;190</additional_attributes></element><element><id>Relation</id><coordinates><x>1290</x><y>680</y><w>80</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;20;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1250</x><y>1100</y><w>210</w><h>180</h></coordinates><panel_attributes>Move
+--
+ # attacker: Entity            
+ # target: Entity
+--
++ Move(attacker: Entity,     
+              target: Entity)  
+
+ + abstract executeMove(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>1610</y><w>320</w><h>150</h></coordinates><panel_attributes>AttackMove
+--
+ - attackDmg: int   
+--
+ + AttackMove(attacker: Entity, target: Entity, dmg: int)
+ + getDmg(): int               
+ + setDmg(dmgAmt: int): boolean
+ + executeMove(): void </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>950</x><y>1270</y><w>400</w><h>360</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>380;10;10;340</additional_attributes></element><element><id>UMLClass</id><coordinates><x>540</x><y>460</y><w>210</w><h>60</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+ModiferStatus
+--
++ modifyInputAmt(input: int):  int   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>510</y><w>380</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;360;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>650</y><w>210</w><h>60</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+BuffHealMod
+--
++ modifyInputAmt(input: int):  int   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>530</x><y>510</y><w>110</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>90;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3150</x><y>1610</y><w>230</w><h>120</h></coordinates><panel_attributes>CardImgLoader
+--
+ - cardImgs: HashMap&lt;String, PImage&gt;
+--
+&lt;&lt;constructor&gt;&gt;
+ + CardImgLoader()             
+
+ + getImg(cardName: String): PImage</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3010</x><y>1070</y><w>310</w><h>430</h></coordinates><panel_attributes>CombatEncounter
+--
+ - battlePlayer: Player        
+ - drawDeck: Deck              
+ - currEnemies: ArrayList&lt;Enemy&gt;
+ - cardHand: ArrayList&lt;Card&gt;   
+ - discardPile: ArrayList&lt;Card&gt;
+ - activeCard: Card            
+ - isPlayerTurn: boolean       
+ - drawAmt: int                
+ - ENEMY_BASE_X: int           
+ - ENEMY_BASE_Y: int           
+ - background: PImage          
+ - endTurnBtn: Button          
+ - entityImgs: EntityImgLoader
+--
+&lt;&lt;constructor&gt;&gt;
+ + CombatEncounter(thePlayer:  Player, 
+                           enemies: ArrayList&lt;Enemy&gt;):void                     
+ + initEncounter(): void       
+ + startTurn(): void           
+ + endTurn(): void             
+ + decayStatuses(): void       
+ + playCard(toPlay: Card,  target: Entity): void   
+ + processMouseInput(): void   
+ + checkWinLoss(): OutcomeType 
+ + drawCombat(): void          
+ + drawHUDElements(): void     
+ + drawEnemies(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>4020</x><y>1460</y><w>230</w><h>190</h></coordinates><panel_attributes>CombatNode
+--
+ - isMouseOver: boolean  
+--
+&lt;&lt;constructor&gt;&gt;
+ + CombatNode(id: int,         
+                          connectedIds: int[],    
+                          clickable: boolean,     
+                          position: PVector,      
+                          x: int, y: int,         
+                          level: String)        
+  
+ + display(combatIcon: PImage): void   </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>4010</x><y>1120</y><w>240</w><h>290</h></coordinates><panel_attributes>Node
+--
+ - id: int                      
+ - connectedIds: int[]          
+ - clickable: boolean          
+ - position: PVector            
+ - level: String   
+--
+&lt;&lt;constructor&gt;&gt;
+ + Node(id: int,                
+              connectedIds: int[],    
+              clickable: boolean,    
+              position: PVector,      
+              x: int, y: int,         
+              level: String)     
+     
+ + display(): void              
+ + isMouseOver(mouseX: float,  
+       mouseY: float): boolean</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3310</x><y>300</y><w>390</w><h>230</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
+GameState
+--
+ 
+--
+ + setupState(): void          
+ + pauseState(): void          
+ + resumeState(): void         
+ + updateState(): void         
+ + drawState(): void           
+ + handleMouseInput(): void   
+ + handleMouseWheel(e: MouseEvent): void                     
+ + handleKeyInput(): void      
+
+ + changeState(engine: GameEngine,  newState: GameState): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3010</x><y>730</y><w>310</w><h>290</h></coordinates><panel_attributes>CombatState
+--
+  - engineRef: GameEngine       
+ - passedPlayer: Player        
+ - encounterEnemies: ArrayList&lt;Enemy&gt; 
+ - currEncounter: CombatEncounter
+--
+ + CombatState(engine: GameEngine,
+                          thePlayer: Player,     
+                          enemies: ArrayList&lt;Enemy&gt;): void                     
+ + setupState(): void          
+ + handleMouseInput(): void    
+ + handleMouseWheel(e: MouseEvent): void                     
+ + handleKeyInput(): void      
+ + updateState(): void         
+ + pauseState(): void          
+ + resumeState(): void         
+ + drawState(): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3200</x><y>520</y><w>330</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>310;10;10;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2740</x><y>1150</y><w>220</w><h>70</h></coordinates><panel_attributes>CombatUtility
+--
++ static pickIndex(arr: double[]): int
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>650</y><w>210</w><h>60</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+DebuffHealMod
+--
++ modifyInputAmt(input: int):  int   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>510</y><w>310</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>290;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2320</x><y>1520</y><w>280</w><h>280</h></coordinates><panel_attributes>Deck
+--
+ - deck: ArrayList&lt;Card&gt;               
+ - deckLimit: int                      
+ - CARDS_BASE_X: int                   
+ - cardImages: CardImgLoader 
+--
+ + Deck(limit: int)                    
+ + shuffle(): void                     
+ + setLimit(limit: int): boolean       
+ + getLimit(): int                     
+ + drawSingleCard(): Card              
+ + drawNCards(numCards: int): ArrayList&lt;Card&gt; 
+ + addCard(newCard: Card): boolean     
+ + getDeck(): ArrayList&lt;Card&gt;          
+ + setDeck(newDeck: ArrayList&lt;Card&gt;): void   
+ + isEmpty(): boolean                  
+ - initDeck(): void#Operation(i: int): int
+/+AbstractOperation()/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1170</x><y>50</y><w>260</w><h>100</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
+DecrementType
+--
+ # effect: StatusEffect
+--
+ + DecrementType(parent: StatusEffect)        
+ + abstract processDecrement(): void </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1170</x><y>190</y><w>260</w><h>100</h></coordinates><panel_attributes>DefalutDecrement
+--
+
+--
+ + DefaultDecrement(parent: StatusEffect)       
+ + processDecrement(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1280</x><y>140</y><w>70</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1140</x><y>1610</y><w>320</w><h>150</h></coordinates><panel_attributes>DefenceMove
+--
+ - defenceAmt: int   
+--
+  + DefenceMove(defender: Entity, amt: int)     
+ + executeMove(): void </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>930</x><y>890</y><w>240</w><h>110</h></coordinates><panel_attributes>Defend
+--
+            
+ + Defend(int)
+ + stackEffect(toStack: StatusEffect): void      
+ + modifyInputAmt(input: int): int   
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>660</x><y>650</y><w>210</w><h>60</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+TakingDmgMod
+--
++ modifyInputAmt(input: int):  int   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>750</x><y>700</y><w>300</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>10;10;280;190</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>510</y><w>170</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;150;140</additional_attributes></element><element><id>Relation</id><coordinates><x>1070</x><y>680</y><w>250</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>230;10;10;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>650</y><w>210</w><h>60</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+DoingDmgMod
+--
++ modifyInputAmt(input: int):  int   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>100</x><y>510</y><w>460</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>440;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3350</x><y>730</y><w>290</w><h>550</h></coordinates><panel_attributes>EndState
+--
+ - backgroundImage: PImage                                                    
+ - winImage: PImage                                                           
+ - loseImage: PImage                                                          
+ - Score: PImage                                                              
+ - Menu: PImage                                                               
+ - Cards: PImage                                                              
+ - Shop: PImage                                                               
+ - Continue: PImage                                                           
+ - Setting: PImage                                                            
+ - menuButton: Button                                                         
+ - cardsButton: Button                                                        
+ - shopButton: Button                                                         
+ - continueButton: Button                                                     
+ - settingButton: Button                                                      
+ - actionPoints: int                                                          
+ - winBonus: int = 5                                                          
+ - totalPoints: int                                                           
+ - checkWin: boolean                                                          
+ - agreeToSacrificeLife: boolean = false                                      
+ - gameContinue: boolean = true                                               
+ - pageChange: boolean = false
+--
+ + EndState(player: Player, check: boolean)                                   
+ + setupState(): void                                                         
+ + handleMouseInput(): void                                                   
+ + handleKeyInput(): void                                                     
+ + drawState(): void                                                          
+ + drawWin(): void                                                            
+ + drawLose(): void                                                           
+ + cleanScreen(): void                                                        
+ + pauseState(): void                                                         
+ + resumeState(): void                                                        
+ + handleMouseWheel(e: MouseEvent): void                                      
+ + updateState(): void 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3500</x><y>520</y><w>90</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;40;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1850</x><y>1100</y><w>350</w><h>190</h></coordinates><panel_attributes>Enemy
+--
+ - moves: ArrayList&lt;Move&gt;                                    
+ - playerRef: Player
+--
+ + Enemy(name: String, hp: int, str: int, dex: int, ref: Player) 
+ + getMoves(): ArrayList&lt;Move&gt;                               
+ + abstract void readyMoves()                                
+ + addMove(Move): void                                       
+ + executeMoves(): void                                      
+ + die(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2000</x><y>930</y><w>500</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>480;10;10;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1850</x><y>320</y><w>250</w><h>110</h></coordinates><panel_attributes>EntityImgLoader
+--
+ - entityImgs: HashMap&lt;String, PImage&gt;
+--
+ + EntityImgLoader()                            
+ + getImg(entityName: String): PImage</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>920</x><y>190</y><w>230</w><h>100</h></coordinates><panel_attributes>FullDecrement
+--
+
+--
+ + FullDecrement(parent: StatusEffect)       
+ + processDecrement(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1030</x><y>140</y><w>240</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>220;10;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2960</x><y>0</y><w>370</w><h>220</h></coordinates><panel_attributes>GameEngine
+--
+ - stateStack: Stack&lt;GameState&gt;                                 
+ - thePlayer: Player                                            
+ - isRunning: boolean  
+--
+ + GameEngine()                                                 
+ + handleMouseInput(): void                                     
+ + handleMouseWheel(MouseEvent e): void                         
+ + handleKeyInput(): void                                       
+ + updateGame(): void                                           
+ + drawScreen(): void                                           
+ + changeState(GameState state): void                           
+ + endEngine(): void                                            
+ + isRunning(): boolean</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3670</x><y>1120</y><w>290</w><h>160</h></coordinates><panel_attributes>MapLoader
+--
+ - mapData: JSONObject 
+--
+ + MapLoader()                              
+ + loadNodesFromJSON(jsonString: String): void 
+ + loadNodes(): Node[]                      
+ - createNode(id: int, connectedIds: int[], 
+                         clickable: boolean, 
+                       position: PVector, x: int, y: int, 
+                       level: String, type: String): Node</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3670</x><y>730</y><w>360</w><h>340</h></coordinates><panel_attributes>MapState
+--
+ - backButton, tutorialButton, entranceButton: Button              
+ - nodes: Node[]                                                   
+ - mapLoader: MapLoader                                            
+ - engineRef: GameEngine                                          
+ - passedPlayer: Player                                            
+ - scrollOffset: float                                             
+ - desertImage, backImage, tutorialImage, entranceImage,           
+   combatIcon, shopIcon: PImage 
+--
+ + MapState(engine: GameEngine, thePlayer: Player)                 
+ + setupState(): void                                              
+ + handleMouseInput(): void                                        
+ + handleMouseWheel(MouseEvent e): void                            
+ + handleKeyInput(): void                                          
+ + updateState(): void                                             
+ + pauseState(): void                                              
+ + resumeState(): void                                             
+ + drawState(): void                                               
+ - drawStatusInfo(): void                                          
+ - findNodeById(int id): Node                                      
+ - goToCombat(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3500</x><y>520</y><w>380</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;360;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>4060</x><y>730</y><w>390</w><h>250</h></coordinates><panel_attributes>MenuState
+--
+ - bg, startImage, combatImage, helpImage, shopImage: PImage       
+ - startButton, combatButton, helpButton, shopButton: Button       
+ - engineRef: GameEngine                                           
+ - passedPlayer: Player
+--
+ + MenuState(engine: GameEngine, thePlayer: Player)                
+ + setupState(): void                                              
+ + handleMouseInput(): void                                        
+ + handleKeyInput(): void                                          
+ + drawState(): void                                               
+ + updateState(): void                                             
+ + pauseState(): void                                              
+ + resumeState(): void                                             
+ + handleMouseWheel(MouseEvent e): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3500</x><y>520</y><w>760</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;740;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1450</x><y>190</y><w>230</w><h>100</h></coordinates><panel_attributes>NoDecrement
+--
+
+--
+ + NoDecrement(parent: StatusEffect)       
+ + processDecrement(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1350</x><y>140</y><w>250</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;230;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3400</x><y>1320</y><w>210</w><h>190</h></coordinates><panel_attributes>OutcomeType
+--
+ OUTCOME_WIN                         
+ OUTCOME_LOSS                        
+ OUTCOME_UNDECIDED </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2340</x><y>1080</y><w>320</w><h>390</h></coordinates><panel_attributes>Player
+--
+ - cardDeck: Deck                                                  
+ - currActionPts: int                                              
+ - energyLim: int                                                  
+ - currEnergy: int                                                 
+ - currGold: int                                                   
+ - pos: PVector
+--
+ + Player(name: String, maxHp: int, str: int, dex: int,            
+   actionPts: int, energyLim: int, cardLim: int)                   
+ + getDeck(): Deck                                                 
+ + setDeck(newDeck: Deck): void                                    
+ + getCurrEnergy(): int                                            
+ + refillEnergy(): void                                            
+ + getEnergyLim(): int                                             
+ + setEnergyLim(newLim: int): void                                 
+ + getGoldOnHand(): int                                            
+ + incrementGold(amt: int): void                                   
+ + decrementGold(amt: int): void                                   
+ + decrementEnergy(amt: int): void                                 
+ + incrementEnergy(amt: int): void                                 
+ + getActionPts(): int                                             
+ + incrementActionPts(amt: int): void                              
+ + decrementActionPts(amt: int): void                              
+ + die(): void   </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2470</x><y>930</y><w>70</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1520</x><y>890</y><w>240</w><h>110</h></coordinates><panel_attributes>Poison
+--
+
+--
+ + Poison(lifeCounter: int)                        
+ + stackEffect(toStack: StatusEffect): void        
+ + trigger(source: Object): void  </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1290</x><y>680</y><w>360</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;340;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1620</x><y>690</y><w>180</w><h>70</h></coordinates><panel_attributes>TurnStartTrigger
+--
+ + trigger(source: Object): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1620</x><y>750</y><w>140</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>90;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1690</x><y>560</y><w>210</w><h>70</h></coordinates><panel_attributes>Trigger
+--
+ + trigger(source: Object): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1720</x><y>620</y><w>100</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>80;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2880</x><y>2160</y><w>200</w><h>100</h></coordinates><panel_attributes>StrikeCard
+--
+
+--
++ StrikeCard()
+- applyCard(target: Entity): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2840</x><y>1990</y><w>150</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;130;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>660</x><y>890</y><w>240</w><h>110</h></coordinates><panel_attributes>Vulnerable
+--
+            
+ + Vulnerable(lifeCounter: int)
+ + stackEffect(toStack: StatusEffect): void      
+ + modifyInputAmt(input: int): int   
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>680</y><w>560</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>540;10;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>750</x><y>700</y><w>100</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>10;10;20;190</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2100</x><y>1390</y><w>190</w><h>190</h></coordinates><panel_attributes>Worm
+--
+ - WORM_HP: int = 40                                               
+ - WORM_STR: int = 25                                              
+ - WORM_DEX: int = 20                                              
+ - ATTACK_PROB: double = 0.65                                      
+ - DEFEND_PROB: double = 0.35                                      
+ - WORM_ATTACK_VAL: int = 11                                       
+ - WORM_DEFENCE_VAL: int = 7 
+--
+ + Worm(ref: Player)                                               
+ + readyMoves(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3560</x><y>2160</y><w>150</w><h>100</h></coordinates><panel_attributes>Other Cards
+...
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2840</x><y>1990</y><w>810</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;790;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1810</x><y>890</y><w>240</w><h>110</h></coordinates><panel_attributes>AfterImageEffect
+--
+            
+  + AfterImageEffect()                              
+ + stackEffect(toStack: StatusEffect): void        
+ + trigger(source: Object): void  
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1290</x><y>680</y><w>680</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;660;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1810</x><y>690</y><w>180</w><h>70</h></coordinates><panel_attributes>CardPlayTrigger
+--
+ + trigger(source: Object): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1900</x><y>750</y><w>110</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>10;10;40;140</additional_attributes></element><element><id>Relation</id><coordinates><x>1790</x><y>620</y><w>130</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;110;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3100</x><y>2160</y><w>210</w><h>100</h></coordinates><panel_attributes>BlizzardCard
+--
+ - dmgAmt: int
+--
+ + BlizzardCard()                     
+ + setDmgAmt(input: int): void        
+ + applyCard(target: Entity): void 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2840</x><y>1990</y><w>380</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;360;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2440</x><y>2160</y><w>200</w><h>100</h></coordinates><panel_attributes>BludgeonCard
+--
+
+--
+ + BludgeonCard()      
+ + applyCard(target: Entity): void 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2580</x><y>1990</y><w>290</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>270;10;10;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3330</x><y>2160</y><w>210</w><h>100</h></coordinates><panel_attributes>BodyslamCard
+--
+ - dmgAmt: int
+--
+ + BodyslamCard()    
+ + setDmgAmt(input: int): void   
+ + applyCard(target: Entity): void 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2840</x><y>1990</y><w>650</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;630;170</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1870</x><y>1390</y><w>220</w><h>190</h></coordinates><panel_attributes>Golem
+--
+ - GOLEM_HP: int = 65                                              
+ - GOLEM_STR: int = 40                                             
+ - GOLEM_DEX: int = 15                                             
+ - ATTACK_PROB: double = 0.55                                      
+ - DEFEND_PROB: double = 0.25                                      
+ - ATTACKBOOST_PROB: double = 0.20                                 
+ - GOLEM_ATTACK_VAL: int = 18                                      
+ - GOLEM_DEFENCE_VAL: int = 13 
+--
+ + Golem(ref: Player)                                              
+ + readyMoves(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2000</x><y>1280</y><w>70</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>970</x><y>1130</y><w>210</w><h>100</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+MoveType
+--
+ MOVETYPE_ATTACK                 
+ MOVETYPE_DEFENCE                
+ MOVETYPE_STRATEGY </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>1390</y><w>190</w><h>190</h></coordinates><panel_attributes>Spider
+--
+ - SPIDER_HP: int = 15                                           
+ - SPIDER_STR: int = 10                                          
+ - SPIDER_DEX: int = 25                                          
+ - ATTACK_PROB: double = 0.70                                    
+ - POISON_PROB: double = 0.30                                    
+ - SPIDER_ATTACK_VAL: int = 8 
+--
+ + Spider(ref: Player)                                           
+ + readyMoves(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1480</x><y>1610</y><w>320</w><h>150</h></coordinates><panel_attributes>StatusEffectMove
+--
+ - statusEffects: List&lt;StatusEffect&gt; 
+--
+ + StatusEffectMove(attacker: Entity, target: Entity,        
+   effects: List&lt;StatusEffect&gt;)                              
+ + executeMove(): void                                       
+ + getEffects(): List&lt;StatusEffect&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1350</x><y>1270</y><w>300</w><h>360</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;280;340</additional_attributes></element><element><id>Relation</id><coordinates><x>2510</x><y>210</y><w>630</w><h>100</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>610;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>3110</x><y>210</y><w>410</w><h>110</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>10;10;390;90</additional_attributes></element><element><id>Relation</id><coordinates><x>4110</x><y>1400</y><w>70</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2090</x><y>360</y><w>230</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;20;210;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1170</x><y>1170</y><w>100</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>80;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>3790</x><y>1060</y><w>110</w><h>80</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;60;40;10</additional_attributes></element><element><id>Relation</id><coordinates><x>3140</x><y>1010</y><w>90</w><h>80</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>2450</x><y>1460</y><w>100</w><h>80</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>30;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>2590</x><y>1560</y><w>140</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;20;120;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2990</x><y>1660</y><w>180</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;20;160;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2000</x><y>1280</y><w>240</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>10;10;220;110</additional_attributes></element><element><id>Relation</id><coordinates><x>1760</x><y>1280</y><w>270</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>250;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>1450</x><y>490</y><w>870</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;20;850;20</additional_attributes></element><element><id>Relation</id><coordinates><x>3480</x><y>1270</y><w>90</w><h>70</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>3920</x><y>1060</y><w>230</w><h>80</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;10;210;60</additional_attributes></element><element><id>Relation</id><coordinates><x>2950</x><y>1160</y><w>80</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>10;20;60;20</additional_attributes></element><element><id>Relation</id><coordinates><x>880</x><y>60</y><w>310</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>290;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1270</x><y>1270</y><w>110</w><h>360</h></coordinates><panel_attributes>lt=&lt;&lt;-
+extends</panel_attributes><additional_attributes>90;10;10;340</additional_attributes></element><element><id>Relation</id><coordinates><x>1450</x><y>1170</y><w>420</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>400;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>880</x><y>70</y><w>30</w><h>460</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>10;440;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>880</x><y>490</y><w>300</w><h>40</h></coordinates><panel_attributes>lt=-
+association</panel_attributes><additional_attributes>280;20;10;20</additional_attributes></element></diagram>
