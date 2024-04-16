@@ -3,16 +3,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Random;
 
 class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
-    Node[] nodes;
+    Node[] nodes; 
     MapLoader mapLoader;
+
     GameEngine engineRef;
     private Player passedPlayer;
 
     PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail;//Used to generate a nice background image of map
-
+    
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
     boolean showWarning = false; // Show warning or not
@@ -26,12 +28,14 @@ class MapState extends GameState {
         setupState();
         drawState();
     }
+
     public void setupState() {
+
         // Initialize Material
         backImage = loadImage("../assets/map/backButton.png");
         tutorialImage = loadImage("../assets/map/tutorialButton.png");
         entranceImage = loadImage("../assets/map/enterButton.png");
-        desertImage = loadImage("../assets/map/MapBackground.jpg");
+        desertImage = loadImage("../assets/map/MapBackground.jpg"); 
         combatIcon = loadImage("../assets/map/combatIcon.png");
         combatIcon.resize(45,0);
         shopIcon = loadImage("../assets/map/shopIcon.png");
@@ -43,9 +47,10 @@ class MapState extends GameState {
         backButton = new Button(100, 50,230,60,backImage);
         tutorialButton = new Button(100, 150, 230, 60, tutorialImage);
         entranceButton = new Button(100, 250, 230, 60, entranceImage);
+
         // Initialize map from json map loader
-        MapLoader mapLoader = new MapLoader();
-        // Check mapTemp exists or not
+        MapLoader mapLoader = new MapLoader(); 
+        // Check mapTemp exists or not 
         if(checkFileExists("../assets/map/mapTemp.json")){
             System.out.println("Loading from mapTemp.json");
             String[] jsonLines = loadStrings("../assets/map/mapTemp.json");
@@ -65,35 +70,50 @@ class MapState extends GameState {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
     }
+
     public void handleMouseInput() {
+
         /* change game state to MENU_STATE */
         if (backButton.overButton() && mousePressed){
             background(240, 210, 200); /* for test */
             MenuState menuState = new MenuState(engineRef, passedPlayer);
             engineRef.changeState(menuState);
         }
+
         /* change game state to COMBAT_STATE */
         if (entranceButton.overButton() && mousePressed){
             Node selectedNode = nodes[currentNodeIndex];
-            if (selectedNode.clickable) {
+            if ((selectedNode.clickable) &&(selectedNode instanceof CombatNode)){
                 // Node is clickable, start combat
                 selectedNode.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
-            } else {
+            } else if ((selectedNode.clickable) &&(selectedNode instanceof ShopNode)){
+                // Node is clickable, enter shop
+                selectedNode.currentOrNot = true;
+                updateNodeStates();
+                saveMapStateToFile("../assets/map/mapTemp.json");
+                goToShop();
+            }else {
                 // Node is not clickable, show warning
                 showWarning("Blocked! ");
             }
         }
 
-        /* basic interactive function for combat node*/
+        /* basic interactive function for different of node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
+                break; // Assume that node could be clicked only once at a time
+            }else if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
+                node.currentOrNot = true;
+                updateNodeStates();
+                saveMapStateToFile("../assets/map/mapTemp.json");
+                goToShop();
                 break; // Assume that node could be clicked only once at a time
             }
             if((node.isMouseOver(mouseX, mouseY))&&(!node.clickable)){
@@ -104,7 +124,7 @@ class MapState extends GameState {
 
         /* Close the warning message */
         // define the close 'X' margin
-        int clickMargin = 30;
+        int clickMargin = 30; 
         // Recalculate the center position for the 'X'
         int rectWidth = 300; // The width of the warning box
         int rectX = width / 2 - rectWidth / 2 + 600; // Calculate the X position as in displayWarningMessage and adjust
@@ -120,26 +140,15 @@ class MapState extends GameState {
         if (tutorialButton.overButton() && mousePressed){
             showTutorial = ! showTutorial;
         }
-        /* change game state to SHOP_STATE*/
-        for (Node node : nodes) {
-            if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
-                node.currentOrNot = true;
-                updateNodeStates();
-                saveMapStateToFile("../assets/map/mapTemp.json");
-                goToShop();
-                break; // Assume that node could be clicked only once at a time
-            }
-            if((node.isMouseOver(mouseX, mouseY))&&(!node.clickable)){
-                // Node is not clickable, show warning
-                showWarning("Blocked! ");
-            }
-        }
+
     }
+
     public void handleMouseWheel(MouseEvent e){
         //float event = e.getCount();
         //scrollOffset += event*20; // Move 20 pixels each scrolling
         //scrollOffset = constrain(scrollOffset, 0, contentHeight - embeddedCanvasHeight);
     }
+
     public void handleKeyInput() {
         if (keyPressed) {
             switch (keyCode) {
@@ -158,12 +167,18 @@ class MapState extends GameState {
                 case ENTER:
                 case RETURN:  // Some keyboards might label it as RETURN
                     Node selectedNode = nodes[currentNodeIndex];
-                    if (selectedNode.clickable) {
+                    if ((selectedNode.clickable) && (selectedNode instanceof CombatNode)) {
                         // Node is clickable, start combat
                         selectedNode.currentOrNot = true;
                         updateNodeStates();
                         saveMapStateToFile("../assets/map/mapTemp.json");
                         goToCombat();
+                    } else if ((selectedNode.clickable) && (selectedNode instanceof ShopNode)) {
+                        // Node is clickable, entershop
+                        selectedNode.currentOrNot = true;
+                        updateNodeStates();
+                        saveMapStateToFile("../assets/map/mapTemp.json");
+                        goToShop();
                     } else {
                         // Node is not clickable, show warning
                         showWarning("Blocked!");
@@ -172,25 +187,32 @@ class MapState extends GameState {
             }
         }
     }
+
     public void updateState() {}
+
     public void pauseState() {}
+
     public void resumeState() {}
+
     public void drawState() {
         image(desertImage,0,0,width,height);
+
         // Draw Button
             backButton.drawButton();
             tutorialButton.drawButton();
             entranceButton.drawButton();
-
+  
         // Draw Status Information
             drawStatusInfo();
-
+ 
         // Draw Map
             for (Node node : nodes) {
                 if(node instanceof CombatNode){
                     ((CombatNode)node).display(combatIcon);
+                }else if(node instanceof ShopNode){
+                    ((ShopNode)node).display(shopIcon);
                 }else{
-                    node.display();
+                    node.display(); 
                 }
             }
             drawConnection();
@@ -202,9 +224,11 @@ class MapState extends GameState {
             if (showWarning) {
                 displayWarningMessage(); // Method to show warning
             }
-        // If Tutorial button clicked show text
+
+        // If Tutorial button clicked show text 
             displayTutorialImage();
     }
+
     private void drawStatusInfo() {
         // Draw Health Point
             fill(255, 0, 0);
@@ -215,7 +239,7 @@ class MapState extends GameState {
             int currHP = passedPlayer.getCurrHp();
             int maxHP = passedPlayer.getMaxHp();
             text("HP "+currHP+"/"+maxHP, 1650, 50); // HP value info
-
+  
         // Draw Action Point
             fill(0, 255, 0);
             ellipse(1670, 90, 30, 30); // Green shape
@@ -232,12 +256,15 @@ class MapState extends GameState {
                 text("AP        "+currAP, 1650, 90); // MP value info
             }else if(currAP >= 0 && currAP <= 9){
                 text("AP           "+currAP, 1650, 90); // MP value info
+            }else if(currAP <0){
+                text("AP          "+currAP, 1650, 90); // MP value info
             }
             //text("AP "+currAP, 1650, 90); // MP value info
     }
 
 
     private void drawMap(){}
+
     // Utility method to find a node by its ID
     private Node findNodeById(int id) {
         for (Node n : nodes) {
@@ -247,22 +274,76 @@ class MapState extends GameState {
         }
         return null;
     }
+
     private void goToCombat() {
-        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-        Worm worm = new Worm(passedPlayer);
-        enemies.add(worm);
-        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-        engineRef.changeState(combatState);
+        int currEnemy = randomizeEnemy();
+        System.out.println("Current enemy case is " + currEnemy);
+        switch(currEnemy){
+            //Spider
+            case 0: 
+                ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                Spider spider = new Spider(passedPlayer);
+                enemies.add(spider);
+                CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                engineRef.changeState(combatState);
+                break;
+            //Worm
+            case 1:
+                ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                Worm worm = new Worm(passedPlayer);
+                enemiesDefault.add(worm);
+                CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                engineRef.changeState(combatStateDefault);
+                break;
+        }
+    }
+
+    private int randomizeEnemy(){
+        Random random = new Random();
+        int randomEnemy = random.nextInt(2);
+        return randomEnemy;
     }
 
     private void goToShop(){
-        ArrayList<Card> cards = new ArrayList<Card>();
-        BlizzardCard blizzardCard = new BlizzardCard();
-        cards.add(blizzardCard);
-        ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
-        engineRef.changeState(shopState);
+        int currShopItems = randomizeShopItems();
+        System.out.println("Current random shop contains case " + currShopItems);
+        switch(currShopItems){
+            //Blizzard and Bludgeon
+            case 0: 
+                ArrayList<Card> cards = new ArrayList<Card>();
+                BlizzardCard blizzardCard = new BlizzardCard();
+                BludgeonCard bludgeonCard = new BludgeonCard();
+                cards.add(blizzardCard);
+                cards.add(bludgeonCard);
+                ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
+                engineRef.changeState(shopState);
+                break;
+            //Blizzard and Anger 
+            case 1:
+                ArrayList<Card> shopDeckOne = new ArrayList<Card>();
+                BlizzardCard blizzardCardOne = new BlizzardCard();
+                AngerCard angerCard = new AngerCard();
+                shopDeckOne.add(blizzardCardOne);
+                shopDeckOne.add(angerCard);
+                ShopState shopStateOne = new ShopState(engineRef,passedPlayer,shopDeckOne);
+                engineRef.changeState(shopStateOne);
+                break;
+            //Default test
+            case 4:
+                ArrayList<Card> shopDeckDefault = new ArrayList<Card>();
+                BlizzardCard blizzardCardTwo = new BlizzardCard();
+                shopDeckDefault.add(blizzardCardTwo);
+                ShopState shopStateTwo = new ShopState(engineRef,passedPlayer,shopDeckDefault);
+                engineRef.changeState(shopStateTwo);
+                break;
+        }
     }
 
+    private int randomizeShopItems(){
+        Random random = new Random();
+        int randomEnemy = random.nextInt(3);
+        return randomEnemy;
+    }
     private void moveCursorToDifferentLevel(int delta) {
         String currentLevel = nodes[currentNodeIndex].level;
         int newLevelIndex = Integer.parseInt(currentLevel.split("_")[1]) + delta; // Assumes level format is "level_X"
@@ -354,6 +435,7 @@ class MapState extends GameState {
     }
 
     public void updateNodeStates() {
+        System.out.println("map updated inside mapstate");
         int currAP = passedPlayer.getActionPts();
         int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
         ArrayList<Node> currentLevelNodes = new ArrayList<>();
@@ -378,11 +460,9 @@ class MapState extends GameState {
                 int nodeLevel = getLevelAsInt(node.level);
                 if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
                     node.clickable = true;
-                    node.currentOrNot = true;
                     nodesToActivate.add(node);
                 } else if (nodeLevel >= minLevelWithCurrent) {
                     node.clickable = false;
-                    node.currentOrNot = false;
                 }
             }
             // Keep clicked node's currentOrNot as "true"，set its clickable to "false"
@@ -398,8 +478,57 @@ class MapState extends GameState {
                     node.clickable = true; // Destination special result
                 }
             }
+            
         }
 
+    }
+
+    public void updateNodeStatesOutside(){
+        System.out.println("map updates outside the mapstate");
+        int currAP = passedPlayer.getActionPts();
+        int minLevelWithCurrent = Integer.MAX_VALUE; // Find the smallest level where currentOrNot is true.
+        ArrayList<Node> currentLevelNodes = new ArrayList<>();
+        ArrayList<Node> nodesToActivate = new ArrayList<>(); // Store the nodes of the previous layer
+        Node currentNode = null; // Declare currentNode here to ensure scope visibility.
+
+        // Step 1: Find the smallest level where currentOrNot is true.
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                int level = getLevelAsInt(node.level);
+                if (level < minLevelWithCurrent) {
+                    minLevelWithCurrent = level;
+                    currentNode = node;
+                }
+            }
+        }
+
+
+        if (currentNode != null) {
+            // Step 2: Update node status
+            for (Node node : nodes) {
+                int nodeLevel = getLevelAsInt(node.level);
+                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                    node.clickable = true;
+                    nodesToActivate.add(node);
+                } else if (nodeLevel >= minLevelWithCurrent) {
+                    node.clickable = false;
+                    node.currentOrNot = false;
+                }
+            }
+            // Keep clicked node's currentOrNot as "true" and clickable as "false"
+            currentNode.currentOrNot = true;
+
+            // Step 3: Update the clickable status according to the AP
+            for (Node node : nodes) {
+                if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
+                int nodeLevel = getLevelAsInt(node.level);
+                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                    node.clickable = true; // connected with currentNode directly or indirectly
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                    node.clickable = true; // Destination special result
+                }
+            }
+        }
     }
 
     public void saveMapStateToFile(String filename) {
@@ -407,7 +536,13 @@ class MapState extends GameState {
         for (Node node : nodes) {
             JSONObject jsonNode = new JSONObject();
             jsonNode.setInt("id", node.id);
-            jsonNode.setString("type", node instanceof CombatNode ? "CombatNode" : "Node");
+            if (node instanceof CombatNode) {
+                jsonNode.setString("type", "CombatNode");
+            } else if (node instanceof ShopNode) {
+                jsonNode.setString("type", "ShopNode");
+            } else {
+                jsonNode.setString("type", "Node");
+            }
             jsonNode.setBoolean("clickable", node.clickable);
             jsonNode.setBoolean("currentOrNot", node.currentOrNot);
             jsonNode.setString("level", node.level);
@@ -449,7 +584,7 @@ class MapState extends GameState {
                 graph.putIfAbsent(node.id, new HashSet<>());
                 for (int connectedId : node.connectedIds) {
                     // Destination level 1 is an exception
-                    if (!nodeLevels.getOrDefault(connectedId, "level_1").equals("level_1")) {
+                    if (!nodeLevels.getOrDefault(connectedId, "level_1").equals("level_1")) { 
                         graph.get(node.id).add(connectedId);
                         graph.putIfAbsent(connectedId, new HashSet<>());
                         graph.get(connectedId).add(node.id);
@@ -471,7 +606,7 @@ class MapState extends GameState {
             }
             for (int neighbor : graph.getOrDefault(current, new HashSet<>())) {
                 // Destination level 1 is an exception
-                if (!visited.contains(neighbor) && !nodeLevels.get(neighbor).equals("level_1")) {
+                if (!visited.contains(neighbor) && !nodeLevels.get(neighbor).equals("level_1")) { 
                     visited.add(neighbor);
                     queue.add(neighbor);
                 }
@@ -479,6 +614,26 @@ class MapState extends GameState {
         }
 
         return false;
+    }
+
+    public boolean checkFinalWin(){
+        System.out.println("Checking final win");
+        int minLevel = Integer.MAX_VALUE;
+        boolean winOrNot = false;
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                int level = getLevelAsInt(node.level); 
+                if (level < minLevel) {
+                    minLevel = level;
+                }
+            }
+        }
+        //if the minimum clickable and current node is destination
+        if(minLevel == 1){
+            winOrNot = true;
+        }
+
+        return winOrNot;
     }
 
 }
