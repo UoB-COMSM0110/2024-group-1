@@ -58,7 +58,7 @@ class MapState extends GameState {
             mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
         }else{
             System.out.println("Loading from mapChoiceEasy.json");
-            String[] jsonLines = loadStrings("../assets/map/mapChoiceEasy.json");
+            String[] jsonLines = loadStrings("../assets/map/mapChoiceHard.json");
             String jsonString = join(jsonLines, "");
             mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
         }
@@ -261,9 +261,6 @@ class MapState extends GameState {
             }
             //text("AP "+currAP, 1650, 90); // MP value info
     }
-
-
-    private void drawMap(){}
 
     // Utility method to find a node by its ID
     private Node findNodeById(int id) {
@@ -522,7 +519,7 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
                 }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
                     node.clickable = true; // Destination special result
@@ -570,6 +567,16 @@ class MapState extends GameState {
         return Integer.parseInt(level.split("_")[1]);
     }
 
+    public int getLevelById(int nodeId) {
+        for (Node node : nodes) {
+            if (node.id == nodeId) {
+                return getLevelAsInt(node.level);
+            }
+        }
+        System.out.println("Get level by ID failure.");
+        return 0;
+    }
+
     public boolean isConnected(int nodeId1, int nodeId2) {
         if (nodeId1 == nodeId2) {
             return true;
@@ -591,6 +598,13 @@ class MapState extends GameState {
                     }
                 }
             }
+        }
+        System.out.println("Graph generated");
+
+        // When level gap is 1, do not use BFS
+        if (((getLevelById(nodeId1) - getLevelById(nodeId2)) == 1)||((getLevelById(nodeId1) - getLevelById(nodeId2)) == -1)){
+            System.out.println("Checking only level gap is one");
+            return graph.getOrDefault(nodeId1, new HashSet<>()).contains(nodeId2);
         }
 
         // BFS serching nodeId2 to nodeId2
