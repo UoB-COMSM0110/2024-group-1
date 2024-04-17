@@ -13,7 +13,7 @@ class MapState extends GameState {
     GameEngine engineRef;
     private Player passedPlayer;
 
-    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail;//Used to generate a nice background image of map
+    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail,APIcon,HPIcon,constantTutorial;//Used to generate a nice background image of map
     
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
@@ -48,7 +48,14 @@ class MapState extends GameState {
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
         tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
-        tutorialDetail.resize(500,0);
+        tutorialDetail.resize(700,0);
+        APIcon = loadImage("../assets/map/apIcon.png");
+        APIcon.resize(150,0);
+        HPIcon = loadImage("../assets/map/hpIcon.png");
+        HPIcon.resize(150,0);
+        constantTutorial = loadImage("../assets/map/ConstantTutorial.png");
+        constantTutorial.resize(320,0);
+        
 
         // Initialize universal Button
         backButton = new Button(100, 50,230,60,backImage);
@@ -72,7 +79,7 @@ class MapState extends GameState {
         nodes = mapLoader.loadNodes(); // set Node array
 
         // Initialize the marker of current node
-        currentNodeIndex = 0;  // Start at the first node
+        currentNodeIndex = 11;  // Start at the bottom line
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
@@ -90,7 +97,13 @@ class MapState extends GameState {
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
         tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
-        tutorialDetail.resize(500,0);
+        tutorialDetail.resize(700,0);
+        APIcon = loadImage("../assets/map/apIcon.png");
+        APIcon.resize(150,0);
+        HPIcon = loadImage("../assets/map/hpIcon.png");
+        HPIcon.resize(150,0);
+        constantTutorial = loadImage("../assets/map/ConstantTutorial.png");
+        constantTutorial.resize(320,0);
 
         // Initialize universal Button
         backButton = new Button(100, 50,230,60,backImage);
@@ -114,7 +127,7 @@ class MapState extends GameState {
         nodes = mapLoader.loadNodes(); // set Node array
 
         // Initialize the marker of current node
-        currentNodeIndex = 0;  // Start at the first node
+        currentNodeIndex = 25;  // Start at the bottom line
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
@@ -187,6 +200,7 @@ class MapState extends GameState {
 
         /* Open and Close the tutorial message */
         if (tutorialButton.overButton() && mousePressed){
+            System.out.println("Tutorial button is clicked");
             showTutorial = ! showTutorial;
         }
 
@@ -254,8 +268,14 @@ class MapState extends GameState {
   
         // Draw Status Information
             drawStatusInfo();
- 
+
+        // Draw Constant picture tutorial
+            image(constantTutorial,100,315);
         // Draw Map
+            if(!showTutorial){
+                drawConnection();
+            }
+
             for (Node node : nodes) {
                 if(node instanceof CombatNode){
                     ((CombatNode)node).display(combatIcon);
@@ -265,7 +285,6 @@ class MapState extends GameState {
                     node.display(); 
                 }
             }
-            drawConnection();
         // Draw marker
             fill(0, 255, 0);  // Green color for cursor
             ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
@@ -280,35 +299,25 @@ class MapState extends GameState {
     }
 
     private void drawStatusInfo() {
+        image(APIcon,1485,0);
+        image(HPIcon,1485,65);
+
         // Draw Health Point
             fill(255, 0, 0);
-            ellipse(1670, 50, 30, 30); // Red shape
+            ellipse(1830, 50, 30, 30); // Red shape
             fill(255);
             textSize(64);
             textAlign(RIGHT, CENTER);
             int currHP = passedPlayer.getCurrHp();
             int maxHP = passedPlayer.getMaxHp();
-            text("HP "+currHP+"/"+maxHP, 1650, 50); // HP value info
+            text(currHP+"/"+maxHP, 1800, 45); // HP value info
   
         // Draw Action Point
             fill(0, 255, 0);
-            ellipse(1670, 90, 30, 30); // Green shape
+            ellipse(1830, 110, 30, 30); // Green shape
             fill(255);
-            int currAP = passedPlayer.getActionPts();
-            /*Optimize visual effect*/
-            if(currAP <= 99999 && currAP >=10000){
-                text("AP  "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 1000 && currAP <= 9999){
-                text("AP    "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 100 && currAP <= 999){
-                text("AP     "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 10 && currAP <= 99){
-                text("AP        "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 0 && currAP <= 9){
-                text("AP           "+currAP, 1650, 90); // MP value info
-            }else if(currAP <0){
-                text("AP          "+currAP, 1650, 90); // MP value info
-            }
+            int currAP = passedPlayer.getActionPts(); 
+            text(currAP, 1800, 100); // MP value info
             //text("AP "+currAP, 1650, 90); // MP value info
     }
 
@@ -399,6 +408,7 @@ class MapState extends GameState {
         int randomEnemy = random.nextInt(3);
         return randomEnemy;
     }
+
     private void moveCursorToDifferentLevel(int delta) {
         String currentLevel = nodes[currentNodeIndex].level;
         int newLevelIndex = Integer.parseInt(currentLevel.split("_")[1]) + delta; // Assumes level format is "level_X"
@@ -467,11 +477,14 @@ class MapState extends GameState {
 
     private void displayTutorialImage() {
         if (showTutorial) {
-            image(tutorialDetail, (width - tutorialDetail.width) / 2 + 700, (height - tutorialDetail.height) / 2);
+            System.out.println("The showing state of tutorial is changed");
+            image(tutorialDetail, 700,30);
         }
     }
 
     private void drawConnection(){
+        stroke(255, 255, 255); // 设置线条颜色为红色
+        strokeWeight(4);   // 设置线条粗细为4像素
         for (Node node : nodes) {
                 // Draw connections
                 for (int connectedId : node.connectedIds) {
@@ -481,6 +494,8 @@ class MapState extends GameState {
                     }
                 }
         }
+        strokeWeight(1);
+        stroke(0,0,0,0); // 默认颜色设置为黑色
     }
 
     private boolean checkFileExists(String filePath){

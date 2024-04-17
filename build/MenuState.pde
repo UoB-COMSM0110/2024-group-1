@@ -91,6 +91,7 @@ class MenuState extends GameState {
     public void handleKeyInput() {}
 
     public void drawState() {
+        background(255);
         image(bg, 0, 0, width, height);
         
         if(modeChoiceVisibility){
