@@ -48,7 +48,7 @@ class MapState extends GameState {
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
         tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
-        tutorialDetail.resize(700,0);
+        tutorialDetail.resize(985,0);
         APIcon = loadImage("../assets/map/apIcon.png");
         APIcon.resize(150,0);
         HPIcon = loadImage("../assets/map/hpIcon.png");
@@ -97,7 +97,7 @@ class MapState extends GameState {
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
         tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
-        tutorialDetail.resize(700,0);
+        tutorialDetail.resize(985,0);
         APIcon = loadImage("../assets/map/apIcon.png");
         APIcon.resize(150,0);
         HPIcon = loadImage("../assets/map/hpIcon.png");
@@ -478,7 +478,7 @@ class MapState extends GameState {
     private void displayTutorialImage() {
         if (showTutorial) {
             System.out.println("The showing state of tutorial is changed");
-            image(tutorialDetail, 700,30);
+            image(tutorialDetail, 500,30);
         }
     }
 
