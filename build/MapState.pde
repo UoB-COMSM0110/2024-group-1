@@ -142,27 +142,6 @@ class MapState extends GameState {
             engineRef.changeState(menuState);
         }
 
-        /* change game state to COMBAT_STATE */
-        if (entranceButton.overButton() && mousePressed){
-            Node selectedNode = nodes[currentNodeIndex];
-            if ((selectedNode.clickable) &&(selectedNode instanceof CombatNode)){
-                // Node is clickable, start combat
-                selectedNode.currentOrNot = true;
-                updateNodeStates();
-                saveMapStateToFile("../assets/map/mapTemp.json");
-                goToCombat();
-            } else if ((selectedNode.clickable) &&(selectedNode instanceof ShopNode)){
-                // Node is clickable, enter shop
-                selectedNode.currentOrNot = true;
-                updateNodeStates();
-                saveMapStateToFile("../assets/map/mapTemp.json");
-                goToShop();
-            }else {
-                // Node is not clickable, show warning
-                showWarning("Blocked! ");
-            }
-        }
-
         /* basic interactive function for different of node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
@@ -264,7 +243,6 @@ class MapState extends GameState {
         // Draw Button
             backButton.drawButton();
             tutorialButton.drawButton();
-            entranceButton.drawButton();
   
         // Draw Status Information
             drawStatusInfo();
