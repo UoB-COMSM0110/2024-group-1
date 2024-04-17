@@ -285,7 +285,10 @@ class MapState extends GameState {
                     node.display(); 
                 }
             }
-        // Draw marker
+        // Draw cursor marker
+            if(!keyPressed){
+                updateCursorToClosestNode();
+            }
             fill(0, 255, 0);  // Green color for cursor
             ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
 
@@ -723,4 +726,21 @@ class MapState extends GameState {
         return winOrNot;
     }
 
+    private void updateCursorToClosestNode() {
+        float minDist = Float.MAX_VALUE;
+        int closestNodeIndex = -1;
+
+        for (int i = 0; i < nodes.length; i++) {
+            float distance = dist(mouseX, mouseY, nodes[i].position.x, nodes[i].position.y);
+            if (distance < minDist) {
+                minDist = distance;
+                closestNodeIndex = i;
+            }
+        }
+
+        if (closestNodeIndex != -1) {
+            currentNodeIndex = closestNodeIndex;
+            updateCursorPosition();
+        }
+    }
 }
