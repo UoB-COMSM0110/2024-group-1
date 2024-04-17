@@ -3,6 +3,7 @@ import java.util.ArrayList;
 abstract class Enemy extends Entity {
     private ArrayList<Move> moves;
     protected Player playerRef;
+    private int goldValue;
 
     Enemy(String name, int hp, int str, int dex, Player ref) {
         super(name, hp, str, dex);
@@ -20,11 +21,23 @@ abstract class Enemy extends Entity {
         moves.add(incomingMove);
     }
 
+    public void clearMoves() {
+        moves.clear();
+    }
+
     public void executeMoves() {
         for (Move move : moves) {
             move.executeMove();
         }
         moves.clear();
+    }
+
+    public int getGoldValue() {
+        return goldValue;
+    }
+
+    public void setGoldValue(int enemyGoldVal) {
+        goldValue = enemyGoldVal;
     }
 
     public void die() {

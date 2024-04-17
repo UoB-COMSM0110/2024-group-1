@@ -11,6 +11,7 @@ class CombatEncounter {
     private final int ENEMY_BASE_Y = (int)(height*0.25);
     private PImage[] encounterImgs;
     private Button endTurnBtn;
+    private int combatGoldReward;
     private EntityImgLoader entityImgs;
 
     CombatEncounter(Player thePlayer, ArrayList<Enemy> enemies) {
@@ -21,6 +22,7 @@ class CombatEncounter {
         discardPile = new ArrayList<Card>();
         entityImgs = new EntityImgLoader();
         drawAmt = 5;
+        combatGoldReward = 0;
 
         encounterImgs = new PImage[6];
         encounterImgs[0] = loadImage("../assets/combat/battle_background.png");
@@ -29,10 +31,11 @@ class CombatEncounter {
         encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
         encounterImgs[4] = loadImage("../assets/combat/poison_icon.png");
         encounterImgs[5] = loadImage("../assets/combat/attack_buff_icon.png");
-        endTurnBtn = new Button(width-300, (int)(height*0.75), 256, 256, encounterImgs[1]);
+        endTurnBtn = new Button((int)(width*0.80), (int)(height*0.75), 345, 126, encounterImgs[1]);
     }
 
     public void initEncounter() {
+        calculateCombatReward();
         for (Enemy nme : currEnemies) {
             nme.setImg(entityImgs.getImg(nme.getName()));
             nme.setPos(ENEMY_BASE_X, ENEMY_BASE_Y);
@@ -135,6 +138,7 @@ class CombatEncounter {
     public OutcomeType checkWinLoss() {
         if (currEnemies.isEmpty() == true) {
             processBattleEnd();
+            battlePlayer.incrementGold(combatGoldReward);
             return OutcomeType.OUTCOME_WIN;
         } else if (battlePlayer.getCurrHp() <= 0) {
             processBattleEnd();
@@ -282,5 +286,12 @@ class CombatEncounter {
         drawDeck.getDeck().addAll(discardPile);
         battlePlayer.setDeck(drawDeck);
         battlePlayer.clearAllEffects();
+    }
+
+    private void calculateCombatReward() {
+        for (Enemy nme : currEnemies) {
+            int currNmeGold = nme.getGoldValue();
+            combatGoldReward += currNmeGold;
+        }
     }
 }
