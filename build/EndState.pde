@@ -18,6 +18,7 @@ class EndState extends GameState {
   boolean checkFinalWin;
   
   EndState(GameEngine engine, Player player, boolean check) {
+    System.out.println("I am called.I am end");
     passedPlayer = player;
     engineRef = engine;
     checkWin = check;
@@ -118,6 +119,7 @@ class EndState extends GameState {
   }
   
   public void drawState() {
+      cleanScreen();
       background(backgroundImage);
       settingButton.drawButton();
       menuButton.drawButton();

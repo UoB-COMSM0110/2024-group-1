@@ -124,7 +124,7 @@ class CombatEncounter {
                             activeCard = currCard;
                         }
                     }
-                }   
+                }
                 if (activeCard != null && (activeCard.getIfTakesTarget() == false)) {
                     playCard(activeCard, battlePlayer);
                 }

@@ -46,7 +46,8 @@ class MapLoader {
         switch (type) {
             case "CombatNode":
                 return new CombatNode(id, connectedIds, clickable, currentOrNot, position, x, y, level);
-            // case "ShopNode"
+            case "ShopNode":
+                return new ShopNode(id,connectedIds,clickable,currentOrNot,position,x,y,level);
             default:
                 return new Node(id, connectedIds, clickable, currentOrNot, position, x, y, level);
         }
