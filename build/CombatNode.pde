@@ -13,13 +13,12 @@ class CombatNode extends Node {
 
         // Set the configuration of indicator
         if (clickable) {
-            fill(255, 255, 0, 100);  // Yellow transparent
+            fill(153, 255, 153, 60);  // Yellow transparent
         } else {
-            fill(255, 0, 0, 100);    // Red transparent
+            fill(255, 51, 51, 100);    // Red transparent
         }
 
         //Draw the cover indicator of clickable visualization
         rect(imageX, imageY, combatIcon.width, combatIcon.height);
     }
 }
-

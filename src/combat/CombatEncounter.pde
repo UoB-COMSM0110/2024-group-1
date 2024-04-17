@@ -183,6 +183,9 @@ class CombatEncounter {
             drawMoveIntentions(curr);
         }
     }
+<<<<<<< HEAD
+}
+=======
 
     private void drawMoveIntentions(Enemy curr) {
         ArrayList<Move> moves = curr.getMoves();

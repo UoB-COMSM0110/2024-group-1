@@ -83,6 +83,6 @@ abstract class Card {
     }
 
     public boolean isMousedOver() {
-        return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
+      return mouseX >= pos.x && mouseX <= (pos.x + img.width) && mouseY >= pos.y && mouseY <= (pos.y + img.height); 
     }
 }
