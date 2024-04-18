@@ -82,9 +82,6 @@ class Deck {
       return deck.size() == deckLimit;
     }
 
-    public boolean isFull() {
-      return deck.size() == deckLimit;
-    }
 
     private void initDeck() {
         deck.add(new StrikeCard());
