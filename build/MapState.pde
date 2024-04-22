@@ -13,7 +13,7 @@ class MapState extends GameState {
     GameEngine engineRef;
     private Player passedPlayer;
 
-    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail;//Used to generate a nice background image of map
+    PImage desertImage,backImage,tutorialImage,entranceImage,combatIcon,shopIcon,tutorialDetail,APIcon,HPIcon,constantTutorial;//Used to generate a nice background image of map
     
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
@@ -29,6 +29,13 @@ class MapState extends GameState {
         drawState();
     }
 
+    MapState(GameEngine engine, Player thePlayer, String hardmode){
+        engineRef = engine;
+        passedPlayer = thePlayer;
+        setupState(hardmode);
+        drawState();
+    }
+
     public void setupState() {
 
         // Initialize Material
@@ -41,7 +48,14 @@ class MapState extends GameState {
         shopIcon = loadImage("../assets/map/shopIcon.png");
         shopIcon.resize(45,0);
         tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
-        tutorialDetail.resize(500,0);
+        tutorialDetail.resize(985,0);
+        APIcon = loadImage("../assets/map/apIcon.png");
+        APIcon.resize(150,0);
+        HPIcon = loadImage("../assets/map/hpIcon.png");
+        HPIcon.resize(150,0);
+        constantTutorial = loadImage("../assets/map/ConstantTutorial.png");
+        constantTutorial.resize(320,0);
+        
 
         // Initialize universal Button
         backButton = new Button(100, 50,230,60,backImage);
@@ -65,7 +79,55 @@ class MapState extends GameState {
         nodes = mapLoader.loadNodes(); // set Node array
 
         // Initialize the marker of current node
-        currentNodeIndex = 0;  // Start at the first node
+        currentNodeIndex = 11;  // Start at the bottom line
+        if (nodes.length > 0) {
+            cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
+        }
+    }
+
+    public void setupState(String hardmode) {
+
+        // Initialize Material
+        backImage = loadImage("../assets/map/backButton.png");
+        tutorialImage = loadImage("../assets/map/tutorialButton.png");
+        entranceImage = loadImage("../assets/map/enterButton.png");
+        desertImage = loadImage("../assets/map/MapBackground.jpg"); 
+        combatIcon = loadImage("../assets/map/combatIcon.png");
+        combatIcon.resize(45,0);
+        shopIcon = loadImage("../assets/map/shopIcon.png");
+        shopIcon.resize(45,0);
+        tutorialDetail = loadImage("../assets/map/tutorialDetail.png");
+        tutorialDetail.resize(985,0);
+        APIcon = loadImage("../assets/map/apIcon.png");
+        APIcon.resize(150,0);
+        HPIcon = loadImage("../assets/map/hpIcon.png");
+        HPIcon.resize(150,0);
+        constantTutorial = loadImage("../assets/map/ConstantTutorial.png");
+        constantTutorial.resize(320,0);
+
+        // Initialize universal Button
+        backButton = new Button(100, 50,230,60,backImage);
+        tutorialButton = new Button(100, 150, 230, 60, tutorialImage);
+        entranceButton = new Button(100, 250, 230, 60, entranceImage);
+
+        // Initialize map from json map loader
+        MapLoader mapLoader = new MapLoader(); 
+        // Check mapTemp exists or not 
+        if(checkFileExists("../assets/map/mapTemp.json")){
+            System.out.println("Loading from mapTemp.json");
+            String[] jsonLines = loadStrings("../assets/map/mapTemp.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }else{
+            System.out.println("Loading from mapChoiceHard.json");
+            String[] jsonLines = loadStrings("../assets/map/mapChoiceHard.json");
+            String jsonString = join(jsonLines, "");
+            mapLoader.loadNodesFromJSON(jsonString); // Load Node from JSON string
+        }
+        nodes = mapLoader.loadNodes(); // set Node array
+
+        // Initialize the marker of current node
+        currentNodeIndex = 25;  // Start at the bottom line
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
@@ -80,28 +142,19 @@ class MapState extends GameState {
             engineRef.changeState(menuState);
         }
 
-        /* change game state to COMBAT_STATE */
-        if (entranceButton.overButton() && mousePressed){
-            Node selectedNode = nodes[currentNodeIndex];
-            if (selectedNode.clickable) {
-                // Node is clickable, start combat
-                selectedNode.currentOrNot = true;
-                updateNodeStates();
-                saveMapStateToFile("../assets/map/mapTemp.json");
-                goToCombat();
-            } else {
-                // Node is not clickable, show warning
-                showWarning("Blocked! ");
-            }
-        }
-
-        /* basic interactive function for combat node*/
+        /* basic interactive function for different of node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
+                break; // Assume that node could be clicked only once at a time
+            }else if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
+                node.currentOrNot = true;
+                updateNodeStates();
+                saveMapStateToFile("../assets/map/mapTemp.json");
+                goToShop();
                 break; // Assume that node could be clicked only once at a time
             }
             if((node.isMouseOver(mouseX, mouseY))&&(!node.clickable)){
@@ -126,24 +179,10 @@ class MapState extends GameState {
 
         /* Open and Close the tutorial message */
         if (tutorialButton.overButton() && mousePressed){
+            System.out.println("Tutorial button is clicked");
             showTutorial = ! showTutorial;
         }
 
-        /* change game state to COMBAT_STATE or SHOP_STATE*/
-        /*test
-               for(){
-            if(node.isMouseOver(mouseX,mouseY)){
-                if(node instanceof CombatNode){
-                    ArrayList<Enemy> nextEnemy = node.getNextEnemy();
-                    CombatState newCombat = new CombatState(engineRef,passedPlayer,nextEnemy);
-                    engineRef.changeState(newCombat);
-                }else if (node instanceof ShopNode) {
-                    ShopState newShop = new ShopState(engineRef,passedPlayer);
-                    engineRef.changeState(newShop);
-                }
-            }
-        }
-        test*/        
     }
 
     public void handleMouseWheel(MouseEvent e){
@@ -170,12 +209,18 @@ class MapState extends GameState {
                 case ENTER:
                 case RETURN:  // Some keyboards might label it as RETURN
                     Node selectedNode = nodes[currentNodeIndex];
-                    if (selectedNode.clickable) {
+                    if ((selectedNode.clickable) && (selectedNode instanceof CombatNode)) {
                         // Node is clickable, start combat
                         selectedNode.currentOrNot = true;
                         updateNodeStates();
                         saveMapStateToFile("../assets/map/mapTemp.json");
                         goToCombat();
+                    } else if ((selectedNode.clickable) && (selectedNode instanceof ShopNode)) {
+                        // Node is clickable, entershop
+                        selectedNode.currentOrNot = true;
+                        updateNodeStates();
+                        saveMapStateToFile("../assets/map/mapTemp.json");
+                        goToShop();
                     } else {
                         // Node is not clickable, show warning
                         showWarning("Blocked!");
@@ -192,26 +237,36 @@ class MapState extends GameState {
     public void resumeState() {}
 
     public void drawState() {
+        background(255);//Clear the screen for connection lines
         image(desertImage,0,0,width,height);
 
         // Draw Button
             backButton.drawButton();
             tutorialButton.drawButton();
-            entranceButton.drawButton();
   
         // Draw Status Information
             drawStatusInfo();
- 
+
+        // Draw Constant picture tutorial
+            image(constantTutorial,100,315);
         // Draw Map
+            if(!showTutorial){
+                drawConnection();
+            }
+
             for (Node node : nodes) {
                 if(node instanceof CombatNode){
                     ((CombatNode)node).display(combatIcon);
+                }else if(node instanceof ShopNode){
+                    ((ShopNode)node).display(shopIcon);
                 }else{
                     node.display(); 
                 }
             }
-            drawConnection();
-        // Draw marker
+        // Draw cursor marker
+            if(!keyPressed){
+                updateCursorToClosestNode();
+            }
             fill(0, 255, 0);  // Green color for cursor
             ellipse(cursorPosition.x, cursorPosition.y, 30, 30);  // Draw a larger ellipse for the cursor
 
@@ -225,40 +280,27 @@ class MapState extends GameState {
     }
 
     private void drawStatusInfo() {
+        image(APIcon,1485,0);
+        image(HPIcon,1485,65);
+
         // Draw Health Point
             fill(255, 0, 0);
-            ellipse(1670, 50, 30, 30); // Red shape
+            ellipse(1830, 50, 30, 30); // Red shape
             fill(255);
             textSize(64);
             textAlign(RIGHT, CENTER);
             int currHP = passedPlayer.getCurrHp();
             int maxHP = passedPlayer.getMaxHp();
-            text("HP "+currHP+"/"+maxHP, 1650, 50); // HP value info
+            text(currHP+"/"+maxHP, 1800, 45); // HP value info
   
         // Draw Action Point
             fill(0, 255, 0);
-            ellipse(1670, 90, 30, 30); // Green shape
+            ellipse(1830, 110, 30, 30); // Green shape
             fill(255);
-            int currAP = passedPlayer.getActionPts();
-            /*Optimize visual effect*/
-            if(currAP <= 99999 && currAP >=10000){
-                text("AP  "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 1000 && currAP <= 9999){
-                text("AP    "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 100 && currAP <= 999){
-                text("AP     "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 10 && currAP <= 99){
-                text("AP        "+currAP, 1650, 90); // MP value info
-            }else if(currAP >= 0 && currAP <= 9){
-                text("AP           "+currAP, 1650, 90); // MP value info
-            }else if(currAP <0){
-                text("AP          "+currAP, 1650, 90); // MP value info
-            }
+            int currAP = passedPlayer.getActionPts(); 
+            text(currAP, 1800, 100); // MP value info
             //text("AP "+currAP, 1650, 90); // MP value info
     }
-
-
-    private void drawMap(){}
 
     // Utility method to find a node by its ID
     private Node findNodeById(int id) {
@@ -290,12 +332,61 @@ class MapState extends GameState {
                 CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
                 engineRef.changeState(combatStateDefault);
                 break;
+            //Golem
+            case 2:
+                ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
+                Golem golem = new Golem(passedPlayer);
+                enemiesGolem.add(golem);
+                CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                engineRef.changeState(combatStateGolem);
+            break;
         }
     }
 
     private int randomizeEnemy(){
         Random random = new Random();
-        int randomEnemy = random.nextInt(2);
+        int randomEnemy = random.nextInt(3);
+        return randomEnemy;
+    }
+
+    private void goToShop(){
+        int currShopItems = randomizeShopItems();
+        System.out.println("Current random shop contains case " + currShopItems);
+        switch(currShopItems){
+            //Blizzard and Bludgeon
+            case 0: 
+                ArrayList<Card> cards = new ArrayList<Card>();
+                BlizzardCard blizzardCard = new BlizzardCard();
+                BludgeonCard bludgeonCard = new BludgeonCard();
+                cards.add(blizzardCard);
+                cards.add(bludgeonCard);
+                ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
+                engineRef.changeState(shopState);
+                break;
+            //Blizzard and Anger 
+            case 1:
+                ArrayList<Card> shopDeckOne = new ArrayList<Card>();
+                BlizzardCard blizzardCardOne = new BlizzardCard();
+                AngerCard angerCard = new AngerCard();
+                shopDeckOne.add(blizzardCardOne);
+                shopDeckOne.add(angerCard);
+                ShopState shopStateOne = new ShopState(engineRef,passedPlayer,shopDeckOne);
+                engineRef.changeState(shopStateOne);
+                break;
+            //Default test
+            case 2:
+                ArrayList<Card> shopDeckDefault = new ArrayList<Card>();
+                BlizzardCard blizzardCardTwo = new BlizzardCard();
+                shopDeckDefault.add(blizzardCardTwo);
+                ShopState shopStateTwo = new ShopState(engineRef,passedPlayer,shopDeckDefault);
+                engineRef.changeState(shopStateTwo);
+                break;
+        }
+    }
+
+    private int randomizeShopItems(){
+        Random random = new Random();
+        int randomEnemy = random.nextInt(3);
         return randomEnemy;
     }
 
@@ -367,11 +458,14 @@ class MapState extends GameState {
 
     private void displayTutorialImage() {
         if (showTutorial) {
-            image(tutorialDetail, (width - tutorialDetail.width) / 2 + 700, (height - tutorialDetail.height) / 2);
+            System.out.println("The showing state of tutorial is changed");
+            image(tutorialDetail, 500,30);
         }
     }
 
     private void drawConnection(){
+        stroke(255, 255, 255); // 设置线条颜色为红色
+        strokeWeight(4);   // 设置线条粗细为4像素
         for (Node node : nodes) {
                 // Draw connections
                 for (int connectedId : node.connectedIds) {
@@ -381,6 +475,8 @@ class MapState extends GameState {
                     }
                 }
         }
+        strokeWeight(1);
+        stroke(0,0,0,0); // 默认颜色设置为黑色
     }
 
     private boolean checkFileExists(String filePath){
@@ -477,7 +573,7 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
                 }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
                     node.clickable = true; // Destination special result
@@ -491,7 +587,13 @@ class MapState extends GameState {
         for (Node node : nodes) {
             JSONObject jsonNode = new JSONObject();
             jsonNode.setInt("id", node.id);
-            jsonNode.setString("type", node instanceof CombatNode ? "CombatNode" : "Node");
+            if (node instanceof CombatNode) {
+                jsonNode.setString("type", "CombatNode");
+            } else if (node instanceof ShopNode) {
+                jsonNode.setString("type", "ShopNode");
+            } else {
+                jsonNode.setString("type", "Node");
+            }
             jsonNode.setBoolean("clickable", node.clickable);
             jsonNode.setBoolean("currentOrNot", node.currentOrNot);
             jsonNode.setString("level", node.level);
@@ -519,6 +621,16 @@ class MapState extends GameState {
         return Integer.parseInt(level.split("_")[1]);
     }
 
+    public int getLevelById(int nodeId) {
+        for (Node node : nodes) {
+            if (node.id == nodeId) {
+                return getLevelAsInt(node.level);
+            }
+        }
+        System.out.println("Get level by ID failure.");
+        return 0;
+    }
+
     public boolean isConnected(int nodeId1, int nodeId2) {
         if (nodeId1 == nodeId2) {
             return true;
@@ -540,6 +652,13 @@ class MapState extends GameState {
                     }
                 }
             }
+        }
+        System.out.println("Graph generated");
+
+        // When level gap is 1, do not use BFS
+        if (((getLevelById(nodeId1) - getLevelById(nodeId2)) == 1)||((getLevelById(nodeId1) - getLevelById(nodeId2)) == -1)){
+            System.out.println("Checking only level gap is one");
+            return graph.getOrDefault(nodeId1, new HashSet<>()).contains(nodeId2);
         }
 
         // BFS serching nodeId2 to nodeId2
@@ -585,4 +704,21 @@ class MapState extends GameState {
         return winOrNot;
     }
 
+    private void updateCursorToClosestNode() {
+        float minDist = Float.MAX_VALUE;
+        int closestNodeIndex = -1;
+
+        for (int i = 0; i < nodes.length; i++) {
+            float distance = dist(mouseX, mouseY, nodes[i].position.x, nodes[i].position.y);
+            if (distance < minDist) {
+                minDist = distance;
+                closestNodeIndex = i;
+            }
+        }
+
+        if (closestNodeIndex != -1) {
+            currentNodeIndex = closestNodeIndex;
+            updateCursorPosition();
+        }
+    }
 }
