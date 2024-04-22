@@ -88,6 +88,7 @@ public class ShopState extends GameState {
     image(shopBackground, 0, 0, width, height);
     image(backImage, 50, height - 80, 230, 60);  
     
+    fill(255, 255, 255);
     textSize(40);
     textAlign(CENTER);
     
@@ -97,7 +98,7 @@ public class ShopState extends GameState {
         int posX = divX + (cardWidth + gap) * j;
         int posY = divY + (cardHeight + 2 * gap) * i;
         card.setPos(posX, posY);
-        rect(posX, posY, cardWidth, cardHeight);
+        //rect(posX, posY, cardWidth, cardHeight);
         image(card.getImg(), posX, posY, cardWidth, cardHeight);
         text(card.getShopCost() + "£", posX + cardWidth / 2, posY + cardHeight + 35);
       }

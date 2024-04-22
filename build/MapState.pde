@@ -358,8 +358,18 @@ class MapState extends GameState {
                 ArrayList<Card> cards = new ArrayList<Card>();
                 BlizzardCard blizzardCard = new BlizzardCard();
                 BludgeonCard bludgeonCard = new BludgeonCard();
+                IronWaveCard ironWaveCard = new IronWaveCard();
+                BashCard bashCard = new BashCard();
+                ShrugItOffCard shrugItOffCard = new ShrugItOffCard();
+                BodyslamCard bodySlamCard = new BodyslamCard();
                 cards.add(blizzardCard);
                 cards.add(bludgeonCard);
+                cards.add(ironWaveCard);
+                cards.add(bashCard);
+                cards.add(shrugItOffCard);
+                cards.add(bodySlamCard);
+
+
                 ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
                 engineRef.changeState(shopState);
                 break;
@@ -368,8 +378,15 @@ class MapState extends GameState {
                 ArrayList<Card> shopDeckOne = new ArrayList<Card>();
                 BlizzardCard blizzardCardOne = new BlizzardCard();
                 AngerCard angerCard = new AngerCard();
+                ThunderclapCard thunderClapCardOne = new ThunderclapCard();
+                ShrugItOffCard shrugItOffCardOne = new ShrugItOffCard();
+                BodyslamCard bodySlamCardOne = new BodyslamCard();
+
                 shopDeckOne.add(blizzardCardOne);
                 shopDeckOne.add(angerCard);
+                shopDeckOne.add(thunderClapCardOne);
+                shopDeckOne.add(shrugItOffCardOne);
+                shopDeckOne.add(bodySlamCardOne);
                 ShopState shopStateOne = new ShopState(engineRef,passedPlayer,shopDeckOne);
                 engineRef.changeState(shopStateOne);
                 break;
@@ -377,7 +394,12 @@ class MapState extends GameState {
             case 2:
                 ArrayList<Card> shopDeckDefault = new ArrayList<Card>();
                 BlizzardCard blizzardCardTwo = new BlizzardCard();
+                IronWaveCard ironWaveCardTwo = new IronWaveCard();
+                ThunderclapCard thunderClapCardTwo = new ThunderclapCard();
                 shopDeckDefault.add(blizzardCardTwo);
+                shopDeckDefault.add(ironWaveCardTwo);
+                shopDeckDefault.add(thunderClapCardTwo);
+                
                 ShopState shopStateTwo = new ShopState(engineRef,passedPlayer,shopDeckDefault);
                 engineRef.changeState(shopStateTwo);
                 break;
