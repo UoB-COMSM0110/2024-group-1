@@ -362,12 +362,20 @@ class MapState extends GameState {
                 BashCard bashCard = new BashCard();
                 ShrugItOffCard shrugItOffCard = new ShrugItOffCard();
                 BodyslamCard bodySlamCard = new BodyslamCard();
+                PoisonCard poisonCard = new PoisonCard();
+                ThunderclapCard thunderclapCard = new ThunderclapCard();
+                HeadbuttCard headbuttCard = new HeadbuttCard();
+                CleaveCard cleaveCard = new CleaveCard();
                 cards.add(blizzardCard);
                 cards.add(bludgeonCard);
                 cards.add(ironWaveCard);
                 cards.add(bashCard);
                 cards.add(shrugItOffCard);
                 cards.add(bodySlamCard);
+                cards.add(poisonCard);
+                cards.add(thunderclapCard);
+                cards.add(headbuttCard);
+                cards.add(cleaveCard);
 
 
                 ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
@@ -381,12 +389,21 @@ class MapState extends GameState {
                 ThunderclapCard thunderClapCardOne = new ThunderclapCard();
                 ShrugItOffCard shrugItOffCardOne = new ShrugItOffCard();
                 BodyslamCard bodySlamCardOne = new BodyslamCard();
-
+                PoisonCard poisonCardOne = new PoisonCard();
+                AfterImageCard afterImageCard = new AfterImageCard();
+                BashCard bashCardOne = new BashCard();
+                CleaveCard cleaveCardOne = new CleaveCard();
+                HemokinesisCard hemokinesisCard = new HemokinesisCard();
                 shopDeckOne.add(blizzardCardOne);
                 shopDeckOne.add(angerCard);
                 shopDeckOne.add(thunderClapCardOne);
                 shopDeckOne.add(shrugItOffCardOne);
                 shopDeckOne.add(bodySlamCardOne);
+                shopDeckOne.add(poisonCardOne);
+                shopDeckOne.add(afterImageCard);
+                shopDeckOne.add(bashCardOne);
+                shopDeckOne.add(hemokinesisCard);
+                shopDeckOne.add(cleaveCardOne);
                 ShopState shopStateOne = new ShopState(engineRef,passedPlayer,shopDeckOne);
                 engineRef.changeState(shopStateOne);
                 break;
@@ -396,10 +413,13 @@ class MapState extends GameState {
                 BlizzardCard blizzardCardTwo = new BlizzardCard();
                 IronWaveCard ironWaveCardTwo = new IronWaveCard();
                 ThunderclapCard thunderClapCardTwo = new ThunderclapCard();
+                PoisonCard poisonCardTwo = new PoisonCard();
+
                 shopDeckDefault.add(blizzardCardTwo);
                 shopDeckDefault.add(ironWaveCardTwo);
                 shopDeckDefault.add(thunderClapCardTwo);
-                
+                shopDeckDefault.add(poisonCardTwo);
+
                 ShopState shopStateTwo = new ShopState(engineRef,passedPlayer,shopDeckDefault);
                 engineRef.changeState(shopStateTwo);
                 break;
