@@ -1,10 +1,11 @@
 class MenuState extends GameState {
-    PImage bg, startImage, combatImage, helpImage, shopImage, easyModeImage, hardModeImage, backImage;
-    Button startButton, combatButton, helpButton, shopButton, easyButton, hardButton, backButton;
+    PImage bg, startImage, combatImage, helpImage, shopImage, easyModeImage, hardModeImage, backImage, HelpContent;
+    Button startButton, helpButton, easyButton, hardButton, backButton;
 
     GameEngine engineRef;
     private Player passedPlayer;
     private Boolean modeChoiceVisibility = false;
+    boolean showHelp = false; // Show Help or not
 
     MenuState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
@@ -19,17 +20,15 @@ class MenuState extends GameState {
 
         bg = loadImage("../assets/main/menu_bg.jpeg");
         startImage = loadImage("../assets/main/start.png");
-        combatImage = loadImage("../assets/main/combat.png");
         helpImage = loadImage("../assets/main/help.png");
-        shopImage = loadImage("../assets/main/shop.png");
         easyModeImage = loadImage("../assets/main/easy.png");
         hardModeImage = loadImage("../assets/main/hard.png");
         backImage = loadImage("../assets/map/backButton.png");
+        HelpContent = loadImage("../assets/main/HelpContent.png");
+        HelpContent.resize(750,750);
   
-        startButton = new Button(600, 300, 230, 60, startImage);
-        combatButton = new Button(600, 400, 230, 60, combatImage);
-        helpButton = new Button(600, 500, 230, 60, helpImage);
-        shopButton = new Button(900, 600, 100, 100, shopImage);
+        startButton = new Button(650, 500, 230, 60, startImage);
+        helpButton = new Button(250, 500, 230, 60, helpImage);
         easyButton = new Button(850,400,230,60,easyModeImage);
         hardButton = new Button(850,500,230,60,hardModeImage);
         backButton = new Button(600,300,230,60,backImage);
@@ -56,36 +55,13 @@ class MenuState extends GameState {
         }else if(hardButton.overButton() && mousePressed){
             goToHardMode();
         }
-
-        /* change game state to COMBAT_STATE */
-        if (combatButton.overButton() && mousePressed){
-            ArrayList<Enemy> enemies = new ArrayList<Enemy>();  // Initialize the enemy
-            Worm worm = new Worm(passedPlayer);
-            enemies.add(worm);
-            CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-            engineRef.changeState(combatState);
-        }
   
         /* change to tutorial interface */
         if (helpButton.overButton() && mousePressed){
-            background(100, 100, 200); // for test
+            System.out.println("Help button is clicked");
+            showHelp = !showHelp;
         }
-  
-        /* change to shop interface */
-        if (shopButton.overButton() && mousePressed){
-          ArrayList<Card> cards = new ArrayList<>();
-          cards.add(new AngerCard());
-          cards.add(new PoisonCard());
-          cards.add(new StrikeCard());
-          cards.add(new AngerCard());
-          cards.add(new BashCard());
-          cards.add(new StrikeCard());
-          cards.add(new StrikeCard());
-          cards.add(new AngerCard());
-          cards.add(new BashCard());
-          cards.add(new StrikeCard());
-          engineRef.changeState(new ShopState(engineRef, passedPlayer, cards));
-        }
+
     }
 
     public void handleKeyInput() {}
@@ -100,10 +76,10 @@ class MenuState extends GameState {
             backButton.drawButton();
         }else{
             startButton.drawButton();    /* the same position as Button */
-            combatButton.drawButton();
             helpButton.drawButton();
-            shopButton.drawButton();
         }
+        
+        displayHelpImage();
     }
 
     public void updateState() {}
@@ -128,6 +104,13 @@ class MenuState extends GameState {
         File file = new File(sketchPath(filePath));
         System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
         return file.exists();
+    }
+    
+    private void displayHelpImage() {
+        if (showHelp) {
+            System.out.println("The showing state of Help is changed");
+            image(HelpContent, 500,30);
+        }
     }
 
 }
