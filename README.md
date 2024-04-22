@@ -124,6 +124,7 @@ The complex scene transition mechanism in our turn-based card game requires the 
 
 
 ## Class diagram
+![ClassDiagram](./docs/Class-Diagram-major.png)
 
 ## Behavioural diagram
  
