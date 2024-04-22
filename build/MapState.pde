@@ -9,6 +9,7 @@ class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
     Node[] nodes; 
     MapLoader mapLoader;
+    MusicLoader BGMplayer = new MusicLoader();
 
     GameEngine engineRef;
     private Player passedPlayer;
@@ -25,6 +26,9 @@ class MapState extends GameState {
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
         passedPlayer = thePlayer;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
         setupState();
         drawState();
     }
@@ -32,6 +36,9 @@ class MapState extends GameState {
     MapState(GameEngine engine, Player thePlayer, String hardmode){
         engineRef = engine;
         passedPlayer = thePlayer;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
         setupState(hardmode);
         drawState();
     }
