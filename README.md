@@ -126,6 +126,8 @@ The complex scene transition mechanism in our turn-based card game requires the 
 ## Class diagram
 ![ClassDiagram](./docs/Class-Diagram-major.png)
 
+To effectively organize our ideas and streamline our workload, we developed a class diagram for our game early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. As we progressed, continuously implementing and updating the class diagram with each phase of our game development, the structure evolved. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/design-section-draft/docs/Draft%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
+
 ## Behavioural diagram
  
 In our game, the `GameEngine` class is the central hub that manages transitions between various game states (e.g. `MenuState`, `MapState`, `CombatState`, `EndState`). The engine maintains a state stack to support smooth transitions and fallbacks between different game states.
