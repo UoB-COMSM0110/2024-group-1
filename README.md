@@ -103,6 +103,50 @@ and feel a sense of urgency during the game.
 
 > As a player, I want the game to have a variety of different encounters in order to keep the game fresh and provide a challenge.
 
+# Design
+
+## System architecture
+Based on our gameplay, we will have many game interfaces, so we manage different game interfaces through `GameState`, each interface is a subclass of `GameState`; and through `GameState` and `GameEngine`: we implement the classic game loop architecture through these abstract and concrete classes.`GameState` abstracts the `GameState` abstracts the different states of the game (e.g. `MapState` or `EndState`), each with methods such as `setupState()`, `updateState()` and `drawState()`. This abstraction allows us to easily extend the functionality of the game by adding new states.
+
+The complex scene transition mechanism in our turn-based card game requires the design of multiple components:
+| Class          | Responsibilities | Functions |
+|----------------|------------------|-----------|
+| **GameEngine** | Acts as the central management system for the game, responsible for transitioning game states, managing events, and maintaining the game loop. | - Manages the stack of GameState, allowing transitions between different states.<br>- Calls methods of the current game state to handle user input, update game logic, and render the game display.<br>- Provides a unified interface to control the start, pause, and continuation of the game. |
+| **GameState**  | An abstract base class that defines the interface and behaviours that all specific game states must implement. | - Defines essential methods for game states, such as setupState(), updateState(), drawState(), handleMouseInput(), etc.<br>- Allows the GameEngine to interact with various game states through a single interface, without needing to know the details of specific states. |
+| **MapState**   | Manages all elements and interactions of the map interface, one of the states where players interact most frequently with the game world. | - Displays the game map and related UI components (such as buttons and icons).<br>- Manages node objects, which may represent battles, shops, or other game events.<br>- Processes user input, updates game states, such as the selection and activation of nodes. |
+| **Node**       | Represents a node on the map that can be interacted with by players. Each node has specific attributes, such as whether it can be clicked and whether it is currently active. | - Stores node status and properties.<br>- Provides methods to display itself on the map.<br>- Manages connections with other nodes, which is crucial for determining paths and implementing game logic. |
+| **Button**     | Used to create and manage buttons in the game UI. Each button has its position, size, and icon, and can respond to user click events. | - Displays the button and changes state based on user interaction.<br>- Detects whether the mouse is hovering or clicking on the button, triggering corresponding actions. |
+| **CombatState**| A game state class specifically dealing with player encounters with enemies in battle scenarios. | - Initialises the battle scene and enemies.<br>- Handles player mouse and keyboard inputs, allowing players to choose attacks or use specific cards.<br>- Updates the combat state, including the life points and energy of both players and enemies.<br>- Changes the game state to the EndState based on the outcome of the battle (victory or defeat). |
+| **Card**       | Provides a common framework for all cards. Each specific type of card, such as attack cards, skill cards, or ability cards, inherits from this base class. | - Stores basic card information, including name, type, energy consumption, and shop cost.<br>- Defines an abstract method applyCard(Entity target) that needs to be specifically implemented in subclasses.<br>- Provides methods to adjust the energy consumption and shop cost of cards, as well as to obtain card status information. |
+| **CardImgLoader** | Responsible for loading and storing all card images in the game. | - Loads and stores all card images at initialization.<br>- Offers a method getImg(String cardName), allowing other classes to obtain the corresponding image resource based on the card name. |
+
+
+
+
+## Class diagram
+
+## Behavioural diagram
+ 
+In our game, the `GameEngine` class is the central hub that manages transitions between various game states (e.g. `MenuState`, `MapState`, `CombatState`, `EndState`). The engine maintains a state stack to support smooth transitions and fallbacks between different game states.
+
+At the beginning of the game, the `GameEngine` initialises and pushes the `MenuState`, which is the player's first interaction with the game. In the `MenuState`, the `Start` button and Difficulty Selection buttons trigger a state transition to the MapState, which is called by different constructor methods with no parameters or with parameters.
+
+In `MapState`, the player navigates by interacting with nodes on the map. When the player selects a node and initiates a battle, `MapState` is responsible for switching the game state to `CombatState`. in `CombatState`, the player fights against an enemy, and the result of the battle (victory or defeat) decides what happens next in `EndState`.
+
+In `EndState`, depending on the outcome of the battle, the player may be presented with a victory or defeat screen and may eventually choose to restart or exit the game. If the choice is to continue, the game state may return to `MapState`, allowing the player to continue exploring other nodes.
+
+The entire process is controlled by the `GameEngine`'s `changeState()` method, which controls state switching. Each state class responds to user input, updates the game logic, and draws the game interface by implementing the methods of the GameState abstract class, ensuring a coherent game and consistent user experience.
+ 
+ 
+
+
+
+
+
+
+
+
+
 # Implementation
 
 Three key challenges emerged over the course of development and the brainstorming process which preceded it. Namely, these were:
