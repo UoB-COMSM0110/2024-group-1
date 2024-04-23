@@ -71,7 +71,7 @@ public class ShopState extends GameState {
   }
   
   public void setupState(){
-    shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
+    shopBackground = loadImage("../assets/shop/shop_bg.png");
     backImage = loadImage("../assets/shop/backButton.png");
     
     backButton = new Button(50, height - 80, 230, 60, backImage);
