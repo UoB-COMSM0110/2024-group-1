@@ -21,6 +21,8 @@ public class ShopState extends GameState {
       imageLoader = new CardImgLoader();
       for (Card card : this.items) {
         card.setImg(imageLoader.getImg(card.getName()));
+        
+        System.out.println(width + ", " + height);
       }
         
       //add in game engine and player 
@@ -28,7 +30,7 @@ public class ShopState extends GameState {
       passedPlayer = thePlayer;
       
       gap = 30;
-      cardWidth = (width - (10 * gap)) / 5;
+      cardWidth = (width - (12 * gap)) / 5;
       cardHeight = (height - (80 + 6 * gap)) / 2;
       divX = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
       divY = ((height - 80)/ 2) - cardHeight - gap;
@@ -71,7 +73,7 @@ public class ShopState extends GameState {
   }
   
   public void setupState(){
-    shopBackground = loadImage("../assets/shop/shop_bg.png");
+    shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
     
     backButton = new Button(50, height - 80, 230, 60, backImage);
