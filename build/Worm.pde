@@ -1,5 +1,5 @@
 class Worm extends Enemy {
-    private static final int WORM_HP = 40;
+    private static final int WORM_HP = 50;
     private static final int WORM_STR = 25;
     private static final int WORM_DEX = 20;
 
@@ -11,6 +11,7 @@ class Worm extends Enemy {
 
     Worm(Player ref) {
         super("Worm", WORM_HP, WORM_STR, WORM_DEX, ref);
+        this.setGoldValue(65);
     }
 
     @Override

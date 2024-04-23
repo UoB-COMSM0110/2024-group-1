@@ -82,6 +82,7 @@ class Deck {
       return deck.size() == deckLimit;
     }
 
+
     private void initDeck() {
         deck.add(new StrikeCard());
         deck.add(new StrikeCard());

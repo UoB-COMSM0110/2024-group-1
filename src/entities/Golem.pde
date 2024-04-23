@@ -12,6 +12,7 @@ class Golem extends Enemy {
 
     Golem(Player ref) {
         super("Golem", GOLEM_HP, GOLEM_STR, GOLEM_DEX, ref);
+        this.setGoldValue(100);
     }
 
     @Override
@@ -30,6 +31,7 @@ class Golem extends Enemy {
             case 2:
                 List<StatusEffect> buffEffect = List.of(new AttackBoost(7));
                 addMove(new StatusEffectMove(this, this, buffEffect));
+                break;
             default:
                 addMove(new AttackMove(this, playerRef, GOLEM_ATTACK_VAL));
         }
