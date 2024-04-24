@@ -76,6 +76,11 @@ class MenuState extends GameState {
             showHelp = !showHelp;
         }
 
+        if (loadButton.overButton() && mousePressed && loadModeAvailable){
+            System.out.println("Load button is clicked");
+            goToEasyMode();
+        }
+
     }
 
     public void handleKeyInput() {}
@@ -114,6 +119,7 @@ class MenuState extends GameState {
 
     private void goToEasyMode(){
         background(240, 210, 200); /* for test */
+        BGMplayer.musicStop();
         MapState mapState = new MapState(engineRef, passedPlayer);
         engineRef.changeState(mapState);
     }
@@ -121,6 +127,7 @@ class MenuState extends GameState {
     private void goToHardMode(){
         background(240, 210, 200); /* for test */
         String hardmode = "Yes";
+        BGMplayer.musicStop();
         MapState mapState = new MapState(engineRef, passedPlayer,hardmode);
         engineRef.changeState(mapState);
     }
