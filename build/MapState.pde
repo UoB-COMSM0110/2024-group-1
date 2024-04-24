@@ -9,6 +9,7 @@ class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
     Node[] nodes; 
     MapLoader mapLoader;
+    MusicLoader BGMplayer = new MusicLoader();
 
     GameEngine engineRef;
     private Player passedPlayer;
@@ -25,6 +26,9 @@ class MapState extends GameState {
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
         passedPlayer = thePlayer;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
         setupState();
         drawState();
     }
@@ -32,6 +36,9 @@ class MapState extends GameState {
     MapState(GameEngine engine, Player thePlayer, String hardmode){
         engineRef = engine;
         passedPlayer = thePlayer;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
         setupState(hardmode);
         drawState();
     }
@@ -139,6 +146,7 @@ class MapState extends GameState {
         if (backButton.overButton() && mousePressed){
             background(240, 210, 200); /* for test */
             MenuState menuState = new MenuState(engineRef, passedPlayer);
+            BGMplayer.musicStop();
             engineRef.changeState(menuState);
         }
 
@@ -314,6 +322,7 @@ class MapState extends GameState {
 
     private void goToCombat() {
         int currEnemy = randomizeEnemy();
+        // String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
         System.out.println("Current enemy case is " + currEnemy);
         switch(currEnemy){
             //Spider
@@ -322,6 +331,10 @@ class MapState extends GameState {
                 Spider spider = new Spider(passedPlayer);
                 enemies.add(spider);
                 CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                BGMplayer.musicStop();
+                // BGMplayer.musicLoad(combatBgmPath);
+                // BGMplayer.musicPlay();
+                // BGMplayer.musicStop();
                 engineRef.changeState(combatState);
                 break;
             //Worm
@@ -330,6 +343,10 @@ class MapState extends GameState {
                 Worm worm = new Worm(passedPlayer);
                 enemiesDefault.add(worm);
                 CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                BGMplayer.musicStop();
+                // BGMplayer.musicLoad(combatBgmPath);
+                // BGMplayer.musicPlay();
+                // BGMplayer.musicStop();
                 engineRef.changeState(combatStateDefault);
                 break;
             //Golem
@@ -338,6 +355,10 @@ class MapState extends GameState {
                 Golem golem = new Golem(passedPlayer);
                 enemiesGolem.add(golem);
                 CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                BGMplayer.musicStop();
+                // BGMplayer.musicLoad(combatBgmPath);
+                // BGMplayer.musicPlay();
+                // BGMplayer.musicStop();
                 engineRef.changeState(combatStateGolem);
             break;
         }
@@ -352,6 +373,7 @@ class MapState extends GameState {
     private void goToShop(){
         int currShopItems = randomizeShopItems();
         System.out.println("Current random shop contains case " + currShopItems);
+        BGMplayer.musicStop();
         switch(currShopItems){
             //Blizzard and Bludgeon
             case 0: 
@@ -517,8 +539,8 @@ class MapState extends GameState {
     }
 
     private void drawConnection(){
-        stroke(255, 255, 255); // 设置线条颜色为红色
-        strokeWeight(4);   // 设置线条粗细为4像素
+        stroke(255, 255, 255); 
+        strokeWeight(4);   
         for (Node node : nodes) {
                 // Draw connections
                 for (int connectedId : node.connectedIds) {
@@ -529,7 +551,7 @@ class MapState extends GameState {
                 }
         }
         strokeWeight(1);
-        stroke(0,0,0,0); // 默认颜色设置为黑色
+        stroke(0,0,0,0); 
     }
 
     private boolean checkFileExists(String filePath){
@@ -633,6 +655,7 @@ class MapState extends GameState {
                 }
             }
         }
+        BGMplayer.musicStop();
     }
 
     public void saveMapStateToFile(String filename) {

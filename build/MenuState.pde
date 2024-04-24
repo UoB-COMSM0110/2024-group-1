@@ -1,6 +1,7 @@
 class MenuState extends GameState {
     PImage bg, startImage, combatImage, helpImage, shopImage, easyModeImage, hardModeImage, backImage, HelpContent, loadIcon, loadIconGrey;
     Button startButton, helpButton, easyButton, hardButton, backButton, loadButton, loadGreyButton;
+    MusicLoader BGMplayer = new MusicLoader();
 
     GameEngine engineRef;
     private Player passedPlayer;
@@ -12,8 +13,9 @@ class MenuState extends GameState {
         engineRef = engine;
         passedPlayer = thePlayer;
         setupState();
-        
-        
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
     }
 
     public void setupState() {
@@ -74,6 +76,11 @@ class MenuState extends GameState {
             showHelp = !showHelp;
         }
 
+        if (loadButton.overButton() && mousePressed && loadModeAvailable){
+            System.out.println("Load button is clicked");
+            goToEasyMode();
+        }
+
     }
 
     public void handleKeyInput() {}
@@ -112,6 +119,7 @@ class MenuState extends GameState {
 
     private void goToEasyMode(){
         background(240, 210, 200); /* for test */
+        BGMplayer.musicStop();
         MapState mapState = new MapState(engineRef, passedPlayer);
         engineRef.changeState(mapState);
     }
@@ -119,6 +127,7 @@ class MenuState extends GameState {
     private void goToHardMode(){
         background(240, 210, 200); /* for test */
         String hardmode = "Yes";
+        BGMplayer.musicStop();
         MapState mapState = new MapState(engineRef, passedPlayer,hardmode);
         engineRef.changeState(mapState);
     }

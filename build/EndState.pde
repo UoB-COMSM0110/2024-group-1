@@ -18,6 +18,7 @@ class EndState extends GameState {
   boolean checkWin;
   boolean agreeToSacrificeLife = true;
   boolean checkFinalWin;
+  MusicLoader BGMplayer = new MusicLoader();
   
   EndState(GameEngine engine, Player player, boolean check) {
     System.out.println("I am called.I am end");
@@ -27,7 +28,13 @@ class EndState extends GameState {
     actionPoints = player.getActionPts();
     if (checkWin) {
       player.incrementActionPts(winBonus);
+      String gameWinBgmPath = sketchPath("../assets/music/StagedWin.wav");
+      BGMplayer.musicLoad(gameWinBgmPath);
+      BGMplayer.musicPlay();
     } else {
+      String gameOverBgmPath = sketchPath("../assets/music/GameOver.wav");
+      BGMplayer.musicLoad(gameOverBgmPath);
+      BGMplayer.musicPlay();
       player.decrementActionPts(sacrificeFine);
     }
     totalPoints = player.getActionPts();
@@ -82,6 +89,7 @@ class EndState extends GameState {
       }
     }
     if (continueButton.overButton() && mousePressed) {
+      BGMplayer.musicStop();
       if (checkWin || (!checkWin && (totalPoints >= sacrificeFine) && (passedPlayer.getCurrHp() > 0))) {
         MapState mapStateFake = new MapState(engineRef, passedPlayer);
         mapStateFake.updateNodeStatesOutside();
