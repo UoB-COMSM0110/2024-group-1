@@ -78,7 +78,9 @@ public class ShopState extends GameState {
     shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
     backButton = new Button(50, height - 80, 230, 60, backImage);
-    alertImage = loadImage("../assets/shop/alert_message.png");
+    //alertImage = loadImage("../assets/shop/alert_message.png");
+     alertImage = loadImage("../assets/shop/alert_message_test.png");
+
     
   } 
   
@@ -116,7 +118,7 @@ public class ShopState extends GameState {
     if (showAlert) {
       //rect(width / 2 - 250, height / 2 - 50, 500, 100);
       //image(alertImage,width / 2 - 250, height / 2 - 50, 500, 100);
-      image(alertImage,width / 2 - 250, height / 2 - 50, 492, 200);
+      image(alertImage,width / 2 - 100, height / 2 - 50, 200, 200);
       textSize(40);
       textAlign(CENTER);
       fill(#000000);
