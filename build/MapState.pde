@@ -288,8 +288,8 @@ class MapState extends GameState {
     }
 
     private void drawStatusInfo() {
-        image(APIcon,1485,0);
-        image(HPIcon,1485,65);
+        image(HPIcon,1485,0);
+        image(APIcon,1485,65);
 
         // Draw Health Point
             fill(255, 0, 0);
