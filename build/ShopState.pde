@@ -2,6 +2,9 @@ public class ShopState extends GameState {
   private PImage shopBackground;
   private PImage backImage;
   private Button backButton;
+  private PImage alertImage;
+
+  MusicLoader BGMplayer = new MusicLoader();
 
   //private static final String FILE_PATH = "shop.csv"; //file path of shop data file
   private final ArrayList<Card> items; //items available in the shop
@@ -21,6 +24,8 @@ public class ShopState extends GameState {
       imageLoader = new CardImgLoader();
       for (Card card : this.items) {
         card.setImg(imageLoader.getImg(card.getName()));
+        
+        //System.out.println(width + ", " + height);
       }
         
       //add in game engine and player 
@@ -28,13 +33,16 @@ public class ShopState extends GameState {
       passedPlayer = thePlayer;
       
       gap = 30;
-      cardWidth = (width - (10 * gap)) / 5;
+      cardWidth = (width - (12 * gap)) / 5;
       cardHeight = (height - (80 + 6 * gap)) / 2;
       divX = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
       divY = ((height - 80)/ 2) - cardHeight - gap;
       
       setupState();
-      drawState();        
+      drawState();   
+      String gameOverBgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+      BGMplayer.musicLoad(gameOverBgmPath);
+      BGMplayer.musicPlay();     
   }
 
   private ArrayList<Card> getItems() {
@@ -43,7 +51,7 @@ public class ShopState extends GameState {
 
   private boolean buyCard(int index) { //player purchase card from shop at specific index        
     if (index < 0 || index >= items.size()) {
-      alertMessage = "Item not found";
+      alertMessage = "Item Not found";
       showAlert = true;
       return false;
     }
@@ -51,13 +59,13 @@ public class ShopState extends GameState {
     Card item = items.get(index);
     
     if (passedPlayer.getGoldOnHand() < item.getShopCost()) {
-      alertMessage = "Not enough gold";
+      alertMessage = "Not Enough Gold";
       showAlert = true;
       return false;
     }
 
     if (passedPlayer.getDeck().isFull()) {
-      alertMessage = "Player's deck is full";
+      alertMessage = "Player's Deck is Full";
       showAlert = true;
       return false;
     }
@@ -73,8 +81,9 @@ public class ShopState extends GameState {
   public void setupState(){
     shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
-    
     backButton = new Button(50, height - 80, 230, 60, backImage);
+    alertImage = loadImage("../assets/shop/alert_message.png");
+     //alertImage = loadImage("../assets/shop/scoreUI.png");
   } 
   
 
@@ -88,6 +97,7 @@ public class ShopState extends GameState {
     image(shopBackground, 0, 0, width, height);
     image(backImage, 50, height - 80, 230, 60);  
     
+    fill(255, 255, 255);
     textSize(40);
     textAlign(CENTER);
     
@@ -97,7 +107,7 @@ public class ShopState extends GameState {
         int posX = divX + (cardWidth + gap) * j;
         int posY = divY + (cardHeight + 2 * gap) * i;
         card.setPos(posX, posY);
-        rect(posX, posY, cardWidth, cardHeight);
+        //rect(posX, posY, cardWidth, cardHeight);
         image(card.getImg(), posX, posY, cardWidth, cardHeight);
         text(card.getShopCost() + "£", posX + cardWidth / 2, posY + cardHeight + 35);
       }
@@ -108,10 +118,13 @@ public class ShopState extends GameState {
     text(passedPlayer.getGoldOnHand() + "£", width - 80, height - 40);
     
     if (showAlert) {
-      rect(width / 2 - 250, height / 2 - 50, 500, 100);
-      textSize(40);
+      //rect(width / 2 - 250, height / 2 - 50, 500, 100);
+      //image(alertImage,width / 2 - 250, height / 2 - 50, 500, 100);
+      //image(alertImage,width / 2 - 100, height / 2 - 50, 200, 200);
+     image(alertImage,width / 2 - 250, height / 2 - 180, 500, 350);
+      textSize(45);
       textAlign(CENTER);
-      fill(#000000);
+      //fill(#000000);
       text(alertMessage, width / 2, height / 2 + 5);
       fill(#FFFFFF);
     }
@@ -125,6 +138,7 @@ public class ShopState extends GameState {
     if (mousePressed && !showAlert) {
       // System.out.println("[DEBUG] Mouse clicked (" + mouseX + ", " + mouseY + ")");
       if (backButton.overButton()) {
+        BGMplayer.musicStop();
         MapState mapState = new MapState(engineRef, passedPlayer);
         engineRef.changeState(mapState);
         return;

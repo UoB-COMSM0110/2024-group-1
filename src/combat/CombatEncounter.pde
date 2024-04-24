@@ -5,12 +5,13 @@ class CombatEncounter {
     private ArrayList<Card> cardHand;
     private ArrayList<Card> discardPile;
     private Card activeCard;
-    private boolean isPlayerTurn;
+    private boolean isPlayerTurn, showCombatInfo;
     private int drawAmt;
     private final int ENEMY_BASE_X = (int)(width*0.43);
     private final int ENEMY_BASE_Y = (int)(height*0.25);
     private PImage[] encounterImgs;
-    private Button endTurnBtn;
+    private Button endTurnBtn, combatInfoBtn;
+    private int combatGoldReward;
     private EntityImgLoader entityImgs;
 
     CombatEncounter(Player thePlayer, ArrayList<Enemy> enemies) {
@@ -21,18 +22,27 @@ class CombatEncounter {
         discardPile = new ArrayList<Card>();
         entityImgs = new EntityImgLoader();
         drawAmt = 5;
+        combatGoldReward = 0;
+        showCombatInfo = false;
 
-        encounterImgs = new PImage[6];
+        encounterImgs = new PImage[11];
         encounterImgs[0] = loadImage("../assets/combat/battle_background.png");
         encounterImgs[1] = loadImage("../assets/combat/turn_end_button.png");
         encounterImgs[2] = loadImage("../assets/combat/attack_icon.png");
         encounterImgs[3] = loadImage("../assets/combat/shield_icon.png");
         encounterImgs[4] = loadImage("../assets/combat/poison_icon.png");
         encounterImgs[5] = loadImage("../assets/combat/attack_buff_icon.png");
-        endTurnBtn = new Button(width-300, (int)(height*0.75), 256, 256, encounterImgs[1]);
+        encounterImgs[6] = loadImage("../assets/combat/combat_help_icon.png");
+        encounterImgs[7] = loadImage("../assets/combat/combat_info_popup.png");
+        encounterImgs[8] = loadImage("../assets/combat/attack_debuff_icon.png");
+        encounterImgs[9] = loadImage("../assets/combat/vulnerable_icon.png");
+        encounterImgs[10] = loadImage("../assets/combat/click_to_use_icon.png");
+        endTurnBtn = new Button((int)(width*0.80), (int)(height*0.75), 345, 126, encounterImgs[1]);
+        combatInfoBtn = new Button((int)(width*0.01), (int)(height*0.10), 128, 128, encounterImgs[6]);
     }
 
     public void initEncounter() {
+        calculateCombatReward();
         for (Enemy nme : currEnemies) {
             nme.setImg(entityImgs.getImg(nme.getName()));
             nme.setPos(ENEMY_BASE_X, ENEMY_BASE_Y);
@@ -109,6 +119,8 @@ class CombatEncounter {
             if (endTurnBtn.overButton()) {
                 endTurn();
                 activeCard = null;
+            } else if (combatInfoBtn.overButton()) {
+                showCombatInfo = !showCombatInfo;
             } else if (activeCard != null && (activeCard.getIfTakesTarget() == true)) {
                 for (int n=0; n < currEnemies.size(); n++) {
                     Enemy currEnemy = currEnemies.get(n);
@@ -135,6 +147,7 @@ class CombatEncounter {
     public OutcomeType checkWinLoss() {
         if (currEnemies.isEmpty() == true) {
             processBattleEnd();
+            battlePlayer.incrementGold(combatGoldReward);
             return OutcomeType.OUTCOME_WIN;
         } else if (battlePlayer.getCurrHp() <= 0) {
             processBattleEnd();
@@ -149,7 +162,11 @@ class CombatEncounter {
         drawEnemies();
 
         for (int j=0; j < cardHand.size(); j++) {
-            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, width*0.20, height*0.40);
+            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, width*0.15, height*0.35);
+        }
+
+        if (showCombatInfo) {
+            image(encounterImgs[7], (int)(width*0.10), (int)(height*0.10), (int)(encounterImgs[7].width*0.75), (int)(encounterImgs[7].height*0.75));
         }
     }
 
@@ -162,6 +179,7 @@ class CombatEncounter {
         text("HP: " + battlePlayer.getCurrHp() + "/" + battlePlayer.getMaxHp(), width-300, 90);
         text("Energy: " + battlePlayer.getCurrEnergy() + "/" + battlePlayer.getEnergyLim(), width-350, 150);
         endTurnBtn.drawButton();
+        combatInfoBtn.drawButton();
     }
 
     private void drawEnemies() {
@@ -176,12 +194,13 @@ class CombatEncounter {
             fill(161, 18, 18);
             rect(curr.getPos().x+80, curr.getPos().y+350, 200*((float)curr.getCurrHp()/(float)curr.getMaxHp()), 20, 30);
 
+            if (activeCard != null) {
+                image(encounterImgs[10], curr.getPos().x+50, curr.getPos().y+220, 250, 50);
+            }
+
             drawMoveIntentions(curr);
         }
     }
-<<<<<<< HEAD
-}
-=======
 
     private void drawMoveIntentions(Enemy curr) {
         ArrayList<Move> moves = curr.getMoves();
@@ -217,6 +236,10 @@ class CombatEncounter {
                 image(encounterImgs[4], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
             } else if (currEffect instanceof AttackBoost) {
                 image(encounterImgs[5], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
+            } else if (currEffect instanceof AttackDebuff) {
+                image(encounterImgs[8], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
+            } else if (currEffect instanceof Vulnerable) {
+                image(encounterImgs[9], currEnemy.getPos().x+90, currEnemy.getPos().y-50, 85, 85);
             }
         }
     }
@@ -286,5 +309,11 @@ class CombatEncounter {
         battlePlayer.setDeck(drawDeck);
         battlePlayer.clearAllEffects();
     }
+
+    private void calculateCombatReward() {
+        for (Enemy nme : currEnemies) {
+            int currNmeGold = nme.getGoldValue();
+            combatGoldReward += currNmeGold;
+        }
+    }
 }
->>>>>>> main

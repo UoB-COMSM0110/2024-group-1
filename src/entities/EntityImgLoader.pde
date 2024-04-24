@@ -8,6 +8,7 @@ class EntityImgLoader {
         entityImgs.put("Worm", loadImage("../assets/entities/worm.png"));
         entityImgs.put("Spider", loadImage("../assets/entities/spider.png"));
         entityImgs.put("Golem", loadImage("../assets/entities/golem.png"));
+        entityImgs.put("Boss", loadImage("../assets/entities/boss.png"));
     }
 
     public PImage getImg(String entityName) {
