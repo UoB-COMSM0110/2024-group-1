@@ -1,11 +1,12 @@
 class MenuState extends GameState {
-    PImage bg, startImage, combatImage, helpImage, shopImage, easyModeImage, hardModeImage, backImage, HelpContent;
-    Button startButton, helpButton, easyButton, hardButton, backButton;
+    PImage bg, startImage, combatImage, helpImage, shopImage, easyModeImage, hardModeImage, backImage, HelpContent, loadIcon, loadIconGrey;
+    Button startButton, helpButton, easyButton, hardButton, backButton, loadButton, loadGreyButton;
 
     GameEngine engineRef;
     private Player passedPlayer;
     private Boolean modeChoiceVisibility = false;
     boolean showHelp = false; // Show Help or not
+    boolean loadModeAvailable = false;
 
     MenuState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
@@ -23,38 +24,47 @@ class MenuState extends GameState {
         bg = loadImage("../assets/main/menu_bg.jpeg");
         startImage = loadImage("../assets/main/start.png");
         helpImage = loadImage("../assets/main/help.png");
+        loadIcon = loadImage("../assets/main/load.png");
+        loadIconGrey = loadImage("../assets/main/loadGrey.png");
         easyModeImage = loadImage("../assets/main/easy.png");
         hardModeImage = loadImage("../assets/main/hard.png");
         backImage = loadImage("../assets/map/backButton.png");
         HelpContent = loadImage("../assets/main/HelpContent.png");
         HelpContent.resize(750,750);
   
-        startButton = new Button(650, 500, 230, 60, startImage);
-        helpButton = new Button(250, 500, 230, 60, helpImage);
+        startButton = new Button(250, 400, 230, 60, startImage);
+        helpButton = new Button(250, 600, 230, 60, helpImage);
         easyButton = new Button(850,400,230,60,easyModeImage);
         hardButton = new Button(850,500,230,60,hardModeImage);
         backButton = new Button(600,300,230,60,backImage);
+        loadButton = new Button(250,500,230,60, loadIcon); 
+        loadGreyButton = new Button(250,500,230,60, loadIconGrey);
+
+        if(checkFileExists("../assets/map/mapTemp.json")){
+            loadModeAvailable = true; 
+            System.out.println("Loading mode available");
+        }else{
+            loadModeAvailable = false;
+            System.out.println("Loading mode not available");
+        }
     }
 
     public void handleMouseInput() {
         
         /* change game state to MAP_STATE */
         if (startButton.overButton() && mousePressed){
-            if(checkFileExists("../assets/map/mapTemp.json")){
-                System.out.println("Loading from last game");
-                goToEasyMode();
-            }else{
-                modeChoiceVisibility = !modeChoiceVisibility; 
-                System.out.println("Start a new game with mode choice option");
-            }
-            //background(240, 210, 200); /* for test */
-            //MapState mapState = new MapState(engineRef, passedPlayer);
-            //engineRef.changeState(mapState);
+            modeChoiceVisibility = !modeChoiceVisibility; 
+        }
+
+        if (backButton.overButton() && mousePressed){
+            modeChoiceVisibility = !modeChoiceVisibility; 
         }
 
         if (easyButton.overButton() && mousePressed){
+            deleteMapOld();
             goToEasyMode();
         }else if(hardButton.overButton() && mousePressed){
+            deleteMapOld();
             goToHardMode();
         }
   
@@ -72,12 +82,23 @@ class MenuState extends GameState {
         background(255);
         image(bg, 0, 0, width, height);
         
+        if(checkFileExists("../assets/map/mapTemp.json")){
+            loadModeAvailable = true; 
+        }else{
+            loadModeAvailable = false;
+        }
+
         if(modeChoiceVisibility){
             easyButton.drawButton();
             hardButton.drawButton();
             backButton.drawButton();
         }else{
             startButton.drawButton();    /* the same position as Button */
+            if(loadModeAvailable){
+                loadButton.drawButton();
+            }else{
+                loadGreyButton.drawButton();
+            }
             helpButton.drawButton();
         }
         
@@ -115,4 +136,15 @@ class MenuState extends GameState {
         }
     }
 
+    private void deleteMapOld(){
+        String filePath = "../assets/map/mapTemp.json";
+            try {
+                Path path = Paths.get(sketchPath(filePath));
+                Files.deleteIfExists(path);
+                println("Delete successfully: " + filePath);
+            } catch (IOException e) {
+                println("Delete failed: " + e.getMessage());
+                e.printStackTrace();
+            }
+    }
 }
