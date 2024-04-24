@@ -358,8 +358,26 @@ class MapState extends GameState {
                 ArrayList<Card> cards = new ArrayList<Card>();
                 BlizzardCard blizzardCard = new BlizzardCard();
                 BludgeonCard bludgeonCard = new BludgeonCard();
+                IronWaveCard ironWaveCard = new IronWaveCard();
+                BashCard bashCard = new BashCard();
+                ShrugItOffCard shrugItOffCard = new ShrugItOffCard();
+                BodyslamCard bodySlamCard = new BodyslamCard();
+                PoisonCard poisonCard = new PoisonCard();
+                ThunderclapCard thunderclapCard = new ThunderclapCard();
+                HeadbuttCard headbuttCard = new HeadbuttCard();
+                CleaveCard cleaveCard = new CleaveCard();
                 cards.add(blizzardCard);
                 cards.add(bludgeonCard);
+                cards.add(ironWaveCard);
+                cards.add(bashCard);
+                cards.add(shrugItOffCard);
+                cards.add(bodySlamCard);
+                cards.add(poisonCard);
+                cards.add(thunderclapCard);
+                cards.add(headbuttCard);
+                cards.add(cleaveCard);
+
+
                 ShopState shopState = new ShopState(engineRef,passedPlayer,cards);
                 engineRef.changeState(shopState);
                 break;
@@ -368,8 +386,24 @@ class MapState extends GameState {
                 ArrayList<Card> shopDeckOne = new ArrayList<Card>();
                 BlizzardCard blizzardCardOne = new BlizzardCard();
                 AngerCard angerCard = new AngerCard();
+                ThunderclapCard thunderClapCardOne = new ThunderclapCard();
+                ShrugItOffCard shrugItOffCardOne = new ShrugItOffCard();
+                BodyslamCard bodySlamCardOne = new BodyslamCard();
+                PoisonCard poisonCardOne = new PoisonCard();
+                AfterImageCard afterImageCard = new AfterImageCard();
+                BashCard bashCardOne = new BashCard();
+                CleaveCard cleaveCardOne = new CleaveCard();
+                HemokinesisCard hemokinesisCard = new HemokinesisCard();
                 shopDeckOne.add(blizzardCardOne);
                 shopDeckOne.add(angerCard);
+                shopDeckOne.add(thunderClapCardOne);
+                shopDeckOne.add(shrugItOffCardOne);
+                shopDeckOne.add(bodySlamCardOne);
+                shopDeckOne.add(poisonCardOne);
+                shopDeckOne.add(afterImageCard);
+                shopDeckOne.add(bashCardOne);
+                shopDeckOne.add(hemokinesisCard);
+                shopDeckOne.add(cleaveCardOne);
                 ShopState shopStateOne = new ShopState(engineRef,passedPlayer,shopDeckOne);
                 engineRef.changeState(shopStateOne);
                 break;
@@ -377,7 +411,26 @@ class MapState extends GameState {
             case 2:
                 ArrayList<Card> shopDeckDefault = new ArrayList<Card>();
                 BlizzardCard blizzardCardTwo = new BlizzardCard();
+                IronWaveCard ironWaveCardTwo = new IronWaveCard();
+                ThunderclapCard thunderClapCardTwo = new ThunderclapCard();
+                PoisonCard poisonCardTwo = new PoisonCard();
+                BodyslamCard bodySlamCardTwo = new BodyslamCard();
+                AfterImageCard afterImageCardTwo = new AfterImageCard();
+                CleaveCard cleaveCardTwo = new CleaveCard();
+                BludgeonCard bludgeonCardTwo = new BludgeonCard();
+                AngerCard angerCardTwo = new AngerCard();
+                HemokinesisCard hemokinesisCardTwo = new HemokinesisCard();
+
                 shopDeckDefault.add(blizzardCardTwo);
+                shopDeckDefault.add(ironWaveCardTwo);
+                shopDeckDefault.add(thunderClapCardTwo);
+                shopDeckDefault.add(poisonCardTwo);
+                shopDeckDefault.add(bodySlamCardTwo);
+                shopDeckDefault.add(afterImageCardTwo);
+                shopDeckDefault.add(cleaveCardTwo);
+                shopDeckDefault.add(bludgeonCardTwo);
+                shopDeckDefault.add(angerCardTwo);
+                shopDeckDefault.add(hemokinesisCardTwo);
                 ShopState shopStateTwo = new ShopState(engineRef,passedPlayer,shopDeckDefault);
                 engineRef.changeState(shopStateTwo);
                 break;
