@@ -25,6 +25,7 @@ public class MusicLoader{
     void musicPlay() {
         if (clip != null) {
             clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 

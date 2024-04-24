@@ -146,6 +146,7 @@ class MapState extends GameState {
         if (backButton.overButton() && mousePressed){
             background(240, 210, 200); /* for test */
             MenuState menuState = new MenuState(engineRef, passedPlayer);
+            BGMplayer.musicStop();
             engineRef.changeState(menuState);
         }
 
@@ -321,6 +322,7 @@ class MapState extends GameState {
 
     private void goToCombat() {
         int currEnemy = randomizeEnemy();
+        String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
         System.out.println("Current enemy case is " + currEnemy);
         switch(currEnemy){
             //Spider
@@ -329,6 +331,9 @@ class MapState extends GameState {
                 Spider spider = new Spider(passedPlayer);
                 enemies.add(spider);
                 CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                BGMplayer.musicStop();
+                BGMplayer.musicLoad(combatBgmPath);
+                BGMplayer.musicPlay();
                 engineRef.changeState(combatState);
                 break;
             //Worm
@@ -337,6 +342,9 @@ class MapState extends GameState {
                 Worm worm = new Worm(passedPlayer);
                 enemiesDefault.add(worm);
                 CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                BGMplayer.musicStop();
+                BGMplayer.musicLoad(combatBgmPath);
+                BGMplayer.musicPlay();
                 engineRef.changeState(combatStateDefault);
                 break;
             //Golem
@@ -345,6 +353,9 @@ class MapState extends GameState {
                 Golem golem = new Golem(passedPlayer);
                 enemiesGolem.add(golem);
                 CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                BGMplayer.musicStop();
+                BGMplayer.musicLoad(combatBgmPath);
+                BGMplayer.musicPlay();
                 engineRef.changeState(combatStateGolem);
             break;
         }
@@ -359,6 +370,7 @@ class MapState extends GameState {
     private void goToShop(){
         int currShopItems = randomizeShopItems();
         System.out.println("Current random shop contains case " + currShopItems);
+        BGMplayer.musicStop();
         switch(currShopItems){
             //Blizzard and Bludgeon
             case 0: 
