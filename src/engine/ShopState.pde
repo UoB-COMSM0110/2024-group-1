@@ -2,6 +2,8 @@ public class ShopState extends GameState {
   private PImage shopBackground;
   private PImage backImage;
   private Button backButton;
+  private PImage alertImage;
+
 
   //private static final String FILE_PATH = "shop.csv"; //file path of shop data file
   private final ArrayList<Card> items; //items available in the shop
@@ -15,66 +17,69 @@ public class ShopState extends GameState {
   private boolean showAlert;
   private String alertMessage = "";
     
-    ShopState(GameEngine engine, Player thePlayer, ArrayList<Card> cards) {
-        this.items = cards;
+  public ShopState(GameEngine engine, Player thePlayer, ArrayList<Card> cards) {
+      this.items = cards;
+      
+      imageLoader = new CardImgLoader();
+      for (Card card : this.items) {
+        card.setImg(imageLoader.getImg(card.getName()));
         
-        imageLoader = new CardImgLoader();
-        for (Card card : this.items) {
-          card.setImg(imageLoader.getImg(card.getName()));
-        }
-         
-        //add in game engine and player 
-        engineRef = engine;
-        passedPlayer = thePlayer;
-       
-        gap = 30;
-        cardWidth = (width - (10 * gap)) / 5;
-        cardHeight = (height - (80 + 6 * gap)) / 2;
-        divX = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
-        divY = ((height - 80)/ 2) - cardHeight - gap;
-       
-        setupState();
-        drawState();        
-    }
-
-    private ArrayList<Card> getItems() {
-        return items; //access to items array list 
-    }
-
-    private boolean buyCard(int index) { //player purchase card from shop at specific index        
-      if (index < 0 || index >= items.size()) {
-        alertMessage = "Item not found";
-        showAlert = true;
-        return false;
+        //System.out.println(width + ", " + height);
       }
+        
+      //add in game engine and player 
+      engineRef = engine;
+      passedPlayer = thePlayer;
       
-      Card item = items.get(index);
+      gap = 30;
+      cardWidth = (width - (12 * gap)) / 5;
+      cardHeight = (height - (80 + 6 * gap)) / 2;
+      divX = (width / 2) - 5 * cardWidth / 2 - 2 * gap;
+      divY = ((height - 80)/ 2) - cardHeight - gap;
       
-      if (passedPlayer.getGoldOnHand() < item.getShopCost()) {
-        alertMessage = "Not enough gold";
-        showAlert = true;
-        return false;
-      }
+      setupState();
+      drawState();        
+  }
 
-      if (passedPlayer.getDeck().isFull()) {
-        alertMessage = "Player's deck is full";
-        showAlert = true;
-        return false;
-      }
+  private ArrayList<Card> getItems() {
+      return items; //access to items array list 
+  }
 
-      passedPlayer.decrementGold(item.getShopCost()); //if passes decrement gold by item cost 
-
-      items.remove(index); 
-
-      //System.out.println(passedPlayer.getDeck().toString());
-      return passedPlayer.getDeck().addCard(item);
+  private boolean buyCard(int index) { //player purchase card from shop at specific index        
+    if (index < 0 || index >= items.size()) {
+      alertMessage = "Item Not found";
+      showAlert = true;
+      return false;
     }
-   
+    
+    Card item = items.get(index);
+    
+    if (passedPlayer.getGoldOnHand() < item.getShopCost()) {
+      alertMessage = "Not Enough Gold";
+      showAlert = true;
+      return false;
+    }
+
+    if (passedPlayer.getDeck().isFull()) {
+      alertMessage = "Player's Deck is Full";
+      showAlert = true;
+      return false;
+    }
+
+    passedPlayer.decrementGold(item.getShopCost()); //if passes decrement gold by item cost 
+
+    items.remove(index); 
+
+    //System.out.println(passedPlayer.getDeck().toString());
+    return passedPlayer.getDeck().addCard(item);
+  }
+  
   public void setupState(){
     shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
-    
     backButton = new Button(50, height - 80, 230, 60, backImage);
+    alertImage = loadImage("../assets/shop/alert_message.png");
+     //alertImage = loadImage("../assets/shop/scoreUI.png");
   } 
   
 
@@ -84,9 +89,11 @@ public class ShopState extends GameState {
   public void handleMouseWheel(MouseEvent e) {}
   
   public void drawState(){
+    background(255);//Clear the screen to move lines
     image(shopBackground, 0, 0, width, height);
     image(backImage, 50, height - 80, 230, 60);  
     
+    fill(255, 255, 255);
     textSize(40);
     textAlign(CENTER);
     
@@ -96,7 +103,7 @@ public class ShopState extends GameState {
         int posX = divX + (cardWidth + gap) * j;
         int posY = divY + (cardHeight + 2 * gap) * i;
         card.setPos(posX, posY);
-        rect(posX, posY, cardWidth, cardHeight);
+        //rect(posX, posY, cardWidth, cardHeight);
         image(card.getImg(), posX, posY, cardWidth, cardHeight);
         text(card.getShopCost() + "£", posX + cardWidth / 2, posY + cardHeight + 35);
       }
@@ -107,10 +114,13 @@ public class ShopState extends GameState {
     text(passedPlayer.getGoldOnHand() + "£", width - 80, height - 40);
     
     if (showAlert) {
-      rect(width / 2 - 250, height / 2 - 50, 500, 100);
-      textSize(40);
+      //rect(width / 2 - 250, height / 2 - 50, 500, 100);
+      //image(alertImage,width / 2 - 250, height / 2 - 50, 500, 100);
+      //image(alertImage,width / 2 - 100, height / 2 - 50, 200, 200);
+     image(alertImage,width / 2 - 250, height / 2 - 180, 500, 350);
+      textSize(45);
       textAlign(CENTER);
-      fill(#000000);
+      //fill(#000000);
       text(alertMessage, width / 2, height / 2 + 5);
       fill(#FFFFFF);
     }
