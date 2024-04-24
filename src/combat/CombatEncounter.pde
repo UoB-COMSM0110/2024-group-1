@@ -162,7 +162,7 @@ class CombatEncounter {
         drawEnemies();
 
         for (int j=0; j < cardHand.size(); j++) {
-            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, width*0.20, height*0.40);
+            image(cardHand.get(j).getImg(), cardHand.get(j).getPos().x, cardHand.get(j).getPos().y, width*0.15, height*0.35);
         }
 
         if (showCombatInfo) {
