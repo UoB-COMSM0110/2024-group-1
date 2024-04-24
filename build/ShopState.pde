@@ -2,6 +2,7 @@ public class ShopState extends GameState {
   private PImage shopBackground;
   private PImage backImage;
   private Button backButton;
+  MusicLoader BGMplayer = new MusicLoader();
 
   //private static final String FILE_PATH = "shop.csv"; //file path of shop data file
   private final ArrayList<Card> items; //items available in the shop
@@ -34,7 +35,10 @@ public class ShopState extends GameState {
       divY = ((height - 80)/ 2) - cardHeight - gap;
       
       setupState();
-      drawState();        
+      drawState();   
+      String gameOverBgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+      BGMplayer.musicLoad(gameOverBgmPath);
+      BGMplayer.musicPlay();     
   }
 
   private ArrayList<Card> getItems() {
@@ -125,6 +129,7 @@ public class ShopState extends GameState {
     if (mousePressed && !showAlert) {
       // System.out.println("[DEBUG] Mouse clicked (" + mouseX + ", " + mouseY + ")");
       if (backButton.overButton()) {
+        BGMplayer.musicStop();
         MapState mapState = new MapState(engineRef, passedPlayer);
         engineRef.changeState(mapState);
         return;
