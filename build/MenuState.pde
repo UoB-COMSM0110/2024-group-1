@@ -12,6 +12,8 @@ class MenuState extends GameState {
         engineRef = engine;
         passedPlayer = thePlayer;
         setupState();
+        
+        
     }
 
     public void setupState() {
