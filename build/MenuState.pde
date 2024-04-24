@@ -27,7 +27,7 @@ class MenuState extends GameState {
         HelpContent = loadImage("../assets/main/HelpContent.png");
         HelpContent.resize(750,750);
   
-        startButton = new Button(650, 500, 230, 60, startImage);
+        startButton = new Button(250, 400, 230, 60, startImage);
         helpButton = new Button(250, 500, 230, 60, helpImage);
         easyButton = new Button(850,400,230,60,easyModeImage);
         hardButton = new Button(850,500,230,60,hardModeImage);
@@ -48,6 +48,10 @@ class MenuState extends GameState {
             //background(240, 210, 200); /* for test */
             //MapState mapState = new MapState(engineRef, passedPlayer);
             //engineRef.changeState(mapState);
+        }
+
+        if (backButton.overButton() && mousePressed){
+            modeChoiceVisibility = !modeChoiceVisibility; 
         }
 
         if (easyButton.overButton() && mousePressed){
