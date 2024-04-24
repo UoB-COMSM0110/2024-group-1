@@ -12,6 +12,8 @@ class EndState extends GameState {
   int sacrificeHp = 10; //suppose the player will get 10 hp after losing 5 points
   int actionPoints;
   int totalPoints;
+  int buttonWidth;
+  int buttonHeight;
   String warningMessage = "Blocked! "; // Warning message content
   boolean checkWin;
   boolean agreeToSacrificeLife = true;
@@ -43,11 +45,20 @@ class EndState extends GameState {
     Continue = loadImage("../assets/endscreen/buttonContinue.png");
     Setting = loadImage("../assets/endscreen/imageSetting.png");
     backgroundImage.resize(displayWidth, displayHeight-50);
-    menuButton = new Button(0, height-400, Menu.width, Menu.height, Menu);
-    cardsButton = new Button(width/2-600, height-400, Cards.width, Cards.height, Cards);
-    shopButton = new Button(width/2+100, height-400, Shop.width, Shop.height, Shop);
-    continueButton = new Button(width-500, height-400, Continue.width, Continue.height, Continue);
-    settingButton = new Button(width-300, 0, Setting.width, Setting.height, Setting);
+    winImage.resize(displayWidth/5, displayHeight/4);
+    loseImage.resize(displayWidth/5, displayHeight/4);
+    Setting.resize(displayWidth/10, displayHeight/6);
+    buttonWidth = displayWidth/7;
+    buttonHeight = buttonWidth * Menu.height / Menu.width;
+    Menu.resize(buttonWidth, buttonHeight);
+    Cards.resize(buttonWidth, buttonHeight);
+    Shop.resize(buttonWidth, buttonHeight);
+    Continue.resize(buttonWidth, buttonHeight);
+    menuButton = new Button(0, height-2*buttonHeight, Menu.width, Menu.height, Menu);
+    cardsButton = new Button(2*buttonWidth, height-2*buttonHeight, Cards.width, Cards.height, Cards);
+    shopButton = new Button(4*buttonWidth, height-2*buttonHeight, Shop.width, Shop.height, Shop);
+    continueButton = new Button(width-buttonWidth, height-2*buttonHeight, Continue.width, Continue.height, Continue);
+    settingButton = new Button(width-Setting.width, 0, Setting.width, Setting.height, Setting);
   }
   
   public void handleMouseInput() {
@@ -141,7 +152,7 @@ class EndState extends GameState {
   
   void drawWin() {
     agreeToSacrificeLife = false;
-    image(winImage, displayWidth/2-230, -50);
+    image(winImage, displayWidth/2-winImage.width/2, 0);
     image(Score, width/2-350, height/2-250); 
     fill(255, 255, 255);
     textAlign(LEFT, CENTER);
@@ -155,7 +166,7 @@ class EndState extends GameState {
   }
 
   void drawLose() {
-    image(loseImage, displayWidth/2-230, -50);
+    image(loseImage, displayWidth/2-loseImage.width/2, 0);
     fill(255, 0, 0); // red means failure
     text("\nRemaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -60);
     text("\nRemaining HP: " + passedPlayer.getCurrHp(), width/2, height/2);
