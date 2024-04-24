@@ -414,12 +414,23 @@ class MapState extends GameState {
                 IronWaveCard ironWaveCardTwo = new IronWaveCard();
                 ThunderclapCard thunderClapCardTwo = new ThunderclapCard();
                 PoisonCard poisonCardTwo = new PoisonCard();
+                BodyslamCard bodySlamCardTwo = new BodyslamCard();
+                AfterImageCard afterImageCardTwo = new AfterImageCard();
+                CleaveCard cleaveCardTwo = new CleaveCard();
+                BludgeonCard bludgeonCardTwo = new BludgeonCard();
+                AngerCard angerCardTwo = new AngerCard();
+                HemokinesisCard hemokinesisCardTwo = new HemokinesisCard();
 
                 shopDeckDefault.add(blizzardCardTwo);
                 shopDeckDefault.add(ironWaveCardTwo);
                 shopDeckDefault.add(thunderClapCardTwo);
                 shopDeckDefault.add(poisonCardTwo);
-
+                shopDeckDefault.add(bodySlamCardTwo);
+                shopDeckDefault.add(afterImageCardTwo);
+                shopDeckDefault.add(cleaveCardTwo);
+                shopDeckDefault.add(bludgeonCardTwo);
+                shopDeckDefault.add(angerCardTwo);
+                shopDeckDefault.add(hemokinesisCardTwo);
                 ShopState shopStateTwo = new ShopState(engineRef,passedPlayer,shopDeckDefault);
                 engineRef.changeState(shopStateTwo);
                 break;

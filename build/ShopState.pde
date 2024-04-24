@@ -47,7 +47,7 @@ public class ShopState extends GameState {
 
   private boolean buyCard(int index) { //player purchase card from shop at specific index        
     if (index < 0 || index >= items.size()) {
-      alertMessage = "Item not found";
+      alertMessage = "Item Not found";
       showAlert = true;
       return false;
     }
@@ -55,13 +55,13 @@ public class ShopState extends GameState {
     Card item = items.get(index);
     
     if (passedPlayer.getGoldOnHand() < item.getShopCost()) {
-      alertMessage = "Not enough gold";
+      alertMessage = "Not Enough Gold";
       showAlert = true;
       return false;
     }
 
     if (passedPlayer.getDeck().isFull()) {
-      alertMessage = "Player's deck is full";
+      alertMessage = "Player's Deck is Full";
       showAlert = true;
       return false;
     }
@@ -78,10 +78,8 @@ public class ShopState extends GameState {
     shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
     backButton = new Button(50, height - 80, 230, 60, backImage);
-    //alertImage = loadImage("../assets/shop/alert_message.png");
-     alertImage = loadImage("../assets/shop/alert_message_test.png");
-
-    
+    alertImage = loadImage("../assets/shop/alert_message.png");
+     //alertImage = loadImage("../assets/shop/scoreUI.png");
   } 
   
 
@@ -118,11 +116,12 @@ public class ShopState extends GameState {
     if (showAlert) {
       //rect(width / 2 - 250, height / 2 - 50, 500, 100);
       //image(alertImage,width / 2 - 250, height / 2 - 50, 500, 100);
-      image(alertImage,width / 2 - 100, height / 2 - 50, 200, 200);
-      textSize(40);
+      //image(alertImage,width / 2 - 100, height / 2 - 50, 200, 200);
+     image(alertImage,width / 2 - 250, height / 2 - 180, 500, 350);
+      textSize(45);
       textAlign(CENTER);
-      fill(#000000);
-      //text(alertMessage, width / 2, height / 2 + 5);
+      //fill(#000000);
+      text(alertMessage, width / 2, height / 2 + 5);
       fill(#FFFFFF);
     }
   } //editing the images 
