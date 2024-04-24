@@ -2,6 +2,8 @@ public class ShopState extends GameState {
   private PImage shopBackground;
   private PImage backImage;
   private Button backButton;
+  private PImage alertImage;
+
 
   //private static final String FILE_PATH = "shop.csv"; //file path of shop data file
   private final ArrayList<Card> items; //items available in the shop
@@ -22,7 +24,7 @@ public class ShopState extends GameState {
       for (Card card : this.items) {
         card.setImg(imageLoader.getImg(card.getName()));
         
-        System.out.println(width + ", " + height);
+        //System.out.println(width + ", " + height);
       }
         
       //add in game engine and player 
@@ -75,8 +77,9 @@ public class ShopState extends GameState {
   public void setupState(){
     shopBackground = loadImage("../assets/shop/shop_bg.jpeg");
     backImage = loadImage("../assets/shop/backButton.png");
-    
     backButton = new Button(50, height - 80, 230, 60, backImage);
+    alertImage = loadImage("../assets/shop/alert_message.png");
+    
   } 
   
 
@@ -111,11 +114,13 @@ public class ShopState extends GameState {
     text(passedPlayer.getGoldOnHand() + "£", width - 80, height - 40);
     
     if (showAlert) {
-      rect(width / 2 - 250, height / 2 - 50, 500, 100);
+      //rect(width / 2 - 250, height / 2 - 50, 500, 100);
+      //image(alertImage,width / 2 - 250, height / 2 - 50, 500, 100);
+      image(alertImage,width / 2 - 250, height / 2 - 50, 492, 200);
       textSize(40);
       textAlign(CENTER);
       fill(#000000);
-      text(alertMessage, width / 2, height / 2 + 5);
+      //text(alertMessage, width / 2, height / 2 + 5);
       fill(#FFFFFF);
     }
   } //editing the images 
