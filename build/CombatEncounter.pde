@@ -38,7 +38,7 @@ class CombatEncounter {
         encounterImgs[9] = loadImage("../assets/combat/vulnerable_icon.png");
         encounterImgs[10] = loadImage("../assets/combat/click_to_use_icon.png");
         endTurnBtn = new Button((int)(width*0.80), (int)(height*0.75), 345, 126, encounterImgs[1]);
-        combatInfoBtn = new Button((int)(width*0.01), (int)(height*0.07), 128, 128, encounterImgs[6]);
+        combatInfoBtn = new Button((int)(width*0.01), (int)(height*0.10), 128, 128, encounterImgs[6]);
     }
 
     public void initEncounter() {
@@ -166,7 +166,7 @@ class CombatEncounter {
         }
 
         if (showCombatInfo) {
-            image(encounterImgs[7], (int)(width*0.10), (int)(height*0.10));
+            image(encounterImgs[7], (int)(width*0.10), (int)(height*0.10), (int)(encounterImgs[7].width*0.75), (int)(encounterImgs[7].height*0.75));
         }
     }
 
