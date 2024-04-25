@@ -16,6 +16,7 @@ public class ShopState extends GameState {
   private Player passedPlayer;
     
   private boolean showAlert;
+  private boolean showExhaustAP = false;
   private String alertMessage = "";
     
   public ShopState(GameEngine engine, Player thePlayer, ArrayList<Card> cards) {
@@ -84,6 +85,11 @@ public class ShopState extends GameState {
     backButton = new Button(50, height - 80, 230, 60, backImage);
     alertImage = loadImage("../assets/shop/alert_message.png");
      //alertImage = loadImage("../assets/shop/scoreUI.png");
+    int currAP = passedPlayer.getActionPts();
+    if(currAP<= 0){
+      alertMessage = "Not Enough AP\nGame Over!\nClick Back to Restart";
+      showExhaustAP = true;
+    }
   } 
   
 
@@ -128,6 +134,15 @@ public class ShopState extends GameState {
       text(alertMessage, width / 2, height / 2 + 5);
       fill(#FFFFFF);
     }
+
+    if(showExhaustAP){
+      image(alertImage,width / 2 - 500, height / 2 - 350, 1000, 700);
+      textSize(45);
+      textAlign(CENTER);
+      //fill(#000000);
+      text(alertMessage, width / 2, height / 2 -75);
+      fill(#FFFFFF);
+    }
   } //editing the images 
   
   public void handleMouseInput() {  /* change game state to MAP_STATE */
@@ -135,13 +150,37 @@ public class ShopState extends GameState {
       showAlert = false;
       return;
     }
+
+    if (showExhaustAP) {
+      showExhaustAP = false;
+      return;
+    }
+
     if (mousePressed && !showAlert) {
       // System.out.println("[DEBUG] Mouse clicked (" + mouseX + ", " + mouseY + ")");
       if (backButton.overButton()) {
-        BGMplayer.musicStop();
-        MapState mapState = new MapState(engineRef, passedPlayer);
-        engineRef.changeState(mapState);
-        return;
+        int currAP = passedPlayer.getActionPts();
+        if(currAP <= 0){
+          String filePath = "../assets/map/mapTemp.json";
+          try {
+            Path path = Paths.get(sketchPath(filePath));
+            Files.deleteIfExists(path);
+            println("Delete successfully: " + filePath);
+          } catch (IOException e) {
+            println("Delete failed: " + e.getMessage());
+            e.printStackTrace();
+          }
+          background(240, 210, 200); 
+          MenuState menuState = new MenuState(engineRef, passedPlayer);
+          BGMplayer.musicStop();
+          engineRef.changeState(menuState);
+          return;
+        }else{
+          BGMplayer.musicStop();
+          MapState mapState = new MapState(engineRef, passedPlayer);
+          engineRef.changeState(mapState);
+          return;
+        }
       }
       
       int index = mouseOverCard();
