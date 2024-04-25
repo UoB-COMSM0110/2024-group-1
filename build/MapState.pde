@@ -20,8 +20,6 @@ class MapState extends GameState {
     PVector cursorPosition;    // Position of the cursor or marker
     boolean showWarning = false; // Show warning or not
     boolean bossOrNot = false; 
-    boolean modeEasy = false;
-    boolean modeHard = false;
     String warningMessage = "Blocked! "; // Warning message content
     boolean showTutorial = false; // Show Tutorial or not
 
@@ -93,8 +91,6 @@ class MapState extends GameState {
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
-
-        modeEasy = true ;
     }
 
     public void setupState(String hardmode) {
@@ -143,8 +139,6 @@ class MapState extends GameState {
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
-
-        modeHard = true;
     }
 
     public void handleMouseInput() {
@@ -617,10 +611,11 @@ class MapState extends GameState {
             // Step 2: Update node status
             for (Node node : nodes) {
                 int nodeLevel = getLevelAsInt(node.level);
-                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
-                    node.clickable = true;
-                    nodesToActivate.add(node);
-                } else if (nodeLevel >= minLevelWithCurrent) {
+                // if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                //     node.clickable = true;
+                //     nodesToActivate.add(node);
+                // } else 
+                if (nodeLevel >= minLevelWithCurrent) {
                     node.clickable = false;
                 }
             }
@@ -666,10 +661,11 @@ class MapState extends GameState {
             // Step 2: Update node status
             for (Node node : nodes) {
                 int nodeLevel = getLevelAsInt(node.level);
-                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
-                    node.clickable = true;
-                    nodesToActivate.add(node);
-                } else if (nodeLevel >= minLevelWithCurrent) {
+                // if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                //     node.clickable = true;
+                //     nodesToActivate.add(node);
+                // } else 
+                if (nodeLevel >= minLevelWithCurrent) {
                     node.clickable = false;
                     node.currentOrNot = false;
                 }
@@ -681,7 +677,7 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) <= currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
                 }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
@@ -833,22 +829,28 @@ class MapState extends GameState {
 
     private int findOldCurrLevel() {
         int oldCurrLevel = Integer.MAX_VALUE; 
-        if(modeEasy){
-            oldCurrLevel = 5;
-        }
-        else if(modeHard){
-            oldCurrLevel = 8;
-        }
+        int maxLevel = 5;  
+        boolean hasCurr = false;
 
         for (Node node : nodes) {
             if (node.currentOrNot) {
+                hasCurr = true;
                 int level = getLevelAsInt(node.level);
                 System.out.println("Node ID: " + node.id + ", Level: " + level + ", Current or Not: " + node.currentOrNot);
                 if (level < oldCurrLevel) {
                     oldCurrLevel = level;
                 }
             }
+            int level = getLevelAsInt(node.level);
+            if (level > maxLevel) {
+                maxLevel = level;
+            }
         }
+
+        if (!hasCurr) {
+            oldCurrLevel = maxLevel;
+        }
+
 
         System.out.println("Old Current Level: " + oldCurrLevel);
         return oldCurrLevel; 
