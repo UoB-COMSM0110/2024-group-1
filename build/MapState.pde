@@ -153,12 +153,16 @@ class MapState extends GameState {
         /* basic interactive function for different of node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
+                int levelGap = Math.abs(getLevelAsInt(node.level) - getLevelAsInt(nodes[currentNodeIndex].level));
+                passedPlayer.decrementActionPts(levelGap);
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
                 goToCombat();
                 break; // Assume that node could be clicked only once at a time
             }else if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
+                int levelGap = Math.abs(getLevelAsInt(node.level) - getLevelAsInt(nodes[currentNodeIndex].level));
+                passedPlayer.decrementActionPts(levelGap);
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
@@ -598,9 +602,9 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) <= currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
-                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
                 }
             }
@@ -648,9 +652,9 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) <= currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
-                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
                 }
             }

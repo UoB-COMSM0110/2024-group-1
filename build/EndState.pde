@@ -7,9 +7,9 @@ class EndState extends GameState {
 
   GameEngine engineRef;
   private Player passedPlayer;
-  int winBonus = 15; //suppose the player will get 5 points after winning
-  int sacrificeFine = 5; //suppose the player will lose 5 points after lose
-  int sacrificeHp = 10; //suppose the player will get 10 hp after losing 5 points
+  int winBonus = 2; //suppose the player will get 5 points after winning
+  int sacrificeFine = 1; //suppose the player will lose 5 points after lose
+  int sacrificeHp = 20; //suppose the player will get 10 hp after losing 5 points
   int actionPoints;
   int totalPoints;
   int buttonWidth;
