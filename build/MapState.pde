@@ -19,6 +19,7 @@ class MapState extends GameState {
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
     boolean showWarning = false; // Show warning or not
+    boolean bossOrNot = false; 
     String warningMessage = "Blocked! "; // Warning message content
     boolean showTutorial = false; // Show Tutorial or not
 
@@ -158,6 +159,9 @@ class MapState extends GameState {
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
+                if(getLevelAsInt(node.level) == 1){
+                    bossOrNot = true;
+                }
                 goToCombat();
                 break; // Assume that node could be clicked only once at a time
             }else if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
@@ -327,44 +331,53 @@ class MapState extends GameState {
     private void goToCombat() {
         int currEnemy = randomizeEnemy();
         // String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
-        System.out.println("Current enemy case is " + currEnemy);
-        switch(currEnemy){
-            //Spider
-            case 0: 
-                ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-                Spider spider = new Spider(passedPlayer);
-                enemies.add(spider);
-                CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-                BGMplayer.musicStop();
-                // BGMplayer.musicLoad(combatBgmPath);
-                // BGMplayer.musicPlay();
-                // BGMplayer.musicStop();
-                engineRef.changeState(combatState);
+        if(bossOrNot){
+            ArrayList<Enemy> enemiesBoss = new ArrayList<Enemy>();
+            Boss boss = new Boss(passedPlayer);
+            enemiesBoss.add(boss);
+            CombatState bossState = new CombatState(engineRef, passedPlayer, enemiesBoss);
+            BGMplayer.musicStop();
+            engineRef.changeState(bossState);
+        }else{
+            System.out.println("Current enemy case is " + currEnemy);
+            switch(currEnemy){
+                //Spider
+                case 0: 
+                    ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                    Spider spider = new Spider(passedPlayer);
+                    enemies.add(spider);
+                    CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                    BGMplayer.musicStop();
+                    // BGMplayer.musicLoad(combatBgmPath);
+                    // BGMplayer.musicPlay();
+                    // BGMplayer.musicStop();
+                    engineRef.changeState(combatState);
+                    break;
+                //Worm
+                case 1:
+                    ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                    Worm worm = new Worm(passedPlayer);
+                    enemiesDefault.add(worm);
+                    CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                    BGMplayer.musicStop();
+                    // BGMplayer.musicLoad(combatBgmPath);
+                    // BGMplayer.musicPlay();
+                    // BGMplayer.musicStop();
+                    engineRef.changeState(combatStateDefault);
+                    break;
+                //Golem
+                case 2:
+                    ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
+                    Golem golem = new Golem(passedPlayer);
+                    enemiesGolem.add(golem);
+                    CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                    BGMplayer.musicStop();
+                    // BGMplayer.musicLoad(combatBgmPath);
+                    // BGMplayer.musicPlay();
+                    // BGMplayer.musicStop();
+                    engineRef.changeState(combatStateGolem);
                 break;
-            //Worm
-            case 1:
-                ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
-                Worm worm = new Worm(passedPlayer);
-                enemiesDefault.add(worm);
-                CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
-                BGMplayer.musicStop();
-                // BGMplayer.musicLoad(combatBgmPath);
-                // BGMplayer.musicPlay();
-                // BGMplayer.musicStop();
-                engineRef.changeState(combatStateDefault);
-                break;
-            //Golem
-            case 2:
-                ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
-                Golem golem = new Golem(passedPlayer);
-                enemiesGolem.add(golem);
-                CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
-                BGMplayer.musicStop();
-                // BGMplayer.musicLoad(combatBgmPath);
-                // BGMplayer.musicPlay();
-                // BGMplayer.musicStop();
-                engineRef.changeState(combatStateGolem);
-            break;
+            }
         }
     }
 
