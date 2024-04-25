@@ -20,6 +20,8 @@ class MapState extends GameState {
     PVector cursorPosition;    // Position of the cursor or marker
     boolean showWarning = false; // Show warning or not
     boolean bossOrNot = false; 
+    boolean modeEasy = false;
+    boolean modeHard = false;
     String warningMessage = "Blocked! "; // Warning message content
     boolean showTutorial = false; // Show Tutorial or not
 
@@ -91,6 +93,8 @@ class MapState extends GameState {
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
+
+        modeEasy = true ;
     }
 
     public void setupState(String hardmode) {
@@ -139,6 +143,8 @@ class MapState extends GameState {
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
+
+        modeHard = true;
     }
 
     public void handleMouseInput() {
@@ -154,8 +160,13 @@ class MapState extends GameState {
         /* basic interactive function for different of node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
-                int levelGap = Math.abs(getLevelAsInt(node.level) - getLevelAsInt(nodes[currentNodeIndex].level));
+                int oldCurrLevel = findOldCurrLevel();
+                System.out.println("Current Node Level: " + oldCurrLevel);
+                System.out.println("Clicked Node Level: " + getLevelAsInt(node.level));
+                int levelGap = oldCurrLevel - getLevelAsInt(node.level);
+                System.out.println("Level gap is"+levelGap);
                 passedPlayer.decrementActionPts(levelGap);
+                System.out.println("AP right now is "+passedPlayer.getActionPts());
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
@@ -165,8 +176,13 @@ class MapState extends GameState {
                 goToCombat();
                 break; // Assume that node could be clicked only once at a time
             }else if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
-                int levelGap = Math.abs(getLevelAsInt(node.level) - getLevelAsInt(nodes[currentNodeIndex].level));
+                int oldCurrLevel = findOldCurrLevel();
+                System.out.println("Current Node Level: " + oldCurrLevel);
+                System.out.println("Clicked Node Level: " + getLevelAsInt(node.level));
+                int levelGap = oldCurrLevel - getLevelAsInt(node.level);
+                System.out.println("Level gap is" + levelGap);
                 passedPlayer.decrementActionPts(levelGap);
+                System.out.println("AP right now is "+passedPlayer.getActionPts());
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
@@ -573,7 +589,7 @@ class MapState extends GameState {
 
     private boolean checkFileExists(String filePath){
         File file = new File(sketchPath(filePath));
-        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        //System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
         return file.exists();
     }
 
@@ -615,7 +631,7 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) <= currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
                 }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
@@ -665,7 +681,7 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) <= currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
                 }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
@@ -746,11 +762,11 @@ class MapState extends GameState {
                 }
             }
         }
-        System.out.println("Graph generated");
+        //System.out.println("Graph generated");
 
         // When level gap is 1, do not use BFS
         if (((getLevelById(nodeId1) - getLevelById(nodeId2)) == 1)||((getLevelById(nodeId1) - getLevelById(nodeId2)) == -1)){
-            System.out.println("Checking only level gap is one");
+            //System.out.println("Checking only level gap is one");
             return graph.getOrDefault(nodeId1, new HashSet<>()).contains(nodeId2);
         }
 
@@ -814,4 +830,28 @@ class MapState extends GameState {
             updateCursorPosition();
         }
     }
+
+    private int findOldCurrLevel() {
+        int oldCurrLevel = Integer.MAX_VALUE; 
+        if(modeEasy){
+            oldCurrLevel = 5;
+        }
+        else if(modeHard){
+            oldCurrLevel = 8;
+        }
+
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                int level = getLevelAsInt(node.level);
+                System.out.println("Node ID: " + node.id + ", Level: " + level + ", Current or Not: " + node.currentOrNot);
+                if (level < oldCurrLevel) {
+                    oldCurrLevel = level;
+                }
+            }
+        }
+
+        System.out.println("Old Current Level: " + oldCurrLevel);
+        return oldCurrLevel; 
+    }
+
 }

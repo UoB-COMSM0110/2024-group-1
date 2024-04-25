@@ -20,7 +20,7 @@ class MenuState extends GameState {
 
     public void setupState() {
         
-        passedPlayer = new Player("Initial", 40, 5, 5, 3, 4, 20); //Initialize the player
+        passedPlayer = new Player("Initial", 40, 5, 5, 2, 4, 20); //Initialize the player
         
 
         bg = loadImage("../assets/main/menu_bg.jpeg");
@@ -134,7 +134,7 @@ class MenuState extends GameState {
 
     private boolean checkFileExists(String filePath){
         File file = new File(sketchPath(filePath));
-        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        //System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
         return file.exists();
     }
     

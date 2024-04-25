@@ -35,7 +35,7 @@ class EndState extends GameState {
       String gameOverBgmPath = sketchPath("../assets/music/GameOver.wav");
       BGMplayer.musicLoad(gameOverBgmPath);
       BGMplayer.musicPlay();
-      player.decrementActionPts(sacrificeFine);
+      //player.decrementActionPts(sacrificeFine);
     }
     totalPoints = player.getActionPts();
     setupState();
