@@ -2,7 +2,7 @@ public class BlizzardCard extends Card {
     private int dmgAmt;
 
     public BlizzardCard() {
-        super("Blizzard", CardType.CARDTYPE_ATTACK, 1, int(random(60, 110)), true, false);
+        super("Blizzard", CardType.CARDTYPE_ATTACK, 1, int(random(60, 80)), true, false);
         dmgAmt = 1;
     }
 

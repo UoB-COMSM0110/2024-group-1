@@ -1,11 +1,11 @@
 class Boss extends Enemy {
-    private static final int BOSS_HP = 250;
+    private static final int BOSS_HP = 100;
     private static final int BOSS_STR = 50;
     private static final int BOSS_DEX = 35;
     private static final int STANCE_THRESHOLD_INCREMENT = 10;
 
-    private static final int HEAVY_ATTACK_DMG = 30;
-    private static final int LIGHT_ATTACK_DMG = 15;
+    private static final int HEAVY_ATTACK_DMG = 18;
+    private static final int LIGHT_ATTACK_DMG = 14;
     private static final int FLURRY_DMG = 4;
     private static final int PUMMEL_DMG = 6;
     private static final int PAIN_AURA_DMG = 3;

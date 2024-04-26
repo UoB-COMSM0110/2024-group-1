@@ -1,7 +1,7 @@
 public class ThunderclapCard extends Card {
 
     public ThunderclapCard() {
-        super("Thunderclap", CardType.CARDTYPE_ATTACK, 1, int(random(180, 220)), true, true);
+        super("Thunderclap", CardType.CARDTYPE_ATTACK, 1, int(random(50, 85)), true, true);
     }
 
     public void applyCard(Entity target) {
