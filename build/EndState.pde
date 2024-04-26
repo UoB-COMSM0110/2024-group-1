@@ -9,9 +9,10 @@ class EndState extends GameState {
   private Player passedPlayer;
   int winBonus = 2; //suppose the player will get 5 points after winning
   int sacrificeFine = 1; //suppose the player will lose 5 points after lose
-  int sacrificeHp = 20; //suppose the player will get 10 hp after losing 5 points
+  int sacrificeHp = 40; //suppose the player will get 10 hp after losing 5 points
   int actionPoints;
   int totalPoints;
+  int bossCurrHP;
   int buttonWidth;
   int buttonHeight;
   String warningMessage = "Blocked! "; // Warning message content
@@ -28,14 +29,7 @@ class EndState extends GameState {
     actionPoints = player.getActionPts();
     if (checkWin) {
       player.incrementActionPts(winBonus);
-      String gameWinBgmPath = sketchPath("../assets/music/StagedWin.wav");
-      BGMplayer.musicLoad(gameWinBgmPath);
-      BGMplayer.musicPlay();
     } else {
-      String gameOverBgmPath = sketchPath("../assets/music/GameOver.wav");
-      BGMplayer.musicLoad(gameOverBgmPath);
-      BGMplayer.musicPlay();
-      //player.decrementActionPts(sacrificeFine);
     }
     totalPoints = player.getActionPts();
     MapState mapStateFake = new MapState(engineRef, passedPlayer);
@@ -43,6 +37,51 @@ class EndState extends GameState {
     mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
     checkFinalWin = mapStateFake.checkFinalWin();
     setupState();
+    if (checkWin && (!checkFinalWin)) {
+      String gameWinBgmPath = sketchPath("../assets/music/StagedWin.wav");
+      BGMplayer.musicLoad(gameWinBgmPath);
+      BGMplayer.musicPlay();
+    } else if(checkFinalWin && checkWin){
+      String finalWinBGMPath = sketchPath("../assets/music/FinalWin.wav");
+      BGMplayer.musicLoad(finalWinBGMPath);
+      BGMplayer.musicPlay();
+    }else {
+      String gameOverBgmPath = sketchPath("../assets/music/GameOver.wav");
+      BGMplayer.musicLoad(gameOverBgmPath);
+      BGMplayer.musicPlay();
+    }
+  }
+
+  EndState(GameEngine engine, Player player, boolean check, int bossHP) {
+    System.out.println("I am called.I am end");
+    passedPlayer = player;
+    engineRef = engine;
+    checkWin = check;
+    bossCurrHP = bossHP;
+    actionPoints = player.getActionPts();
+    if (checkWin) {
+      player.incrementActionPts(winBonus);
+    } else {
+    }
+    totalPoints = player.getActionPts();
+    MapState mapStateFake = new MapState(engineRef, passedPlayer);
+    mapStateFake.updateNodeStatesOutside();
+    mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
+    checkFinalWin = mapStateFake.checkFinalWin();
+    setupState();
+    if (checkWin && (!checkFinalWin)) {
+      String gameWinBgmPath = sketchPath("../assets/music/StagedWin.wav");
+      BGMplayer.musicLoad(gameWinBgmPath);
+      BGMplayer.musicPlay();
+    } else if(checkFinalWin && checkWin){
+      String finalWinBGMPath = sketchPath("../assets/music/FinalWin.wav");
+      BGMplayer.musicLoad(finalWinBGMPath);
+      BGMplayer.musicPlay();
+    }else {
+      String gameOverBgmPath = sketchPath("../assets/music/GameOver.wav");
+      BGMplayer.musicLoad(gameOverBgmPath);
+      BGMplayer.musicPlay();
+    }
   }
 
   public void setupState() {
@@ -69,7 +108,7 @@ class EndState extends GameState {
         mapStateFake.updateNodeStatesOutside();
         mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
         checkFinalWin = mapStateFake.checkFinalWin();
-        if(checkFinalWin){
+        if(checkFinalWin&&checkWin){
           System.out.println("WinWinWin!!!");
           String filePath = "../assets/map/mapTemp.json";
           try {
@@ -82,6 +121,11 @@ class EndState extends GameState {
           }
           MenuState menuState = new MenuState(engineRef, passedPlayer);
           engineRef.changeState(menuState);
+        }else if(checkFinalWin && (!checkWin) && (totalPoints >= 0)){
+          MapState bossState = new MapState(engineRef, passedPlayer,bossCurrHP);
+          bossState.fightBossAgain();
+          bossState.saveMapStateToFile("../assets/map/mapTemp.json");
+          engineRef.changeState(bossState);
         }else{
           MapState mapStateTrue = new MapState(engineRef, passedPlayer);
           engineRef.changeState(mapStateTrue);
@@ -112,7 +156,7 @@ class EndState extends GameState {
       cleanScreen();
       textSize(128);
       textAlign(CENTER, CENTER);
-      if (checkFinalWin) {
+      if (checkFinalWin && checkWin) {
         background(finalImage);
         continueButton.drawButton();
         fill(0, 255, 0);
