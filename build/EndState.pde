@@ -2,7 +2,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 class EndState extends GameState {
-  PImage backgroundImage, winImage, loseImage, Score, Menu, Cards, Shop, Continue, Setting;
+  PImage backgroundImage, winImage, loseImage, finalImage, Continue;
   Button menuButton, cardsButton, shopButton, continueButton, settingButton;
 
   GameEngine engineRef;
@@ -38,56 +38,30 @@ class EndState extends GameState {
       //player.decrementActionPts(sacrificeFine);
     }
     totalPoints = player.getActionPts();
+    MapState mapStateFake = new MapState(engineRef, passedPlayer);
+    mapStateFake.updateNodeStatesOutside();
+    mapStateFake.saveMapStateToFile("../assets/map/mapTemp.json");
+    checkFinalWin = mapStateFake.checkFinalWin();
     setupState();
   }
 
   public void setupState() {
     backgroundImage = loadImage("../assets/endscreen/Background.png");
-    Score = loadImage("../assets/endscreen/scoreUI.png");
     winImage = loadImage("../assets/endscreen/imageWin.png");
     loseImage = loadImage("../assets/endscreen/imageLose.png");
-    Menu = loadImage("../assets/endscreen/buttonMenu.png");
-    Cards = loadImage("../assets/endscreen/buttonCards.png");
-    Shop = loadImage("../assets/endscreen/buttonShop.png");
+    finalImage = loadImage("../assets/endscreen/finalWin.png");
     Continue = loadImage("../assets/endscreen/buttonContinue.png");
-    Setting = loadImage("../assets/endscreen/imageSetting.png");
     backgroundImage.resize(displayWidth, displayHeight-50);
+    finalImage.resize(displayWidth, displayHeight-50);
     winImage.resize(displayWidth/5, displayHeight/4);
     loseImage.resize(displayWidth/5, displayHeight/4);
-    Setting.resize(displayWidth/10, displayHeight/6);
-    buttonWidth = displayWidth/7;
-    buttonHeight = buttonWidth * Menu.height / Menu.width;
-    Menu.resize(buttonWidth, buttonHeight);
-    Cards.resize(buttonWidth, buttonHeight);
-    Shop.resize(buttonWidth, buttonHeight);
+    buttonWidth = displayWidth/5;
+    buttonHeight = buttonWidth * Continue.height / Continue.width;
     Continue.resize(buttonWidth, buttonHeight);
-    menuButton = new Button(0, height-2*buttonHeight, Menu.width, Menu.height, Menu);
-    cardsButton = new Button(2*buttonWidth, height-2*buttonHeight, Cards.width, Cards.height, Cards);
-    shopButton = new Button(4*buttonWidth, height-2*buttonHeight, Shop.width, Shop.height, Shop);
-    continueButton = new Button(width-buttonWidth, height-2*buttonHeight, Continue.width, Continue.height, Continue);
-    settingButton = new Button(width-Setting.width, 0, Setting.width, Setting.height, Setting);
+    continueButton = new Button(width/2-buttonWidth/2, height-2*buttonHeight, Continue.width, Continue.height, Continue);
   }
   
   public void handleMouseInput() {
-    if (menuButton.overButton() && mousePressed) {
-      //Add codes to go to start stage
-      MenuState menuState = new MenuState(engineRef, passedPlayer);
-      engineRef.changeState(menuState);
-    }
-    if (cardsButton.overButton() && mousePressed) {
-      if (checkWin || (!checkWin && totalPoints >= sacrificeFine)) {
-        //Add codes to go to cards stage
-      } else {
-        displayWarningMessage();
-      }
-    }
-    if (shopButton.overButton() && mousePressed) {
-      if (checkWin || (!checkWin && totalPoints >= sacrificeFine)) {
-        //Add codes to go to shop stage
-      } else {
-        displayWarningMessage();
-      }
-    }
     if (continueButton.overButton() && mousePressed) {
       BGMplayer.musicStop();
       if (checkWin || (!checkWin && (totalPoints >= sacrificeFine) && (passedPlayer.getCurrHp() > 0))) {
@@ -117,9 +91,6 @@ class EndState extends GameState {
         engineRef.changeState(menuState);
       }
     }
-    if (settingButton.overButton() && mousePressed) {
-      //Add codes to go to setting stage
-    }
   }
   
   public void handleKeyInput() {
@@ -139,18 +110,23 @@ class EndState extends GameState {
   
   public void drawState() {
       cleanScreen();
-      background(backgroundImage);
-      settingButton.drawButton();
-      menuButton.drawButton();
-      cardsButton.drawButton();
-      shopButton.drawButton();
-      continueButton.drawButton();
-      textSize(64);
+      textSize(128);
       textAlign(CENTER, CENTER);
-      if (checkWin) {
-        drawWin();
+      if (checkFinalWin) {
+        background(finalImage);
+        continueButton.drawButton();
+        fill(0, 255, 0);
+        drawFinalWin();
       } else {
-        drawLose();
+        background(backgroundImage);
+        continueButton.drawButton();
+        if (checkWin) {
+          fill(0, 255, 0);
+          drawWin();
+        } else {
+          fill(255, 0, 0);
+          drawLose();
+        }
       }
   }
   
@@ -161,26 +137,23 @@ class EndState extends GameState {
   void drawWin() {
     agreeToSacrificeLife = false;
     image(winImage, displayWidth/2-winImage.width/2, 0);
-    image(Score, width/2-350, height/2-250); 
-    fill(255, 255, 255);
-    textAlign(LEFT, CENTER);
-    text("\nAction Points: ", width/2-200, height/2-30);
-    text("\nWin Bonus: ", width/2-200, height/2+20);
-    text("\nTotal: ", width/2-200, height/2+70);
-    textAlign(RIGHT, CENTER);
-    text("\n"+actionPoints, width/2+240, height/2-30);
-    text("\n"+winBonus, width/2+240, height/2+20);
-    text("\n"+totalPoints, width/2+240, height/2+70);
+    text("\nYou Win!!!", displayWidth/2, winImage.height+40);
+    textAlign(CENTER, CENTER);
+    textSize(96);
+    text("Action Points: "+actionPoints, displayWidth/2, displayHeight/2-50);
+    text("\nWin Bonus: "+winBonus, displayWidth/2, displayHeight/2+25);
+    text("\n\nTotal: "+totalPoints, displayWidth/2, displayHeight/2+100);
   }
 
   void drawLose() {
     image(loseImage, displayWidth/2-loseImage.width/2, 0);
-    fill(255, 0, 0); // red means failure
-    text("\nRemaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -60);
-    text("\nRemaining HP: " + passedPlayer.getCurrHp(), width/2, height/2);
+    text("\nYou Lose!!!", width/2, loseImage.height+40);
+    textSize(96);
+    text("Remaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -50);
+    text("\nRemaining HP: " + passedPlayer.getCurrHp(), width/2, height/2+25);
     if (totalPoints < sacrificeFine) {
       agreeToSacrificeLife = false;
-      text("\nNot enough Action Points, Game End!!!", width/2, height/2+60);
+      text("\n\nNot enough Action Points, Game End!!!", width/2, height/2+100);
       String filePath = "../assets/map/mapTemp.json";
       try {
       Path path = Paths.get(sketchPath(filePath));
@@ -192,9 +165,15 @@ class EndState extends GameState {
       }
     } else {
       if (agreeToSacrificeLife) {
-        text("\nAgree to sacrifice life? (Y/N)", width/2, height/2+60);
+        text("\n\nAgree to sacrifice life? (Y/N)", width/2, height/2+100);
       }
     }
+  }
+  
+  public void drawFinalWin() {
+    agreeToSacrificeLife = false;
+    text("\nCongratulations!!!", width/2, winImage.height-50);
+    text("\nYou got "+totalPoints+" points in total!!!", width/2, height/2+50);
   }
   
   private boolean checkFileExists(String filePath){
