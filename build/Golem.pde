@@ -7,7 +7,7 @@ class Golem extends Enemy {
     private static final double DEFEND_PROB = 0.25;
     private static final double ATTACKBOOST_PROB = 0.20;
 
-    private static final int GOLEM_ATTACK_VAL = 18;
+    private static final int GOLEM_ATTACK_VAL = 14;
     private static final int GOLEM_DEFENCE_VAL = 13;
 
     Golem(Player ref) {
