@@ -95,18 +95,22 @@ found that it was not the best format for mapping out alternative/variable game 
 In addition, at this stage we brainstormed a range of user stories in order for us to keep in mind our key stakeholders and consider what goals
 our game should set out to achieve. A selection of the user stories we developed are as follows:
 
-> As a player, I want the game to have enough card variety and
-strategic depth so that I feel challenged and entertained.
+> As a player, I want the game to have enough card variety and strategic depth so that I feel challenged and entertained.
 
-> As a player, I want to be able to see how much health I and enemies have left so that I can make strategic decisions
-and feel a sense of urgency during the game.
+> As a player, I want to be able to see how much health I and enemies have left so that I can make strategic decisions and feel a sense of urgency during the game.
 
 > As a player, I want the game to have a variety of different encounters in order to keep the game fresh and provide a challenge.
+
+> As a player, I want to be able to load the game and pick up where I left off in order to allow me to play flexibly at a time that suits me.
+
+> As a player, I want to be able to change the difficulty of the game so that I can play the game in a way that suits my preferences.
+
+> As a player, I want there to be help information popups/screens in the game so that I can look up information during or prior to gameplay and ensure I understand how to play the game.
 
 # Design
 
 ## System architecture
-We knew from our concept that we would have many game interfaces, so we created the `GameState` class to manage them. Each game interface is a subclass of `GameState` and `GameState`, in conjunction with `GameEngine` (the core game system class), enabled us to implement the classic game loop architecture.`GameState` abstracts the different states of the game (e.g. `MapState` or `EndState`), mandating the implementation of common methods such as `setupState()`, `updateState()` and `drawState()` in each subclass. This abstraction allows us to easily extend the functionality of the game by adding new states.
+We knew from our concept that we would have many game interfaces, so we created the `GameState` class to manage them. Each game interface is a subclass of `GameState` and this, in conjunction with `GameEngine` (the core game system class), enabled us to implement a game loop architecture.`GameState` abstracts the different states of the game (e.g. `MapState` or `EndState`), mandating the implementation of common methods such as `setupState()`, `updateState()` and `drawState()` in each subclass. This abstraction allows us to easily extend the functionality of the game by adding new states.
 
 The complex scene transition mechanism in our turn-based card game requires the design of multiple components:
 | Class          | Responsibilities | Functions |
@@ -132,13 +136,13 @@ We ensure a fresh start by loading default new maps using two fixed maps of vary
 ![ClassDiagram](./docs/Class-Diagram-major.png)
 *A condensed version of our class diagram*
 
-To effectively organize our ideas and streamline our workload, we developed a class diagram for our game early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. As we progressed, continuously implementing and updating the class diagram with each phase of our game development, the structure evolved. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/design-section-draft/docs/Draft%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
+To understand how to structure our code, we developed a class diagram early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. Its structure evolved in line with the complexity of our game. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/design-section-draft/docs/Draft%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
 
 ## Behavioural diagram
  
-In our game, the `GameEngine` class is the central hub that manages transitions between various game states (e.g. `MenuState`, `MapState`, `CombatState`, `EndState`). The engine maintains a state stack to support smooth transitions and fallbacks between different game states.
+The `GameEngine` class is the central hub that manages transitions between various game states (e.g. `MenuState`, `MapState`, `CombatState`, `EndState`). The engine maintains a state stack to support smooth transitions and fallbacks between different game states.
 
-At the beginning of the game, the `GameEngine` initialises and pushes the `MenuState`, the player's first stage of interaction with the game. In `MenuState`, the start button and difficulty selection buttons trigger a state transition to `MapState`, which also receives a reference to the top level `GameEngine` object and a newly created `Player` object as parameters.
+At the beginning of the game, `GameEngine` initialises and pushes the `MenuState`, the player's first stage of interaction with the game. In `MenuState`, the start and difficulty selection buttons trigger a state transition to `MapState`, which also receives a reference to the top level `GameEngine` object and a newly created `Player` object as parameters.
 
 In `MapState`, the player navigates by interacting with nodes on the map. When the player selects a node and initiates a battle, `MapState` is responsible for switching the game state to `CombatState`. In `CombatState`, the player fights against an enemy, and the result of the battle (victory or defeat) decides what happens next in `EndState`.
 
