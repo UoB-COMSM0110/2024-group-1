@@ -3,6 +3,7 @@ class CombatState extends GameState {
     private Player passedPlayer;
     private ArrayList<Enemy> encounterEnemies;
     private CombatEncounter currEncounter;
+    MusicLoader BGMplayer = new MusicLoader();
 
     CombatState(GameEngine engine, Player thePlayer, ArrayList<Enemy> enemies) {
         engineRef = engine;
@@ -14,6 +15,9 @@ class CombatState extends GameState {
 
     public void setupState() {
         currEncounter.initEncounter();
+        String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
+        BGMplayer.musicLoad(combatBgmPath);
+        BGMplayer.musicPlay();
     }
 
     public void handleMouseInput() {
@@ -31,10 +35,12 @@ class CombatState extends GameState {
         switch (combatOutcome) {
             case OUTCOME_WIN:
                 toChangeTo = new EndState(engineRef, passedPlayer, true);
+                BGMplayer.musicStop();
                 changeState(engineRef, toChangeTo);
                 break;
             case OUTCOME_LOSS:
                 toChangeTo = new EndState(engineRef, passedPlayer, false);
+                BGMplayer.musicStop();
                 changeState(engineRef, toChangeTo);
                 break;
             default:

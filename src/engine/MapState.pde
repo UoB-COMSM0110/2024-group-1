@@ -9,6 +9,7 @@ class MapState extends GameState {
     Button backButton,tutorialButton,entranceButton;
     Node[] nodes; 
     MapLoader mapLoader;
+    MusicLoader BGMplayer = new MusicLoader();
 
     GameEngine engineRef;
     private Player passedPlayer;
@@ -18,6 +19,7 @@ class MapState extends GameState {
     int currentNodeIndex = 0;  // Index of the currently highlighted node
     PVector cursorPosition;    // Position of the cursor or marker
     boolean showWarning = false; // Show warning or not
+    boolean bossOrNot = false; 
     String warningMessage = "Blocked! "; // Warning message content
     boolean showTutorial = false; // Show Tutorial or not
 
@@ -25,6 +27,9 @@ class MapState extends GameState {
     MapState(GameEngine engine, Player thePlayer) {
         engineRef = engine;
         passedPlayer = thePlayer;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
         setupState();
         drawState();
     }
@@ -32,6 +37,9 @@ class MapState extends GameState {
     MapState(GameEngine engine, Player thePlayer, String hardmode){
         engineRef = engine;
         passedPlayer = thePlayer;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
         setupState(hardmode);
         drawState();
     }
@@ -139,18 +147,36 @@ class MapState extends GameState {
         if (backButton.overButton() && mousePressed){
             background(240, 210, 200); /* for test */
             MenuState menuState = new MenuState(engineRef, passedPlayer);
+            BGMplayer.musicStop();
             engineRef.changeState(menuState);
         }
 
         /* basic interactive function for different of node*/
         for (Node node : nodes) {
             if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof CombatNode)&&(node.clickable)) {
+                int oldCurrLevel = findOldCurrLevel();
+                System.out.println("Current Node Level: " + oldCurrLevel);
+                System.out.println("Clicked Node Level: " + getLevelAsInt(node.level));
+                int levelGap = oldCurrLevel - getLevelAsInt(node.level);
+                System.out.println("Level gap is"+levelGap);
+                passedPlayer.decrementActionPts(levelGap);
+                System.out.println("AP right now is "+passedPlayer.getActionPts());
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
+                if(getLevelAsInt(node.level) == 1){
+                    bossOrNot = true;
+                }
                 goToCombat();
                 break; // Assume that node could be clicked only once at a time
             }else if ((node.isMouseOver(mouseX, mouseY))&&(node instanceof ShopNode)&&(node.clickable)) {
+                int oldCurrLevel = findOldCurrLevel();
+                System.out.println("Current Node Level: " + oldCurrLevel);
+                System.out.println("Clicked Node Level: " + getLevelAsInt(node.level));
+                int levelGap = oldCurrLevel - getLevelAsInt(node.level);
+                System.out.println("Level gap is" + levelGap);
+                passedPlayer.decrementActionPts(levelGap);
+                System.out.println("AP right now is "+passedPlayer.getActionPts());
                 node.currentOrNot = true;
                 updateNodeStates();
                 saveMapStateToFile("../assets/map/mapTemp.json");
@@ -280,8 +306,8 @@ class MapState extends GameState {
     }
 
     private void drawStatusInfo() {
-        image(APIcon,1485,0);
-        image(HPIcon,1485,65);
+        image(HPIcon,1485,0);
+        image(APIcon,1485,65);
 
         // Draw Health Point
             fill(255, 0, 0);
@@ -314,32 +340,54 @@ class MapState extends GameState {
 
     private void goToCombat() {
         int currEnemy = randomizeEnemy();
-        System.out.println("Current enemy case is " + currEnemy);
-        switch(currEnemy){
-            //Spider
-            case 0: 
-                ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-                Spider spider = new Spider(passedPlayer);
-                enemies.add(spider);
-                CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-                engineRef.changeState(combatState);
+        // String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
+        if(bossOrNot){
+            ArrayList<Enemy> enemiesBoss = new ArrayList<Enemy>();
+            Boss boss = new Boss(passedPlayer);
+            enemiesBoss.add(boss);
+            CombatState bossState = new CombatState(engineRef, passedPlayer, enemiesBoss);
+            BGMplayer.musicStop();
+            engineRef.changeState(bossState);
+        }else{
+            System.out.println("Current enemy case is " + currEnemy);
+            switch(currEnemy){
+                //Spider
+                case 0: 
+                    ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                    Spider spider = new Spider(passedPlayer);
+                    enemies.add(spider);
+                    CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                    BGMplayer.musicStop();
+                    // BGMplayer.musicLoad(combatBgmPath);
+                    // BGMplayer.musicPlay();
+                    // BGMplayer.musicStop();
+                    engineRef.changeState(combatState);
+                    break;
+                //Worm
+                case 1:
+                    ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                    Worm worm = new Worm(passedPlayer);
+                    enemiesDefault.add(worm);
+                    CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                    BGMplayer.musicStop();
+                    // BGMplayer.musicLoad(combatBgmPath);
+                    // BGMplayer.musicPlay();
+                    // BGMplayer.musicStop();
+                    engineRef.changeState(combatStateDefault);
+                    break;
+                //Golem
+                case 2:
+                    ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
+                    Golem golem = new Golem(passedPlayer);
+                    enemiesGolem.add(golem);
+                    CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                    BGMplayer.musicStop();
+                    // BGMplayer.musicLoad(combatBgmPath);
+                    // BGMplayer.musicPlay();
+                    // BGMplayer.musicStop();
+                    engineRef.changeState(combatStateGolem);
                 break;
-            //Worm
-            case 1:
-                ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
-                Worm worm = new Worm(passedPlayer);
-                enemiesDefault.add(worm);
-                CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
-                engineRef.changeState(combatStateDefault);
-                break;
-            //Golem
-            case 2:
-                ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
-                Golem golem = new Golem(passedPlayer);
-                enemiesGolem.add(golem);
-                CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
-                engineRef.changeState(combatStateGolem);
-            break;
+            }
         }
     }
 
@@ -352,6 +400,7 @@ class MapState extends GameState {
     private void goToShop(){
         int currShopItems = randomizeShopItems();
         System.out.println("Current random shop contains case " + currShopItems);
+        BGMplayer.musicStop();
         switch(currShopItems){
             //Blizzard and Bludgeon
             case 0: 
@@ -517,8 +566,8 @@ class MapState extends GameState {
     }
 
     private void drawConnection(){
-        stroke(255, 255, 255); // 设置线条颜色为红色
-        strokeWeight(4);   // 设置线条粗细为4像素
+        stroke(255, 255, 255); 
+        strokeWeight(4);   
         for (Node node : nodes) {
                 // Draw connections
                 for (int connectedId : node.connectedIds) {
@@ -529,12 +578,12 @@ class MapState extends GameState {
                 }
         }
         strokeWeight(1);
-        stroke(0,0,0,0); // 默认颜色设置为黑色
+        stroke(0,0,0,0); 
     }
 
     private boolean checkFileExists(String filePath){
         File file = new File(sketchPath(filePath));
-        System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
+        //System.out.println(new File("../assets/map/mapTemp.json").getAbsolutePath());
         return file.exists();
     }
 
@@ -562,10 +611,11 @@ class MapState extends GameState {
             // Step 2: Update node status
             for (Node node : nodes) {
                 int nodeLevel = getLevelAsInt(node.level);
-                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
-                    node.clickable = true;
-                    nodesToActivate.add(node);
-                } else if (nodeLevel >= minLevelWithCurrent) {
+                // if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                //     node.clickable = true;
+                //     nodesToActivate.add(node);
+                // } else 
+                if (nodeLevel >= minLevelWithCurrent) {
                     node.clickable = false;
                 }
             }
@@ -578,7 +628,7 @@ class MapState extends GameState {
                 int nodeLevel = getLevelAsInt(node.level);
                 if (nodeLevel < minLevelWithCurrent && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
-                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
                 }
             }
@@ -611,10 +661,11 @@ class MapState extends GameState {
             // Step 2: Update node status
             for (Node node : nodes) {
                 int nodeLevel = getLevelAsInt(node.level);
-                if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
-                    node.clickable = true;
-                    nodesToActivate.add(node);
-                } else if (nodeLevel >= minLevelWithCurrent) {
+                // if ((nodeLevel == minLevelWithCurrent - 1)&&isConnected(node.id, currentNode.id)) {
+                //     node.clickable = true;
+                //     nodesToActivate.add(node);
+                // } else 
+                if (nodeLevel >= minLevelWithCurrent) {
                     node.clickable = false;
                     node.currentOrNot = false;
                 }
@@ -626,13 +677,14 @@ class MapState extends GameState {
             for (Node node : nodes) {
                 if (node.level.equals(currentNode.level)) continue; // Skip the nodes in same level
                 int nodeLevel = getLevelAsInt(node.level);
-                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) < currAP && isConnected(node.id, currentNode.id)) {
+                if (nodeLevel < (minLevelWithCurrent-1) && (minLevelWithCurrent - nodeLevel) <= currAP && isConnected(node.id, currentNode.id)) {
                     node.clickable = true; // connected with currentNode directly or indirectly
-                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) < currAP) {
+                }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
                 }
             }
         }
+        BGMplayer.musicStop();
     }
 
     public void saveMapStateToFile(String filename) {
@@ -706,11 +758,11 @@ class MapState extends GameState {
                 }
             }
         }
-        System.out.println("Graph generated");
+        //System.out.println("Graph generated");
 
         // When level gap is 1, do not use BFS
         if (((getLevelById(nodeId1) - getLevelById(nodeId2)) == 1)||((getLevelById(nodeId1) - getLevelById(nodeId2)) == -1)){
-            System.out.println("Checking only level gap is one");
+            //System.out.println("Checking only level gap is one");
             return graph.getOrDefault(nodeId1, new HashSet<>()).contains(nodeId2);
         }
 
@@ -774,4 +826,34 @@ class MapState extends GameState {
             updateCursorPosition();
         }
     }
+
+    private int findOldCurrLevel() {
+        int oldCurrLevel = Integer.MAX_VALUE; 
+        int maxLevel = 5;  
+        boolean hasCurr = false;
+
+        for (Node node : nodes) {
+            if (node.currentOrNot) {
+                hasCurr = true;
+                int level = getLevelAsInt(node.level);
+                System.out.println("Node ID: " + node.id + ", Level: " + level + ", Current or Not: " + node.currentOrNot);
+                if (level < oldCurrLevel) {
+                    oldCurrLevel = level;
+                }
+            }
+            int level = getLevelAsInt(node.level);
+            if (level > maxLevel) {
+                maxLevel = level;
+            }
+        }
+
+        if (!hasCurr) {
+            oldCurrLevel = maxLevel;
+        }
+
+
+        System.out.println("Old Current Level: " + oldCurrLevel);
+        return oldCurrLevel; 
+    }
+
 }

@@ -13,7 +13,7 @@
     {
       "level": "level_2",
       "id": 2,
-      "type": "ShopNode",
+      "type": "CombatNode",
       "connected_ids": [1, 4, 5, 6],
       "x": 700,
       "y": 270,
@@ -93,7 +93,7 @@
     {
       "level": "level_4",
       "id": 10,
-      "type": "ShopNode",
+      "type": "CombatNode",
       "connected_ids": [4, 5, 6, 12, 13, 14],
       "x": 700,
       "y": 670,
@@ -103,7 +103,7 @@
     {
       "level": "level_4",
       "id": 11,
-      "type": "ShopNode",
+      "type": "CombatNode",
       "connected_ids": [7, 8, 9, 15, 16, 17],
       "x": 1300,
       "y": 670,
