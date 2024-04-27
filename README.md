@@ -168,14 +168,15 @@ The team used the Software Engineering labs as well as weekly in-person meetings
 ![GroupMeeting](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/d755d9f2-1c4e-43fd-9fc1-b35b3cd88c37)
 
 However, we were still able to communicate this effectively throughout the holidays using WhatsApp and GitHub to ensure we all knew what needed to be achieved. In order to communicate with each other, we set up a WhatsApp group chat where we organized in-person meetings. It was also used to check in with each other to assess our progress as a group. In addition, it was used for suggesting any small tweaks that needed to be made to the project.
-<img width="585" alt="WhatsappConversation" src="https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/da332296-1838-4d50-ac31-ec6ed993914f">
 
 ## Tools used
 We used GitHub to host and collaborate on the project. Each member used different branches for each feature of the game i.e. using a branch specifically for the menu state. This meant we always had a working version of the game on the main branch. We set up GitHub so that nothing could be merged into main without a pull request. This was valuable as it ensured we reviewed each other's code and helped ensure we were all aligned in terms of how we wanted to implement the different features of the game. In addition, using pull requests allowed any merge conflicts to be reviewed and resolved before being pushed to the main branch.
-![OtherPullRequests](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/4999b6f4-525f-4cd5-9bf2-627f141d4e12)
+<img width="700" alt="PullRequest" src="https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/454e8f79-9378-48f6-ab00-7e7b1e61b06c">
+
 
 We knew that we potentially had a game that would be relatively complex to create due to the multiple game states we needed to implement. Therefore, it was essential to use a Kanban board to keep track of all the different features we wanted to develop and ensure that they could be completed in the given timeframe of the project. As a team, we divided the workload into different features/game states that needed to be completed. We then delegated different game states to each team member. This meant that each team member had a clear idea of what they should be working on. On reflection, perhaps we could have used the Kanban board more effectively by breaking up the tasks into smaller sub-tasks. For example, creating a task for creating a shop state could have been broken up into smaller sub-tasks within this state. This would have given a greater sense of the progress that had been made.
 ![KanbanBoard](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/f57aac8d-cebd-448c-9e7e-a081b9117aca)
+
 
 ## Team roles
 We divided the workload of the game according to the different game states. Sam worked on the overall structure of the game i.e. implementing the game engine and worked on the combat state in terms of both code and related assets. Ricardo created the map state, created a template for the cards and created other assets like buttons. Lanai worked on the end state of the game. Jasmine created the shop state. Zhuoli created the main menu as well as game assets such as the cards.
