@@ -45,6 +45,10 @@ abstract class Entity {
         }
     }
 
+    public void setHP(int amt){
+        currHp = amt;
+    }
+
     public void gainHealth(int initialAmt) {
         int finalAmt = applyModifiers(BuffHealMod.class, initialAmt);
         incrementHp(finalAmt);

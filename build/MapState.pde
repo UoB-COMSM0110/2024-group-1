@@ -22,6 +22,8 @@ class MapState extends GameState {
     boolean bossOrNot = false; 
     String warningMessage = "Blocked! "; // Warning message content
     boolean showTutorial = false; // Show Tutorial or not
+    boolean fightBossAgain = false;
+    int bossCurrHP = 50;
 
 
     MapState(GameEngine engine, Player thePlayer) {
@@ -41,6 +43,17 @@ class MapState extends GameState {
         BGMplayer.musicLoad(bgmPath);
         BGMplayer.musicPlay();
         setupState(hardmode);
+        drawState();
+    }
+
+    MapState(GameEngine engine, Player thePlayer, int bossHP) {
+        engineRef = engine;
+        passedPlayer = thePlayer;
+        bossCurrHP = bossHP;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
+        setupState();
         drawState();
     }
 
@@ -344,6 +357,9 @@ class MapState extends GameState {
         if(bossOrNot){
             ArrayList<Enemy> enemiesBoss = new ArrayList<Enemy>();
             Boss boss = new Boss(passedPlayer);
+            if(fightBossAgain){
+                boss.setHP(bossCurrHP);
+            }
             enemiesBoss.add(boss);
             CombatState bossState = new CombatState(engineRef, passedPlayer, enemiesBoss);
             BGMplayer.musicStop();
@@ -682,6 +698,17 @@ class MapState extends GameState {
                 }else if (nodeLevel == 1 && (minLevelWithCurrent - nodeLevel) <= currAP) {
                     node.clickable = true; // Destination special result
                 }
+            }
+        }
+        BGMplayer.musicStop();
+    }
+
+    public void fightBossAgain(){
+        fightBossAgain = true;
+        for (Node node : nodes) {
+            int nodeLevel = getLevelAsInt(node.level);
+            if (nodeLevel == 1 ) {
+                node.clickable = true; 
             }
         }
         BGMplayer.musicStop();

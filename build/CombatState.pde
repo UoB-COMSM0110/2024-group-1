@@ -34,13 +34,20 @@ class CombatState extends GameState {
 
         switch (combatOutcome) {
             case OUTCOME_WIN:
-                toChangeTo = new EndState(engineRef, passedPlayer, true);
                 BGMplayer.musicStop();
+                toChangeTo = new EndState(engineRef, passedPlayer, true);
                 changeState(engineRef, toChangeTo);
                 break;
             case OUTCOME_LOSS:
-                toChangeTo = new EndState(engineRef, passedPlayer, false);
                 BGMplayer.musicStop();
+                int bossHP = 50;
+                for (Enemy enemy : encounterEnemies) {
+                    if(enemy instanceof Boss){
+                        bossHP = enemy.getCurrHp();
+                        break; 
+                    }
+                }
+                toChangeTo = new EndState(engineRef, passedPlayer, false,bossHP);
                 changeState(engineRef, toChangeTo);
                 break;
             default:
