@@ -126,8 +126,18 @@ class CombatEncounter {
                     Enemy currEnemy = currEnemies.get(n);
                     if (currEnemy.isMousedOver() == true) {
                         playCard(activeCard, currEnemy);
+                        return;
                     }
                 }
+                for (int i=0; i < cardHand.size(); i++) {
+                    Card currCard = cardHand.get(i);
+                    if (currCard.isMousedOver() == true) {
+                        if (currCard == activeCard) {
+                            activeCard = null;
+                            return;
+                        }
+                    }
+                }   
             } else {
                 for (int i=0; i < cardHand.size(); i++) {
                     Card currCard = cardHand.get(i);
@@ -308,6 +318,10 @@ class CombatEncounter {
         drawDeck.getDeck().addAll(discardPile);
         battlePlayer.setDeck(drawDeck);
         battlePlayer.clearAllEffects();
+    }
+
+    private boolean checkPosAreSame(Card cardA, Card cardB) {
+        return (cardA.getPos().x == cardB.getPos().x) && (cardA.getPos().y == cardB.getPos().y);
     }
 
     private void calculateCombatReward() {
