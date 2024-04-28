@@ -45,7 +45,7 @@ abstract class Entity {
         }
     }
 
-    public void setHP(int amt){
+    public void setHP(int amt) {
         currHp = amt;
     }
 
@@ -74,7 +74,7 @@ abstract class Entity {
         Object[] effectSources = new Object[2];
         effectSources[0] = this;
         effectSources[1] = finalAmt;
-        //target.triggerEffects(OnDmgTrigger.class, effectSources);
+        target.triggerEffects(OnDamageTrigger.class, effectSources);
         return target.takeDamage(finalAmt);
     }
 
@@ -190,7 +190,7 @@ abstract class Entity {
     }
 
     public boolean isMousedOver() {
-        return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
+        return mouseX >= pos.x && mouseX <= (pos.x+360) && mouseY >= pos.y && mouseY <= (pos.y+360); 
     }
 
     abstract public void die();

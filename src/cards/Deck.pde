@@ -4,7 +4,6 @@ import java.util.Collections;
 class Deck {
     private ArrayList<Card> deck;
     int deckLimit;
-    private final int CARDS_BASE_X = (int)(width*0.01);
     private CardImgLoader cardImages;
     
     Deck(int limit) {
@@ -43,16 +42,13 @@ class Deck {
 
         ArrayList<Card> toRet = new ArrayList<Card>();
         int toDraw = min(numCards, deck.size());
-        int drawX = CARDS_BASE_X;
 
         while (toDraw > 0) {
             Card drawn = deck.get(0);
             deck.remove(0);
-            drawn.setPos(drawX, (int)(height*0.60));
             drawn.setImg(cardImages.getImg(drawn.getName()));
             toRet.add(drawn);
             toDraw--;
-            drawX = drawX + (int)(width*0.15);
         }
 
         return toRet;
@@ -82,9 +78,6 @@ class Deck {
       return deck.size() == deckLimit;
     }
 
-    public boolean isFull() {
-      return deck.size() == deckLimit;
-    }
 
     private void initDeck() {
         deck.add(new StrikeCard());
