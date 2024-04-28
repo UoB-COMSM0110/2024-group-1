@@ -7,7 +7,18 @@ class AttackMove extends Move {
     }
 
     public int getDmg() {
-        return attackDmg;
+        ArrayList<StatusEffect> attackerEffects = attacker.getActiveEffects();
+        int dmgMod = 0;
+
+        if (!attackerEffects.isEmpty()) {
+            for (StatusEffect currEffect : attackerEffects) {
+                if (currEffect instanceof AttackBoost) {
+                    dmgMod += currEffect.getLifeCounter();
+                }
+            }
+        }
+
+        return attackDmg + dmgMod;
     }
 
     public boolean setDmg(int dmgAmt) {

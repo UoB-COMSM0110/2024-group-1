@@ -1,7 +1,7 @@
 import java.util.List;
 
 class Spider extends Enemy {
-    private static final int SPIDER_HP = 40;
+    private static final int SPIDER_HP = 15;
     private static final int SPIDER_STR = 10;
     private static final int SPIDER_DEX = 25;
 
@@ -26,7 +26,7 @@ class Spider extends Enemy {
                 addMove(new AttackMove(this, playerRef, SPIDER_ATTACK_VAL));
                 break;
             case 1:
-                List<StatusEffect> poisonEffect = List.of(new Poison(12));
+                List<StatusEffect> poisonEffect = List.of(new Poison(5));
                 addMove(new StatusEffectMove(this, playerRef, poisonEffect));
                 break;
             default:

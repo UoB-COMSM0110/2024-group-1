@@ -74,7 +74,7 @@ abstract class Entity {
         Object[] effectSources = new Object[2];
         effectSources[0] = this;
         effectSources[1] = finalAmt;
-        //target.triggerEffects(OnDmgTrigger.class, effectSources);
+        target.triggerEffects(OnDamageTrigger.class, effectSources);
         return target.takeDamage(finalAmt);
     }
 
