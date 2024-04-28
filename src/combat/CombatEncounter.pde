@@ -325,7 +325,7 @@ class CombatEncounter {
         for (Enemy nme : currEnemies) {
             nme.setImg(entityImgs.getImg(nme.getName()));
             nme.setPos(ENEMY_BASE_X+xOffset, ENEMY_BASE_Y);
-            xOffset += (int)(nme.getPos().x*0.40);
+            xOffset += 380;
         }
     }
 

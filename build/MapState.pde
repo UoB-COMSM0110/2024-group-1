@@ -360,7 +360,6 @@ class MapState extends GameState {
     }
 
     private void goToCombat() {
-        int currEnemy = randomizeEnemy();
         // String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
         if(bossOrNot){
             ArrayList<Enemy> enemiesBoss = new ArrayList<Enemy>();
@@ -374,8 +373,8 @@ class MapState extends GameState {
             engineRef.changeState(bossState);
         }else{
             if(hardModeOn){
-                System.out.println("easyMode random case is" + currEnemy);
-                switch(currEnemy){
+                int hardNodeSelection = randomizeEnemy(3);
+                switch(hardNodeSelection){
                     //Double Spider and single worm
                     case 0: 
                         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
@@ -413,10 +412,19 @@ class MapState extends GameState {
                     break;
                 }
             }else if (easyModeOn){
-                System.out.println("easyMode random case is" + currEnemy);
-                switch(currEnemy){
+                int easyNodeSelection = randomizeEnemy(4);
+                System.out.println("easyMode random case is" + easyNodeSelection);
+                switch(easyNodeSelection){
+                    case 0:
+                        ArrayList<Enemy> easySpider = new ArrayList<Enemy>();
+                        Spider simpleSpider = new Spider(passedPlayer);
+                        easySpider.add(simpleSpider);
+                        CombatState combatStateEasySpider = new CombatState(engineRef, passedPlayer, easySpider);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatStateEasySpider);
+                        break;
                     //Spider doubled
-                    case 0: 
+                    case 1: 
                         ArrayList<Enemy> enemies = new ArrayList<Enemy>();
                         Spider spider = new Spider(passedPlayer);
                         Spider spiderTwo = new Spider(passedPlayer);
@@ -427,7 +435,7 @@ class MapState extends GameState {
                         engineRef.changeState(combatState);
                         break;
                     //Worm
-                    case 1:
+                    case 2:
                         ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
                         Worm worm = new Worm(passedPlayer);
                         enemiesDefault.add(worm);
@@ -436,22 +444,22 @@ class MapState extends GameState {
                         engineRef.changeState(combatStateDefault);
                         break;
                     //Golem
-                    case 2:
+                    case 3:
                         ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
                         Golem golem = new Golem(passedPlayer);
                         enemiesGolem.add(golem);
                         CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
                         BGMplayer.musicStop();
                         engineRef.changeState(combatStateGolem);
-                    break;
+                        break;
                 }
             }
         }
     }
 
-    private int randomizeEnemy(){
+    private int randomizeEnemy(int nonInclusiveUpperBound){
         Random random = new Random();
-        int randomEnemy = random.nextInt(3);
+        int randomEnemy = random.nextInt(nonInclusiveUpperBound);
         return randomEnemy;
     }
 

@@ -22,6 +22,10 @@ class MapState extends GameState {
     boolean bossOrNot = false; 
     String warningMessage = "Blocked! "; // Warning message content
     boolean showTutorial = false; // Show Tutorial or not
+    boolean fightBossAgain = false;
+    int bossCurrHP = 50;
+    boolean easyModeOn = true;
+    boolean hardModeOn = false;
 
 
     MapState(GameEngine engine, Player thePlayer) {
@@ -41,6 +45,17 @@ class MapState extends GameState {
         BGMplayer.musicLoad(bgmPath);
         BGMplayer.musicPlay();
         setupState(hardmode);
+        drawState();
+    }
+
+    MapState(GameEngine engine, Player thePlayer, int bossHP) {
+        engineRef = engine;
+        passedPlayer = thePlayer;
+        bossCurrHP = bossHP;
+        String bgmPath = sketchPath("../assets/music/RegularFlowBGM.wav");
+        BGMplayer.musicLoad(bgmPath);
+        BGMplayer.musicPlay();
+        setupState();
         drawState();
     }
 
@@ -87,7 +102,11 @@ class MapState extends GameState {
         nodes = mapLoader.loadNodes(); // set Node array
 
         // Initialize the marker of current node
-        currentNodeIndex = 11;  // Start at the bottom line
+        if(hardModeOn){
+            currentNodeIndex = 25;  // Start at the bottom line
+        }else{
+            currentNodeIndex = 11;  // Start at the bottom line
+        }
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
@@ -139,6 +158,8 @@ class MapState extends GameState {
         if (nodes.length > 0) {
             cursorPosition = new PVector(nodes[currentNodeIndex].position.x, nodes[currentNodeIndex].position.y);
         }
+
+        hardModeOn = true;
     }
 
     public void handleMouseInput() {
@@ -339,61 +360,106 @@ class MapState extends GameState {
     }
 
     private void goToCombat() {
-        int currEnemy = randomizeEnemy();
         // String combatBgmPath = sketchPath("../assets/music/CombatBGM.wav");
         if(bossOrNot){
             ArrayList<Enemy> enemiesBoss = new ArrayList<Enemy>();
             Boss boss = new Boss(passedPlayer);
+            if(fightBossAgain){
+                boss.setHP(bossCurrHP);
+            }
             enemiesBoss.add(boss);
             CombatState bossState = new CombatState(engineRef, passedPlayer, enemiesBoss);
             BGMplayer.musicStop();
             engineRef.changeState(bossState);
         }else{
-            System.out.println("Current enemy case is " + currEnemy);
-            switch(currEnemy){
-                //Spider
-                case 0: 
-                    ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-                    Spider spider = new Spider(passedPlayer);
-                    enemies.add(spider);
-                    CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
-                    BGMplayer.musicStop();
-                    // BGMplayer.musicLoad(combatBgmPath);
-                    // BGMplayer.musicPlay();
-                    // BGMplayer.musicStop();
-                    engineRef.changeState(combatState);
+            if(hardModeOn){
+                int hardNodeSelection = randomizeEnemy(3);
+                switch(hardNodeSelection){
+                    //Double Spider and single worm
+                    case 0: 
+                        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                        Spider spider = new Spider(passedPlayer);
+                        Spider spiderTwo = new Spider(passedPlayer);
+                        Worm wormExtra = new Worm(passedPlayer);
+                        enemies.add(spider);
+                        enemies.add(spiderTwo);
+                        enemies.add(wormExtra);
+                        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatState);
+                        break;
+                    //Worm and Golem
+                    case 1:
+                        ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                        Worm worm = new Worm(passedPlayer);
+                        Golem golemExtra = new Golem(passedPlayer);
+                        enemiesDefault.add(worm);
+                        enemiesDefault.add(golemExtra);
+                        CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatStateDefault);
+                        break;
+                    //Double Golem
+                    case 2:
+                        ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
+                        Golem golem = new Golem(passedPlayer);
+                        Spider spiderExtra = new Spider(passedPlayer);
+                        enemiesGolem.add(golem);
+                        enemiesGolem.add(spiderExtra);
+                        CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatStateGolem);
                     break;
-                //Worm
-                case 1:
-                    ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
-                    Worm worm = new Worm(passedPlayer);
-                    enemiesDefault.add(worm);
-                    CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
-                    BGMplayer.musicStop();
-                    // BGMplayer.musicLoad(combatBgmPath);
-                    // BGMplayer.musicPlay();
-                    // BGMplayer.musicStop();
-                    engineRef.changeState(combatStateDefault);
-                    break;
-                //Golem
-                case 2:
-                    ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
-                    Golem golem = new Golem(passedPlayer);
-                    enemiesGolem.add(golem);
-                    CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
-                    BGMplayer.musicStop();
-                    // BGMplayer.musicLoad(combatBgmPath);
-                    // BGMplayer.musicPlay();
-                    // BGMplayer.musicStop();
-                    engineRef.changeState(combatStateGolem);
-                break;
+                }
+            }else if (easyModeOn){
+                int easyNodeSelection = randomizeEnemy(4);
+                System.out.println("easyMode random case is" + easyNodeSelection);
+                switch(easyNodeSelection){
+                    case 0:
+                        ArrayList<Enemy> easySpider = new ArrayList<Enemy>();
+                        Spider simpleSpider = new Spider(passedPlayer);
+                        easySpider.add(simpleSpider);
+                        CombatState combatStateEasySpider = new CombatState(engineRef, passedPlayer, easySpider);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatStateEasySpider);
+                        break;
+                    //Spider doubled
+                    case 1: 
+                        ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+                        Spider spider = new Spider(passedPlayer);
+                        Spider spiderTwo = new Spider(passedPlayer);
+                        enemies.add(spider);
+                        enemies.add(spiderTwo);
+                        CombatState combatState = new CombatState(engineRef, passedPlayer, enemies);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatState);
+                        break;
+                    //Worm
+                    case 2:
+                        ArrayList<Enemy> enemiesDefault = new ArrayList<Enemy>();
+                        Worm worm = new Worm(passedPlayer);
+                        enemiesDefault.add(worm);
+                        CombatState combatStateDefault = new CombatState(engineRef, passedPlayer, enemiesDefault);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatStateDefault);
+                        break;
+                    //Golem
+                    case 3:
+                        ArrayList<Enemy> enemiesGolem = new ArrayList<Enemy>();
+                        Golem golem = new Golem(passedPlayer);
+                        enemiesGolem.add(golem);
+                        CombatState combatStateGolem = new CombatState(engineRef, passedPlayer, enemiesGolem);
+                        BGMplayer.musicStop();
+                        engineRef.changeState(combatStateGolem);
+                        break;
+                }
             }
         }
     }
 
-    private int randomizeEnemy(){
+    private int randomizeEnemy(int nonInclusiveUpperBound){
         Random random = new Random();
-        int randomEnemy = random.nextInt(3);
+        int randomEnemy = random.nextInt(nonInclusiveUpperBound);
         return randomEnemy;
     }
 
@@ -687,6 +753,17 @@ class MapState extends GameState {
         BGMplayer.musicStop();
     }
 
+    public void fightBossAgain(){
+        fightBossAgain = true;
+        for (Node node : nodes) {
+            int nodeLevel = getLevelAsInt(node.level);
+            if (nodeLevel == 1 ) {
+                node.clickable = true; 
+            }
+        }
+        BGMplayer.musicStop();
+    }
+
     public void saveMapStateToFile(String filename) {
         JSONArray jsonNodes = new JSONArray();
         for (Node node : nodes) {
@@ -851,6 +928,14 @@ class MapState extends GameState {
             oldCurrLevel = maxLevel;
         }
 
+        if(maxLevel == 5){
+            easyModeOn = true;
+            hardModeOn = false;
+        }
+        if(maxLevel == 8){
+            easyModeOn = false;
+            hardModeOn = true;
+        }
 
         System.out.println("Old Current Level: " + oldCurrLevel);
         return oldCurrLevel; 
