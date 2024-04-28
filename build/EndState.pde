@@ -181,9 +181,9 @@ class EndState extends GameState {
   void drawWin() {
     agreeToSacrificeLife = false;
     image(winImage, displayWidth/2-winImage.width/2, 0);
-    text("\nYou Win!!!", displayWidth/2, winImage.height+40);
+    text("\nYou Win!!!", displayWidth/2, winImage.height);
     textAlign(CENTER, CENTER);
-    textSize(96);
+    textSize(64);
     text("Action Points: "+actionPoints, displayWidth/2, displayHeight/2-50);
     text("\nWin Bonus: "+winBonus, displayWidth/2, displayHeight/2+25);
     text("\n\nTotal: "+totalPoints, displayWidth/2, displayHeight/2+100);
@@ -191,8 +191,8 @@ class EndState extends GameState {
 
   void drawLose() {
     image(loseImage, displayWidth/2-loseImage.width/2, 0);
-    text("\nYou Lose!!!", width/2, loseImage.height+40);
-    textSize(96);
+    text("\nYou Lose!!!", width/2, loseImage.height);
+    textSize(64);
     text("Remaining Action Points: " + passedPlayer.getActionPts(), width/2, height/2 -50);
     text("\nRemaining HP: " + passedPlayer.getCurrHp(), width/2, height/2+25);
     if (totalPoints < sacrificeFine) {
@@ -217,7 +217,7 @@ class EndState extends GameState {
   public void drawFinalWin() {
     agreeToSacrificeLife = false;
     text("\nCongratulations!!!", width/2, winImage.height-50);
-    text("\nYou got "+totalPoints+" points in total!!!", width/2, height/2+50);
+    text("\nYou got "+totalPoints+" points in total!!!", width/2, height/2+25);
   }
   
   private boolean checkFileExists(String filePath){
