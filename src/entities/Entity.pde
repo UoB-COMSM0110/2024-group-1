@@ -38,11 +38,15 @@ abstract class Entity {
         return maxHp;
     }
 
-    private void incrementHp(int amt) {
+    public void incrementHp(int amt) {
         currHp += amt;
         if (currHp > maxHp) {
             currHp = maxHp;
         }
+    }
+
+    public void setHP(int amt) {
+        currHp = amt;
     }
 
     public void gainHealth(int initialAmt) {
@@ -186,7 +190,7 @@ abstract class Entity {
     }
 
     public boolean isMousedOver() {
-        return mouseX >= pos.x && mouseX <= (pos.x+img.width) && mouseY >= pos.y && mouseY <= (pos.y+img.height); 
+        return mouseX >= pos.x && mouseX <= (pos.x+360) && mouseY >= pos.y && mouseY <= (pos.y+360); 
     }
 
     abstract public void die();

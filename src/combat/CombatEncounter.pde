@@ -9,6 +9,7 @@ class CombatEncounter {
     private int drawAmt;
     private final int ENEMY_BASE_X = (int)(width*0.43);
     private final int ENEMY_BASE_Y = (int)(height*0.25);
+    private final int CARDS_BASE_X = (int)(width*0.01);
     private PImage[] encounterImgs;
     private Button endTurnBtn, combatInfoBtn;
     private int combatGoldReward;
@@ -43,10 +44,7 @@ class CombatEncounter {
 
     public void initEncounter() {
         calculateCombatReward();
-        for (Enemy nme : currEnemies) {
-            nme.setImg(entityImgs.getImg(nme.getName()));
-            nme.setPos(ENEMY_BASE_X, ENEMY_BASE_Y);
-        }
+        setupEnemies();
 
         drawDeck = battlePlayer.getDeck();
         drawDeck.shuffle();
@@ -71,6 +69,7 @@ class CombatEncounter {
             ArrayList<Card> extraCards = drawDeck.drawNCards(drawAmt-cardHand.size());
             cardHand.addAll(extraCards);
         }
+        setupCardPositions();
     }
 
     private void endTurn() {
@@ -298,6 +297,7 @@ class CombatEncounter {
                     discardPile.clear();
                     drawn = drawDeck.drawSingleCard();
                 }
+                drawn.setPos((int)played.getPos().x, (int)played.getPos().y);
                 cardHand.add(drawn);
                 break;
             case "Headbutt":
@@ -320,11 +320,26 @@ class CombatEncounter {
         battlePlayer.clearAllEffects();
     }
 
-    private boolean checkPosAreSame(Card cardA, Card cardB) {
-        return (cardA.getPos().x == cardB.getPos().x) && (cardA.getPos().y == cardB.getPos().y);
+    private void setupEnemies() {
+        int xOffset = 0;
+        for (Enemy nme : currEnemies) {
+            nme.setImg(entityImgs.getImg(nme.getName()));
+            nme.setPos(ENEMY_BASE_X+xOffset, ENEMY_BASE_Y);
+            xOffset += (int)(nme.getPos().x*0.40);
+        }
+    }
+
+    private void setupCardPositions() {
+        int drawX = CARDS_BASE_X;
+
+        for (Card curr: cardHand) {
+            curr.setPos(drawX, (int)(height*0.60));
+            drawX = drawX + (int)(width*0.15);
+        }
     }
 
     private void calculateCombatReward() {
+
         for (Enemy nme : currEnemies) {
             int currNmeGold = nme.getGoldValue();
             combatGoldReward += currNmeGold;
