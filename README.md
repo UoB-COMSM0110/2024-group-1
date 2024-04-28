@@ -150,14 +150,8 @@ In `EndState`, depending on the outcome of the battle, the player may be present
 
 The entire process is controlled by `GameEngine`'s `changeState()` method, which controls state switching. Each state class responds to user input, updates the game logic, and draws the game interface by implementing the methods of the GameState abstract class, ensuring a coherent game and consistent experience for both users and the development team.
  
- 
-
-
-
-
-
-
-
+![ClassDiagram](./docs/behavioural_diagram.png)
+*A condensed version of our behavioural diagram* 
 
 
 # Implementation
