@@ -95,7 +95,10 @@ class MenuState extends GameState {
             loadModeAvailable = false;
         }
 
+        displayHelpImage();
+
         if(modeChoiceVisibility){
+            showHelp = false;
             easyButton.drawButton();
             hardButton.drawButton();
             backButton.drawButton();
@@ -109,7 +112,7 @@ class MenuState extends GameState {
             helpButton.drawButton();
         }
         
-        displayHelpImage();
+        
     }
 
     public void updateState() {}

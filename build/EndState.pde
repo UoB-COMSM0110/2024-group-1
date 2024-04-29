@@ -19,6 +19,7 @@ class EndState extends GameState {
   boolean checkWin;
   boolean agreeToSacrificeLife = true;
   boolean checkFinalWin;
+  boolean clickableContinue = true;
   MusicLoader BGMplayer = new MusicLoader();
   
   EndState(GameEngine engine, Player player, boolean check) {
@@ -101,7 +102,7 @@ class EndState extends GameState {
   }
   
   public void handleMouseInput() {
-    if (continueButton.overButton() && mousePressed) {
+    if (continueButton.overButton() && mousePressed && clickableContinue) {
       BGMplayer.musicStop();
       if (checkWin || (!checkWin && (totalPoints >= sacrificeFine) && (passedPlayer.getCurrHp() > 0))) {
         MapState mapStateFake = new MapState(engineRef, passedPlayer);
@@ -143,6 +144,7 @@ class EndState extends GameState {
         if (key == 'y' || key == 'Y') {
           //actionPoints -= 5;
           //Fix: Permanently decrease it and save it 
+          clickableContinue = true;
           passedPlayer.decrementActionPts(sacrificeFine);
           passedPlayer.incrementHp(sacrificeHp);
           totalPoints = passedPlayer.getActionPts();
@@ -210,6 +212,7 @@ class EndState extends GameState {
     } else {
       if (agreeToSacrificeLife) {
         text("\n\nAgree to sacrifice life? (Y/N)", width/2, height/2+100);
+        clickableContinue = false;
       }
     }
   }
