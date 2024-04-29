@@ -95,13 +95,64 @@ found that it was not the best format for mapping out alternative/variable game 
 In addition, at this stage we brainstormed a range of user stories in order for us to keep in mind our key stakeholders and consider what goals
 our game should set out to achieve. A selection of the user stories we developed are as follows:
 
-> As a player, I want the game to have enough card variety and
-strategic depth so that I feel challenged and entertained.
+> As a player, I want the game to have enough card variety and strategic depth so that I feel challenged and entertained.
 
-> As a player, I want to be able to see how much health I and enemies have left so that I can make strategic decisions
-and feel a sense of urgency during the game.
+> As a player, I want to be able to see how much health I and enemies have left so that I can make strategic decisions and feel a sense of urgency during the game.
 
 > As a player, I want the game to have a variety of different encounters in order to keep the game fresh and provide a challenge.
+
+> As a player, I want to be able to load the game and pick up where I left off in order to allow me to play flexibly at a time that suits me.
+
+> As a player, I want to be able to change the difficulty of the game so that I can play the game in a way that suits my preferences.
+
+> As a player, I want there to be help information popups/screens in the game so that I can look up information during or prior to gameplay and ensure I understand how to play the game.
+
+# Design
+
+## System architecture
+We knew from our concept that we would have many game interfaces, so we created the `GameState` class to manage them. Each game interface is a subclass of `GameState` and this, in conjunction with `GameEngine` (the core game system class), enabled us to implement a game loop architecture.`GameState` abstracts the different states of the game (e.g. `MapState` or `EndState`), mandating the implementation of common methods such as `setupState()`, `updateState()` and `drawState()` in each subclass. This abstraction allows us to easily extend the functionality of the game by adding new states.
+
+The complex scene transition mechanism in our turn-based card game requires the design of multiple components:
+| Class          | Responsibilities | Functions |
+|----------------|------------------|-----------|
+| **GameEngine** | Acts as the central management system for the game, responsible for transitioning game states, managing events, and maintaining the game loop. | - Manages the stack of GameState, allowing transitions between different states.<br>- Calls methods of the current game state to handle user input, update game logic, and render the game display.<br>- Provides a unified interface to control the start, pause, and continuation of the game. |
+| **GameState**  | An abstract base class that defines the interface and behaviours that all specific game states must implement. | - Defines essential methods for game states, such as setupState(), updateState(), drawState(), handleMouseInput(), etc.<br>- Allows the GameEngine to interact with various game states through a single interface, without needing to know the details of specific states. |
+| **MapState**   | Manages all elements and interactions of the map interface, one of the states where players interact most frequently with the game world. | - Displays the game map and related UI components (such as buttons and icons).<br>- Manages node objects, which may represent battles, shops, or other game events.<br>- Processes user input, updates game states, such as the selection and activation of nodes. |
+| **Node**       | Represents a node on the map that can be interacted with by players. Each node has specific attributes, such as whether it can be clicked and whether it is currently active. | - Stores node status and properties.<br>- Provides methods to display itself on the map.<br>- Manages connections with other nodes, which is crucial for determining paths and implementing game logic. |
+| **Button**     | Used to create and manage buttons in the game UI. Each button has its position, size, and icon, and can respond to user click events. | - Displays the button and changes state based on user interaction.<br>- Detects whether the mouse is hovering or clicking on the button, triggering corresponding actions. |
+| **CombatState**| A game state class specifically dealing with player encounters with enemies in battle scenarios. | - Initialises the battle scene and enemies.<br>- Handles player mouse and keyboard inputs, allowing players to choose attacks or use specific cards.<br>- Updates the combat state, including the life points and energy of both players and enemies.<br>- Changes the game state to the EndState based on the outcome of the battle (victory or defeat). |
+| **Card**       | Provides a common framework for all cards. Each specific type of card, such as attack cards, skill cards, or ability cards, inherits from this base class. | - Stores basic card information, including name, type, energy consumption, and shop cost.<br>- Defines an abstract method `applyCard(Entity target)` that needs to be specifically implemented in subclasses.<br>- Provides methods to adjust the energy consumption and shop cost of cards, as well as to obtain card status information. |
+| **CardImgLoader** | Responsible for loading and storing all card images in the game. | - Loads and stores all card images at initialization.<br>- Offers a method getImg(String cardName), allowing other classes to obtain the corresponding image resource based on the card name. |
+
+
+## JSON mechanism 
+We utilize custom-structured JSON files to manage our maps, enabling flexible editing and map generation. The JSON design encompasses the hierarchy of nodes on the map, their interconnections, and attributes like current node status and clickability. This facilitates interaction with Java's built-in data structures.
+
+Since JSON files support persistent storage, we designed save&load feature. EndState updates through IO operation to JSON file. Leveraging a ```mapTemp.json``` file facilitates resource balancing between Java's garbage collection mechanism and our game's GameEngine.
+
+We ensure a fresh start by loading default new maps using two fixed maps of varying difficulty. By evaluating the existence of ```mapTemp.json```, we update without affecting the initialization of default maps.
+
+## Class diagram
+![ClassDiagram](./docs/Class-Diagram-major.png)
+*A condensed version of our class diagram*
+
+To understand how to structure our code, we developed a class diagram early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. Its structure evolved in line with the complexity of our game. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/design-section-draft/docs/Draft%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
+
+## Behavioural diagram
+ 
+The `GameEngine` class is the central hub that manages transitions between various game states (e.g. `MenuState`, `MapState`, `CombatState`, `EndState`). The engine maintains a state stack to support smooth transitions and fallbacks between different game states.
+
+At the beginning of the game, `GameEngine` initialises and pushes the `MenuState`, the player's first stage of interaction with the game. In `MenuState`, the start and difficulty selection buttons trigger a state transition to `MapState`, which also receives a reference to the top level `GameEngine` object and a newly created `Player` object as parameters.
+
+In `MapState`, the player navigates by interacting with nodes on the map. When the player selects a node and initiates a battle, `MapState` is responsible for switching the game state to `CombatState`. In `CombatState`, the player fights against an enemy, and the result of the battle (victory or defeat) decides what happens next in `EndState`.
+
+In `EndState`, depending on the outcome of the battle, the player may be presented with a victory or defeat screen. Winning players can freely continue, whereas losing players are faced with the choice of sacrificing action points to continue or otherwise lose the game. If the choice is to continue, the game state returns to `MapState`, allowing the player to continue exploring other nodes.
+
+The entire process is controlled by `GameEngine`'s `changeState()` method, which controls state switching. Each state class responds to user input, updates the game logic, and draws the game interface by implementing the methods of the GameState abstract class, ensuring a coherent game and consistent experience for both users and the development team.
+ 
+![ClassDiagram](./docs/behavioural_diagram.png)
+*A condensed version of our behavioural diagram* 
+
 
 # Implementation
 
