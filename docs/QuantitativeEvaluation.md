@@ -9,7 +9,7 @@ We conducted qualitative evaluations at three distinct stages of the game develo
 - "The menu looks great! I love the artwork."
 
 #### Negative Feedback
-- "A tutorial in the map would be great."
+- "A tutorial for the map would be great."
 - "Maybe there should be a clearer button for the player to know how to end the turn in the combat state."
 
 #### Reflection on User Feedback
@@ -26,7 +26,7 @@ We conducted qualitative evaluations at three distinct stages of the game develo
 #### Negative Feedback
 - "I think a tutorial would help."
 - "The game is too easy!"
-- "The yellow and red nodes on first glance look very similar as your eye is first drawn to the combat icons which are the same image."
+- "The yellow and red nodes at first glance look very similar as your eye is first drawn to the combat icons which are the same image."
 
 #### Reflection on User Feedback
 - Users felt unsure of how to play the game. To address this, we developed a tutorial accessible from the menu.
