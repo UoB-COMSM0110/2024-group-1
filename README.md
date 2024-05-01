@@ -22,6 +22,32 @@ Ricardo Pu, kc23989@bristol.ac.uk, RicardoMiles
 ---
 ![image](https://github.com/UoB-COMSM0110/2024-group-1/blob/main/images/TeamPhoto.jpg)
 
+## Table of Contents
+
+* [Introduction](#introduction)
+* [Requirements](#requirements)
+  - [Ideation](#ideation)
+  - [User Stories and Use Case Diagram](#user-stories-and-use-case-diagram)
+* [Design](#design)
+  - [System Architecture](#system-architecture)
+  - [JSON Mechanism](#json-mechanism)
+  - [Class Diagram](#class-diagram)
+  - [Behavioural Diagram](#behavioural-diagram)
+* [Implementation](#implementation)
+  - [Game Asset Handling](#game-asset-handling)
+  - [Encounter Design](#encounter-design)
+  - [Game State System](#game-state-system)
+* [Evaluation](#evaluation)
+  - [Think Aloud Evaluation](#think-aloud-evaluation)
+  - [NASA TLX Evaluation](#nasa-tlx-evaluation)
+  - [Game Testing](#game-testing)
+* [Process](#process)
+  - [Working as a Team](#working-as-a-team)
+  - [Tools Used](#tools-used)
+  - [Team Roles](#team-roles)
+  - [Reflection on Working Together](#reflection-on-working-together)
+* [Conclusion](#conclusion)
+
 # Introduction
 Our game is a turn-based and card-based game. The player begins at the bottom of a node-based map with a simple deck of cards, with the objective of reaching the top of the map and beating the final boss there. Traversing the map requires the player to engage in other combat encounters, though there are also opportunities to obtain new cards at shop nodes which can be encountered on the way.
 
@@ -114,7 +140,7 @@ our game should set out to achieve. A selection of the user stories we developed
 
 # Design
 
-## System architecture
+## System Architecture
 We knew from our concept that we would have many game interfaces, so we created the `GameState` class to manage them. Each game interface is a subclass of `GameState` and this, in conjunction with `GameEngine` (the core game system class), enabled us to implement a game loop architecture.`GameState` abstracts the different states of the game (e.g. `MapState` or `EndState`), mandating the implementation of common methods such as `setupState()`, `updateState()` and `drawState()` in each subclass. This abstraction allows us to easily extend the functionality of the game by adding new states.
 
 The complex scene transition mechanism in our turn-based card game requires the design of multiple components:
@@ -130,20 +156,20 @@ The complex scene transition mechanism in our turn-based card game requires the 
 | **CardImgLoader** | Responsible for loading and storing all card images in the game. | - Loads and stores all card images at initialization.<br>- Offers a method getImg(String cardName), allowing other classes to obtain the corresponding image resource based on the card name. |
 
 
-## JSON mechanism 
+## JSON Mechanism 
 We utilize custom-structured JSON files to manage our maps, enabling flexible editing and map generation. The JSON design encompasses the hierarchy of nodes on the map, their interconnections, and attributes like current node status and clickability. This facilitates interaction with Java's built-in data structures.
 
 Since JSON files support persistent storage, we designed save&load feature. EndState updates through IO operation to JSON file. Leveraging a ```mapTemp.json``` file facilitates resource balancing between Java's garbage collection mechanism and our game's GameEngine.
 
 We ensure a fresh start by loading default new maps using two fixed maps of varying difficulty. By evaluating the existence of ```mapTemp.json```, we update without affecting the initialization of default maps.
 
-## Class diagram
+## Class Diagram
 ![ClassDiagram](./docs/Class-Diagram-major.png)
 *A condensed version of our class diagram*
 
 To understand how to structure our code, we developed a class diagram early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. Its structure evolved in line with the complexity of our game. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/design-section-draft/docs/Draft%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
 
-## Behavioural diagram
+## Behavioural Diagram
  
 The `GameEngine` class is the central hub that manages transitions between various game states (e.g. `MenuState`, `MapState`, `CombatState`, `EndState`). The engine maintains a state stack to support smooth transitions and fallbacks between different game states.
 
@@ -264,11 +290,23 @@ We collected qualitative evaluations at 3 different stages of the game. The feed
 - "The text after you win looks a bit squished together."
 
 #### Reflection on User Feedback
-- We modified the display of the End State so that the text was more appropriately spaced out. 
+- We modified the display of the End State so that the text was more appropriately spaced out.
 
+## NASA TLX Evaluation
+
+As part of gathering feedback through playtesting, we asked players to complete the NASA TLX survey. Our use of this survey was done with the goal of it helping us to refine our game's balance and ensure that there was a meaningful difference in the level of the game's difficulty between the game's easy and hard modes. We chose to use the unweighted NASA TLX scores for ease and speed of testing, and in the face of evidence suggesting that the raw TLX scores are satisfactory.
+
+![EasyMode](./images/TLX_EasyMode.png)
+
+![HardMode](./images/TLX_HardMode.png)
+
+Looking at the individual dimensions, it is clear that our game scored consistently low for physical demand across both easy and hard mode. This is likely due to the simplicity of our game's control scheme. The results clearly indicate that the game's hard mode poses a greater challenge across the dimensions. This was confirmed via a comparison of the results using the Wilcoxon Signed Rank Test which found that the difference in the raw TLX scores was significant with a W-value of 0 and a p-value of approximately 0.00512.
+
+## Game Testing
+
+Due to the limitations of the Processing IDE, we found it challenging to conduct white-box testing. Instead, the majority of our testing was carried out using a black-box approach through playtesting to ensure the game behaved as intended. Time was spent in playtesting to consider edges cases in an effort to fix bugs. Our team did make use of print statements within sections of the code to help peek into the game's internal state and confirm that values were as expected.
 
 # Process
-
 
 ## Working as a team
 The team used the Software Engineering labs as well as weekly in-person meetings to check in on our progress as a team. We used these meetings to identify anything we needed to clarify or get help with. We decided as a team what the essential game states that needed to be achieved for a minimum viable product were and what other game states could be completed later on for the final version of the game. On reflection, it would have been useful to organize an in-person meeting just before the Easter holidays to ensure we all had a clear idea of what we should working on each week of the holidays.
@@ -280,10 +318,8 @@ However, we were still able to communicate this effectively throughout the holid
 We used GitHub to host and collaborate on the project. Each member used different branches for each feature of the game i.e. using a branch specifically for the menu state. This meant we always had a working version of the game on the main branch. We set up GitHub so that nothing could be merged into main without a pull request. This was valuable as it ensured we reviewed each other's code and helped ensure we were all aligned in terms of how we wanted to implement the different features of the game. In addition, using pull requests allowed any merge conflicts to be reviewed and resolved before being pushed to the main branch.
 <img width="700" alt="PullRequest" src="https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/454e8f79-9378-48f6-ab00-7e7b1e61b06c">
 
-
 We knew that we potentially had a game that would be relatively complex to create due to the multiple game states we needed to implement. Therefore, it was essential to use a Kanban board to keep track of all the different features we wanted to develop and ensure that they could be completed in the given timeframe of the project. As a team, we divided the workload into different features/game states that needed to be completed. We then delegated different game states to each team member. This meant that each team member had a clear idea of what they should be working on. On reflection, perhaps we could have used the Kanban board more effectively by breaking up the tasks into smaller sub-tasks. For example, creating a task for creating a shop state could have been broken up into smaller sub-tasks within this state. This would have given a greater sense of the progress that had been made.
 ![KanbanBoard](https://github.com/UoB-COMSM0110/2024-group-1/assets/120200385/f57aac8d-cebd-448c-9e7e-a081b9117aca)
-
 
 ## Team roles
 We divided the workload of the game according to the different game states. Sam worked on the overall structure of the game i.e. implementing the game engine and worked on the combat state in terms of both code and related assets. Ricardo created the map state, created a template for the cards and created other assets like buttons. Lanai worked on the end state of the game. Jasmine created the shop state. Zhuoli created the main menu as well as game assets such as the cards.
@@ -295,23 +331,17 @@ Perhaps we faced challenges with getting the minimum viable product working due 
 
 # Conclusion
 
-Developing *Deck of Doom* tested us on our ability to develop software as a group and offered a look into the challenges which we might face in industry. For those of us on the team interested in pursuing game development further, it was also valuable experience in how to properly lay out a game's systems and get a prototype up and running. Overall, we are satisfied with having been able to develop a complex game architecture which provides for an engaging gameplay experience while retaining the capacity for extensibility. 
+Developing *Deck of Doom* tested us on our ability to develop software as a group and offered a look into the challenges which we might face in industry. For those of us on the team interested in pursuing game development further, it was also valuable experience in how to properly lay out a game's systems and get a prototype up and running. Overall, we are satisfied with having been able to develop a complex game architecture which provides for an engaging gameplay experience while retaining the capacity for extensibility.
 
 Looking back over the development approach we used, our decision to split work on the game states among each team member had both positive and negative aspects. On the negative side, it initially slowed down the pace of development as certain states had to be completed before others could be tested. The need to spend some extra time and effort ensuring that all members understood how to integrate their work within the overarching system also contributed to the delay. However, on the positive side, this approach largely eliminated version control issues, allowed each team member to take ownership of a clear contribution to the project and provided ample experience for code reviews.
 
-Overcoming the challenges we faced (creating game assets, fine-tuning game balance and integrating the game states) was done through regular team discussion via GitHub, WhatsApp and in-person meetings. Drawing on each other's areas of expertise was also critical to surmounting these obstacles, particularly in the realm of game assets, where several team members had existing skills and interests. Regarding improving game balance, user feedback through the use of the NASA Task Load Index and the System Usability Survey proved invaluable. These, alongside the Think Aloud technique, drove the next few stages of development as we knew which features needed improving and what to implement next. 
+Overcoming the challenges we faced (creating game assets, fine-tuning game balance and integrating the game states) was done through regular team discussion via GitHub, WhatsApp and in-person meetings. Drawing on each other's areas of expertise was also critical to surmounting these obstacles, particularly in the realm of game assets, where several team members had existing skills and interests. Regarding improving game balance, user feedback through the use of the NASA Task Load Index and the System Usability Survey proved invaluable. These, alongside the Think Aloud technique, drove the next few stages of development as we knew which features needed improving and what to implement next.
 
-We used an agile development methodology when developing Deck of Doom. We had iterative progress, implementing features in sprints and carrying out user testing. However, it could have been useful to use the Planning Poker technique to estimate the effort required to complete different features of the game. 
+We used an agile development methodology when developing *Deck of Doom*. We had iterative progress, implementing features in sprints and carrying out user testing. However, it could have been useful to use the Planning Poker technique to estimate the effort required to complete different features of the game.
 
 On reflection, we could have dealt better with the fact that we had numerous deadlines in the same time period as the game's development. Nonetheless, through joint discussion we came to an agreement on which tasks to prioritize so that we were able to achieve our goals. In hindsight, it would have been beneficial to have arranged more 'game jam'-style development sessions earlier in the development process.
 
 If we were to develop this game further in the future, we would be keen to create a multiplayer mode to enable players to face off against each other with their own deck. For the map state, casino-style minigames available through nodes on the map would offer an additional avenue for the player to have fun and obtain in-game money or rare cards. With more time, refactoring of the game's combat system could expand the game's strategic possibilities even further by enabling enemy behaviours and card effects which the current system cannot easily implement.
 
-In conclusion, the project has been a success for us, from the standpoint of seeking valuable experience of team-based software engineering and developing an understanding of the Agile workflow. 
-
-
-
-
-
-
+In conclusion, the project has been a success for us, from the standpoint of seeking valuable experience of team-based software engineering and developing an understanding of the Agile workflow.
 
