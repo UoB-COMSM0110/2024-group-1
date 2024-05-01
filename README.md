@@ -5,7 +5,7 @@
 
 Click [here](https://youtu.be/5c_nJ_hS2Og) or on the image above to watch our game video!
 
-## Group member
+## Group Members
 ---
 
 Samuel Arnold-Parra, uq23711@bristol.ac.uk, A-PS1999
@@ -159,9 +159,9 @@ The complex scene transition mechanism in our turn-based card game requires the 
 ## JSON Mechanism 
 We utilize custom-structured JSON files to manage our maps, enabling flexible editing and map generation. The JSON design encompasses the hierarchy of nodes on the map, their interconnections, and attributes like current node status and clickability. This facilitates interaction with Java's built-in data structures.
 
-Since JSON files support persistent storage, we designed save&load feature. EndState updates through IO operation to JSON file. Leveraging a ```mapTemp.json``` file facilitates resource balancing between Java's garbage collection mechanism and our game's GameEngine.
+Since JSON files support persistent storage, we designed a save & load feature. `EndState` updates through IO operations to a JSON file. Leveraging a ```mapTemp.json``` file facilitates resource balancing between Java's garbage collection mechanism and our game's `GameEngine`.
 
-We ensure a fresh start by loading default new maps using two fixed maps of varying difficulty. By evaluating the existence of ```mapTemp.json```, we update without affecting the initialization of default maps.
+We ensure a fresh start by loading new default maps, using two fixed maps of varying difficulty. By evaluating the existence of ```mapTemp.json```, we update without affecting the initialization of the default maps.
 
 ## Class Diagram
 ![ClassDiagram](./docs/Class-Diagram-major.png)
@@ -181,7 +181,7 @@ In `EndState`, depending on the outcome of the battle, the player may be present
 
 The entire process is controlled by `GameEngine`'s `changeState()` method, which controls state switching. Each state class responds to user input, updates the game logic, and draws the game interface by implementing the methods of the GameState abstract class, ensuring a coherent game and consistent experience for both users and the development team.
  
-![ClassDiagram](./docs/behavioural_diagram.png)
+![BehaviouralDiagram](./docs/behavioural_diagram.png)
 *A condensed version of our behavioural diagram* 
 
 
@@ -344,4 +344,17 @@ On reflection, we could have dealt better with the fact that we had numerous dea
 If we were to develop this game further in the future, we would be keen to create a multiplayer mode to enable players to face off against each other with their own deck. For the map state, casino-style minigames available through nodes on the map would offer an additional avenue for the player to have fun and obtain in-game money or rare cards. With more time, refactoring of the game's combat system could expand the game's strategic possibilities even further by enabling enemy behaviours and card effects which the current system cannot easily implement.
 
 In conclusion, the project has been a success for us, from the standpoint of seeking valuable experience of team-based software engineering and developing an understanding of the Agile workflow.
+
+<div align="center">
+
+### Contributions
+|Member Name|Contribution|
+|-----------|------------|
+|  Sam      |     1.0    |
+|  Ricardo  |     1.0    |
+|  Jasmine  |     1.0    |
+|  Zhuoli   |     1.0    |
+|  Lanai    |     1.0    |
+
+</div>
 
