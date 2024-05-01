@@ -5,6 +5,14 @@
 
 Click [here](https://youtu.be/5c_nJ_hS2Og) or on the image above to watch our game video!
 
+## How to play
+
+1. Install Processing and Git.
+2. Clone this repository using `git clone`.
+3. Open the Processing IDE and select the 'Open' option under 'File'.
+4. Navigate to the location where you cloned the repository and select the file `EntryPoint.pde` from the `build` folder.
+5. Start running the game!
+
 ## Group Members
 ---
 
