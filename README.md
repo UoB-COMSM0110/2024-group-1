@@ -175,7 +175,7 @@ We ensure a fresh start by loading new default maps, using two fixed maps of var
 ![ClassDiagram](./docs/Class-Diagram-major.png)
 *A condensed version of our class diagram*
 
-To understand how to structure our code, we developed a class diagram early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. Its structure evolved in line with the complexity of our game. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/main/docs/Draft%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
+To understand how to structure our code, we developed a class diagram early in the project. This diagram initially served as a blueprint for what needed to be implemented and how tasks could be sensibly distributed among team members. Its structure evolved in line with the complexity of our game. Eventually, the class diagram matured into its [final form](https://github.com/UoB-COMSM0110/2024-group-1/blob/README-amendments-and-additions/docs/Final%20Class%20Diagram.pdf), reflecting the changes and improvements we made as we gained more expertise in Processing.
 
 ## Behavioural Diagram
  
