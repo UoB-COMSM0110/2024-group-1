@@ -1,5 +1,10 @@
 # COMSM0110 2024 Group 1
 
+### Game Video
+[<img src="/docs/Game_Logo.jpg" />](https://youtu.be/5c_nJ_hS2Og)
+
+Click [here](https://youtu.be/5c_nJ_hS2Og) or on the image above to watch our game video!
+
 ## Group member
 ---
 
